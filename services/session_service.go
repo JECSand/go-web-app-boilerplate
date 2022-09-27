@@ -46,13 +46,11 @@ type RedisManager struct {
 func InitRedisClient() *RedisManager {
 	var rm RedisManager
 	var ctx = context.Background()
-	fmt.Println("\n\nATTEMPTING REDIS CONNECT: ")
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     os.Getenv("REDIS_HOST"),
 		Password: os.Getenv("REDIS_PASSWORD"), // no password set
 		DB:       0,                           // use default DB
 	})
-	fmt.Println("\n\nREDIS CONNECT: ", rdb)
 	rm.Client = rdb
 	rm.Ctx = ctx
 	return &rm
@@ -130,8 +128,7 @@ func (m *SessionService) IsLoggedIn(r *http.Request) bool {
 }
 
 // NewSession initializes a new user session based on an Auth instance
-// todo debug NewSession
-func (m *SessionService) NewSession(auth *models.Auth) *http.Cookie {
+func (m *SessionService) NewSession(auth *models.Auth) (*http.Cookie, error) {
 	authStr := auth.GetAuthString()
 	checkUuid := generateUuid()
 	checkUuid = strings.Replace(checkUuid, "-", "", -1)
@@ -139,23 +136,22 @@ func (m *SessionService) NewSession(auth *models.Auth) *http.Cookie {
 	expire := time.Now().AddDate(0, 0, 1)
 	err := m.RedisManager.Set(cookieValue, authStr)
 	if err != nil {
-		panic(err)
+		return &http.Cookie{}, err
 	}
-	return &http.Cookie{Name: "SessionID", Value: cookieValue, Expires: expire, HttpOnly: true}
+	return &http.Cookie{Name: "SessionID", Value: cookieValue, Expires: expire, HttpOnly: true}, nil
 }
 
 // GetSession returns a user Auth session
-func (m *SessionService) GetSession(cookie *http.Cookie) *models.Auth {
+func (m *SessionService) GetSession(cookie *http.Cookie) (*models.Auth, error) {
 	fmt.Println("\n\nGET SESSION COOKIE: ", cookie)
 	sessionID := cookie.Value
 	authStr, err := m.RedisManager.Get(sessionID)
 	if err != nil {
-		fmt.Println("\n\nGET SESSION ERROR: ", err)
-		panic(err)
+		return &models.Auth{}, err
 	}
 	auth := models.Auth{Authenticated: false}
 	auth.LoadAuthString(authStr)
-	return &auth
+	return &auth, nil
 }
 
 // DeleteSession deletes a user session

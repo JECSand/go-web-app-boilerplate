@@ -63,7 +63,11 @@ func (p *AuthController) LoginHandler(w http.ResponseWriter, r *http.Request, ps
 		p.manager.Viewer.RenderTemplate(w, "templates/login.html", &model)
 		return
 	}
-	cookie = p.manager.SessionManager.NewSession(auth)
+	cookie, err = p.manager.SessionManager.NewSession(auth)
+	if err != nil {
+		p.manager.Viewer.RenderTemplate(w, "templates/login.html", &model)
+		return
+	}
 	http.SetCookie(w, cookie)
 	iModel := models.IndexModel{Name: "home", Title: "Home", Auth: auth}
 	iModel.Auth = auth
@@ -91,7 +95,11 @@ func (p *AuthController) RegistrationHandler(w http.ResponseWriter, r *http.Requ
 		p.manager.Viewer.RenderTemplate(w, "templates/index.html", &model)
 		return
 	}
-	cookie := p.manager.SessionManager.NewSession(auth)
+	cookie, err := p.manager.SessionManager.NewSession(auth)
+	if err != nil {
+		p.manager.Viewer.RenderTemplate(w, "templates/index.html", &model)
+		return
+	}
 	http.SetCookie(w, cookie)
 	model = models.IndexModel{Name: "home", Title: "Home", Auth: auth}
 	model.Auth = auth

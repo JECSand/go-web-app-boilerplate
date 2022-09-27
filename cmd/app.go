@@ -13,8 +13,11 @@ type App struct {
 }
 
 // Initialize is a function used to initialize a new instantiation of the API Application
-func (a *App) Initialize(env string) {
-	config := ConfigurationSettings(env)
+func (a *App) Initialize(env string) error {
+	config, err := ConfigurationSettings(env)
+	if err != nil {
+		return err
+	}
 	config.InitializeEnvironment()
 	var globalSessions *services.SessionService
 	globalSessions = services.NewSessionService()
@@ -25,6 +28,7 @@ func (a *App) Initialize(env string) {
 	gService := services.NewGroupService()
 	manager := controllers.NewManager(v, globalSessions)
 	a.server = server.NewServer(manager, authService, uService, gService)
+	return nil
 }
 
 // Run is a function used to run a previously initialized Application
