@@ -43,7 +43,7 @@ func (p *ControllerManager) authCheck(r *http.Request) (*models.Auth, *http.Cook
 	if err != nil || !authenticated {
 		return auth, cookie
 	}
-	auth = p.SessionManager.GetSession(cookie)
+	auth, _ = p.SessionManager.GetSession(cookie)
 	return auth, cookie
 }
 

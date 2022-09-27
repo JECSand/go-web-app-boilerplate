@@ -25,7 +25,11 @@ func (p *BasicController) IndexPage(w http.ResponseWriter, r *http.Request, ps h
 		p.manager.Viewer.RenderTemplate(w, "templates/index.html", &model)
 		return
 	}
-	auth = p.manager.SessionManager.GetSession(cookie)
+	auth, err := p.manager.SessionManager.GetSession(cookie)
+	if err != nil {
+		p.manager.Viewer.RenderTemplate(w, "templates/login.html", &model)
+		return
+	}
 	model.Name = "Home"
 	model.Title = "Home"
 	model.Auth = auth
