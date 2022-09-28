@@ -69,9 +69,7 @@ func (p *AuthController) LoginHandler(w http.ResponseWriter, r *http.Request, ps
 		return
 	}
 	http.SetCookie(w, cookie)
-	iModel := models.IndexModel{Name: "home", Title: "Home", Auth: auth}
-	iModel.Auth = auth
-	p.manager.Viewer.RenderTemplate(w, "templates/index.html", &iModel)
+	http.Redirect(w, r, "/", 303)
 }
 
 // RegistrationHandler ...
@@ -101,19 +99,16 @@ func (p *AuthController) RegistrationHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 	http.SetCookie(w, cookie)
-	model = models.IndexModel{Name: "home", Title: "Home", Auth: auth}
-	model.Auth = auth
-	p.manager.Viewer.RenderTemplate(w, "templates/index.html", &model)
+	http.Redirect(w, r, "/", 303)
 }
 
 // LogoutHandler controls the logout process
 func (p *AuthController) LogoutHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// TODO - Get Auth from Session Manager Here, Build in Check to ensure logout worked
 	auth, cookie := p.manager.authCheck(r)
-	model := models.LoginModel{Name: "login", Title: "Login", Auth: auth}
 	if auth.Authenticated {
 		auth, _ = p.authService.Invalidate(auth)
 		_ = p.manager.SessionManager.DeleteSession(cookie)
 	}
-	p.manager.Viewer.RenderTemplate(w, "templates/login.html", &model)
+	http.Redirect(w, r, "/login", 303)
 }
