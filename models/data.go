@@ -8,10 +8,11 @@ import (
 // Group is a root struct that is used to store the json encoded data for/from a mongodb group doc.
 type Group struct {
 	Id           string    `json:"id,omitempty"`
-	RootAdmin    bool      `json:"root_admin,omitempty"`
 	Name         string    `json:"name,omitempty"`
+	RootAdmin    bool      `json:"root_admin,omitempty"`
 	LastModified time.Time `json:"last_modified,omitempty"`
 	CreatedAt    time.Time `json:"created_at,omitempty"`
+	DeletedAt    time.Time `json:"deleted_at,omitempty"`
 }
 
 // GetJSON marshals the Group struct data into JSON bytes
@@ -39,11 +40,12 @@ type User struct {
 	FirstName    string    `json:"firstname,omitempty"`
 	LastName     string    `json:"lastname,omitempty"`
 	Email        string    `json:"email,omitempty"`
-	RootAdmin    bool      `json:"root_admin,omitempty"`
 	Role         string    `json:"role,omitempty"`
+	RootAdmin    bool      `json:"root_admin,omitempty"`
 	GroupId      string    `json:"group_id,omitempty"`
 	LastModified time.Time `json:"last_modified,omitempty"`
 	CreatedAt    time.Time `json:"created_at,omitempty"`
+	DeletedAt    time.Time `json:"deleted_at,omitempty"`
 }
 
 // GetJSON marshals the User struct data into JSON bytes
@@ -79,6 +81,7 @@ type Task struct {
 	GroupId      string    `json:"group_id,omitempty"`
 	LastModified time.Time `json:"last_modified,omitempty"`
 	CreatedAt    time.Time `json:"creation_at,omitempty"`
+	DeletedAt    time.Time `json:"deleted_at,omitempty"`
 }
 
 // GetJSON marshals the Group struct data into JSON bytes
