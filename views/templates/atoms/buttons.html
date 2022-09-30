@@ -1,0 +1,3 @@
+{{ if eq .Button.Category "form" }}
+    <button type={{ .Button.Type }} form={{ .Id }} value={{ .Button.Type | Upper }}>{{ .Button.Label }}</button>
+{{ end }}

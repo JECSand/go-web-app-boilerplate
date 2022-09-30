@@ -11,8 +11,8 @@ import (
 // AdminController structures the set of app page views
 type AdminController struct {
 	manager      *ControllerManager
-	userService  *services.APIService[*models.User]
-	groupService *services.APIService[*models.Group]
+	userService  *services.UserService
+	groupService *services.GroupService
 }
 
 // AdminPage renders the Admin Page

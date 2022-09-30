@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"github.com/JECSand/go-web-app-boilerplate/models"
 	"github.com/go-redis/redis"
@@ -101,6 +102,13 @@ func (m *SessionService) lookupSessionID(checkId string) (string, error) {
 		return "", err
 	}
 	z := strings.Split(val, ":")
+	if len(z) < 2 {
+		err = m.RedisManager.Del(checkId)
+		if err != nil {
+			return "", err
+		}
+		return "", errors.New("invalid session string")
+	}
 	if z[0] == "" {
 		return "", nil
 	}

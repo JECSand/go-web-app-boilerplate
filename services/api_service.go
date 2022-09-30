@@ -3,7 +3,6 @@ package services
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"github.com/JECSand/fetch"
 	"github.com/JECSand/go-web-app-boilerplate/models"
 	"io"
@@ -11,29 +10,28 @@ import (
 	"os"
 )
 
-// dataModel is an abstraction of the db model types
-type dataModel interface {
-	GetJSON() []byte
-	GetID() string
-}
+/*
+================ APIRequest ==================
+*/
 
-// APIRequest managers an async request to the API to return data model(s)
-type APIRequest struct {
-	AuthToken string
+// Request managers an async request to the API to return data model(s)
+type Request struct {
+	url       string
+	authToken string
 }
 
 // getAuthHeaders builds a fetch usable slice of request headers
-func (dr *APIRequest) getAuthHeaders() [][]string {
+func (dr *Request) getAuthHeaders() [][]string {
 	reqHeaders := fetch.JSONDefaultHeaders()
-	if dr.AuthToken != "" {
-		return fetch.AppendHeaders(reqHeaders, []string{"Auth-Token", dr.AuthToken})
+	if dr.authToken != "" {
+		return fetch.AppendHeaders(reqHeaders, []string{"Auth-Token", dr.authToken})
 	}
 	return reqHeaders
 }
 
 // Get returns one or more dataModel
-func (dr *APIRequest) Get(endpoint string) (*fetch.Fetch, error) {
-	f, err := fetch.NewFetch(os.Getenv("API_HOST")+endpoint, "GET", dr.getAuthHeaders(), nil)
+func (dr *Request) Get() (*fetch.Fetch, error) {
+	f, err := fetch.NewFetch(dr.url, "GET", dr.getAuthHeaders(), nil)
 	if err != nil {
 		return f, err
 	}
@@ -42,9 +40,9 @@ func (dr *APIRequest) Get(endpoint string) (*fetch.Fetch, error) {
 }
 
 // Post a new dataModel
-func (dr *APIRequest) Post(endpoint string, bodyContents []byte) (*fetch.Fetch, error) {
+func (dr *Request) Post(bodyContents []byte) (*fetch.Fetch, error) {
 	body := bytes.NewBuffer(bodyContents)
-	f, err := fetch.NewFetch(endpoint, "POST", dr.getAuthHeaders(), body)
+	f, err := fetch.NewFetch(dr.url, "POST", dr.getAuthHeaders(), body)
 	if err != nil {
 		return f, err
 	}
@@ -53,9 +51,9 @@ func (dr *APIRequest) Post(endpoint string, bodyContents []byte) (*fetch.Fetch, 
 }
 
 // Patch an existing data model
-func (dr *APIRequest) Patch(endpoint string, bodyContents []byte) (*fetch.Fetch, error) {
+func (dr *Request) Patch(bodyContents []byte) (*fetch.Fetch, error) {
 	body := bytes.NewBuffer(bodyContents)
-	f, err := fetch.NewFetch(os.Getenv("API_HOST")+endpoint, "PATCH", dr.getAuthHeaders(), body)
+	f, err := fetch.NewFetch(dr.url, "PATCH", dr.getAuthHeaders(), body)
 	if err != nil {
 		return f, err
 	}
@@ -64,8 +62,8 @@ func (dr *APIRequest) Patch(endpoint string, bodyContents []byte) (*fetch.Fetch,
 }
 
 // Delete a dataModel
-func (dr *APIRequest) Delete(endpoint string) (*fetch.Fetch, error) {
-	f, err := fetch.NewFetch(os.Getenv("API_HOST")+endpoint, "DELETE", dr.getAuthHeaders(), nil)
+func (dr *Request) Delete() (*fetch.Fetch, error) {
+	f, err := fetch.NewFetch(dr.url, "DELETE", dr.getAuthHeaders(), nil)
 	if err != nil {
 		return f, err
 	}
@@ -73,18 +71,23 @@ func (dr *APIRequest) Delete(endpoint string) (*fetch.Fetch, error) {
 	return f, err
 }
 
-// NewAPIRequest initializes and returns a new APIRequest struct
-func NewAPIRequest(authToken string) *APIRequest {
-	return &APIRequest{AuthToken: authToken}
+// NewRequest initializes and returns a new Request struct
+func NewRequest(url string, token string) *Request {
+	return &Request{url: url, authToken: token}
 }
 
-// APIService is a Generic type struct for organizing dataModel methods
-type APIService[T dataModel] struct {
-	endpoint string
+/*
+================ API Request ==================
+*/
+
+// APIRequest is a Generic type struct for organizing dataModel methods
+type APIRequest[T models.DTOModel] struct {
+	url  string
+	auth *models.Auth
 }
 
-// loadModels loads returned json data into a dataModel
-func (api *APIService[T]) loadModel(resp *http.Response) (T, error) {
+// loadModel loads returned json data into a dataModel
+func (api *APIRequest[T]) loadModel(resp *http.Response) (T, error) {
 	var m T
 	body, err := io.ReadAll(io.LimitReader(resp.Body, 1048576))
 	if err != nil {
@@ -98,43 +101,13 @@ func (api *APIService[T]) loadModel(resp *http.Response) (T, error) {
 		return m, err
 	}
 	return m, nil
-}
-
-// loadModels loads returned json data into a slice of dataModel
-func (api *APIService[T]) loadModels(resp *http.Response) ([]T, error) {
-	var m []T
-	body, err := io.ReadAll(io.LimitReader(resp.Body, 1048576))
-	fmt.Println("body:", body)
-	if err != nil {
-		return m, err
-	}
-	if err = resp.Body.Close(); err != nil {
-		return m, err
-	}
-	err = json.Unmarshal(body, &m)
-	if err != nil {
-		return m, err
-	}
-	return m, nil
-}
-
-// GetMany returns a slice of dataModels
-func (api *APIService[T]) GetMany(auth *models.Auth) ([]T, error) {
-	var m []T
-	newReq := NewAPIRequest(auth.AuthToken)
-	f, err := newReq.Get(api.endpoint)
-	if err != nil {
-		return m, err
-	}
-	f.Resolve()
-	return api.loadModels(f.Res)
 }
 
 // Get a dataModel
-func (api *APIService[T]) Get(auth *models.Auth, filter T) (T, error) {
+func (api *APIRequest[T]) Get() (T, error) {
 	var m T
-	newReq := NewAPIRequest(auth.AuthToken)
-	f, err := newReq.Get(api.endpoint + "/" + filter.GetID())
+	newReq := NewRequest(api.url, api.auth.AuthToken)
+	f, err := newReq.Get()
 	if err != nil {
 		return m, err
 	}
@@ -143,10 +116,10 @@ func (api *APIService[T]) Get(auth *models.Auth, filter T) (T, error) {
 }
 
 // Create a dataModel
-func (api *APIService[T]) Create(auth *models.Auth, data T) (T, error) {
+func (api *APIRequest[T]) Create(data T) (T, error) {
 	var m T
-	newReq := NewAPIRequest(auth.AuthToken)
-	f, err := newReq.Post(api.endpoint, data.GetJSON())
+	newReq := NewRequest(api.url, api.auth.AuthToken)
+	f, err := newReq.Post(data.GetJSON())
 	if err != nil {
 		return m, err
 	}
@@ -155,10 +128,10 @@ func (api *APIService[T]) Create(auth *models.Auth, data T) (T, error) {
 }
 
 // Update a dataModel
-func (api *APIService[T]) Update(auth *models.Auth, data T) (T, error) {
+func (api *APIRequest[T]) Update(data T) (T, error) {
 	var m T
-	newReq := NewAPIRequest(auth.AuthToken)
-	f, err := newReq.Patch(api.endpoint+"/"+data.GetID(), data.GetJSON())
+	newReq := NewRequest(api.url, api.auth.AuthToken)
+	f, err := newReq.Patch(data.GetJSON())
 	if err != nil {
 		return m, err
 	}
@@ -167,10 +140,10 @@ func (api *APIService[T]) Update(auth *models.Auth, data T) (T, error) {
 }
 
 // Delete a dataModel
-func (api *APIService[T]) Delete(auth *models.Auth, filter T) (T, error) {
+func (api *APIRequest[T]) Delete() (T, error) {
 	var m T
-	newReq := NewAPIRequest(auth.AuthToken)
-	f, err := newReq.Delete(api.endpoint + "/" + filter.GetID())
+	newReq := NewRequest(api.url, api.auth.AuthToken)
+	f, err := newReq.Delete()
 	if err != nil {
 		return m, err
 	}
@@ -178,23 +151,206 @@ func (api *APIService[T]) Delete(auth *models.Auth, filter T) (T, error) {
 	return api.loadModel(f.Res)
 }
 
-// NewUserService initializes and returns a new APIHandler
-func NewUserService() *APIService[*models.User] {
-	return &APIService[*models.User]{
-		endpoint: os.Getenv("API_HOST") + "/users",
+/*
+================ User Service ==================
+*/
+
+// UserService is a Generic type struct for organizing dataModel methods
+type UserService struct {
+	host     string
+	endpoint string
+}
+
+// GetMany returns a slice of dataModels
+func (s *UserService) GetMany(auth *models.Auth) ([]*models.User, error) {
+	req := &APIRequest[*models.Users]{url: s.host + s.endpoint, auth: auth}
+	f, err := req.Get()
+	if err != nil {
+		return []*models.User{}, err
 	}
+	return f.Items, nil
+}
+
+// Get a dataModel
+func (s *UserService) Get(auth *models.Auth, filter *models.User) (*models.User, error) {
+	req := &APIRequest[*models.User]{url: s.host + s.endpoint + "/" + filter.GetID(), auth: auth}
+	f, err := req.Get()
+	if err != nil {
+		return &models.User{}, err
+	}
+	return f, nil
+}
+
+// Create a dataModel
+func (s *UserService) Create(auth *models.Auth, data *models.User) (*models.User, error) {
+	req := &APIRequest[*models.User]{url: s.host + s.endpoint, auth: auth}
+	f, err := req.Create(data)
+	if err != nil {
+		return &models.User{}, err
+	}
+	return f, nil
+}
+
+// Update a dataModel
+func (s *UserService) Update(auth *models.Auth, data *models.User) (*models.User, error) {
+	req := &APIRequest[*models.User]{url: s.host + s.endpoint + "/" + data.GetID(), auth: auth}
+	f, err := req.Update(data)
+	if err != nil {
+		return &models.User{}, err
+	}
+	return f, nil
+}
+
+// Delete a dataModel
+func (s *UserService) Delete(auth *models.Auth, filter *models.User) (*models.User, error) {
+	req := &APIRequest[*models.User]{url: s.host + s.endpoint + "/" + filter.GetID(), auth: auth}
+	f, err := req.Delete()
+	if err != nil {
+		return &models.User{}, err
+	}
+	return f, nil
+}
+
+// NewUserService initializes and returns a new APIHandler
+func NewUserService() *UserService {
+	return &UserService{
+		host:     os.Getenv("API_HOST"),
+		endpoint: "/users",
+	}
+}
+
+/*
+================ Group Service ==================
+*/
+
+// GroupService is a Generic type struct for organizing dataModel methods
+type GroupService struct {
+	host     string
+	endpoint string
+}
+
+// GetMany returns a slice of dataModels
+func (s *GroupService) GetMany(auth *models.Auth) ([]*models.Group, error) {
+	req := &APIRequest[*models.Groups]{url: s.host + s.endpoint, auth: auth}
+	f, err := req.Get()
+	if err != nil {
+		return []*models.Group{}, err
+	}
+	return f.Items, nil
+}
+
+// Get a dataModel
+func (s *GroupService) Get(auth *models.Auth, filter *models.Group) (*models.Group, error) {
+	req := &APIRequest[*models.Group]{url: s.host + s.endpoint + "/" + filter.GetID(), auth: auth}
+	f, err := req.Get()
+	if err != nil {
+		return &models.Group{}, err
+	}
+	return f, nil
+}
+
+// Create a dataModel
+func (s *GroupService) Create(auth *models.Auth, data *models.Group) (*models.Group, error) {
+	req := &APIRequest[*models.Group]{url: s.host + s.endpoint, auth: auth}
+	f, err := req.Create(data)
+	if err != nil {
+		return &models.Group{}, err
+	}
+	return f, nil
+}
+
+// Update a dataModel
+func (s *GroupService) Update(auth *models.Auth, data *models.Group) (*models.Group, error) {
+	req := &APIRequest[*models.Group]{url: s.host + s.endpoint + "/" + data.GetID(), auth: auth}
+	f, err := req.Update(data)
+	if err != nil {
+		return &models.Group{}, err
+	}
+	return f, nil
+}
+
+// Delete a dataModel
+func (s *GroupService) Delete(auth *models.Auth, filter *models.Group) (*models.Group, error) {
+	req := &APIRequest[*models.Group]{url: s.host + s.endpoint + "/" + filter.GetID(), auth: auth}
+	f, err := req.Delete()
+	if err != nil {
+		return &models.Group{}, err
+	}
+	return f, nil
 }
 
 // NewGroupService initializes and returns a new APIHandler
-func NewGroupService() *APIService[*models.Group] {
-	return &APIService[*models.Group]{
-		endpoint: os.Getenv("API_HOST") + "/groups",
+func NewGroupService() *GroupService {
+	return &GroupService{
+		host:     os.Getenv("API_HOST"),
+		endpoint: "/groups",
 	}
 }
 
+/*
+================ Group Service ==================
+*/
+
+// TaskService is a Generic type struct for organizing dataModel methods
+type TaskService struct {
+	host     string
+	endpoint string
+}
+
+// GetMany returns a slice of dataModels
+func (s *TaskService) GetMany(auth *models.Auth) ([]*models.Task, error) {
+	req := &APIRequest[*models.Tasks]{url: s.host + s.endpoint, auth: auth}
+	f, err := req.Get()
+	if err != nil {
+		return []*models.Task{}, err
+	}
+	return f.Items, nil
+}
+
+// Get a dataModel
+func (s *TaskService) Get(auth *models.Auth, filter *models.Task) (*models.Task, error) {
+	req := &APIRequest[*models.Task]{url: s.host + s.endpoint + "/" + filter.GetID(), auth: auth}
+	f, err := req.Get()
+	if err != nil {
+		return &models.Task{}, err
+	}
+	return f, nil
+}
+
+// Create a dataModel
+func (s *TaskService) Create(auth *models.Auth, data *models.Task) (*models.Task, error) {
+	req := &APIRequest[*models.Task]{url: s.host + s.endpoint, auth: auth}
+	f, err := req.Create(data)
+	if err != nil {
+		return &models.Task{}, err
+	}
+	return f, nil
+}
+
+// Update a dataModel
+func (s *TaskService) Update(auth *models.Auth, data *models.Task) (*models.Task, error) {
+	req := &APIRequest[*models.Task]{url: s.host + s.endpoint + "/" + data.GetID(), auth: auth}
+	f, err := req.Update(data)
+	if err != nil {
+		return &models.Task{}, err
+	}
+	return f, nil
+}
+
+// Delete a dataModel
+func (s *TaskService) Delete(auth *models.Auth, filter *models.Task) (*models.Task, error) {
+	req := &APIRequest[*models.Task]{url: s.host + s.endpoint + "/" + filter.GetID(), auth: auth}
+	f, err := req.Delete()
+	if err != nil {
+		return &models.Task{}, err
+	}
+	return f, nil
+}
+
 // NewTaskService initializes and returns a new APIHandler
-func NewTaskService() *APIService[*models.Task] {
-	return &APIService[*models.Task]{
-		endpoint: os.Getenv("API_HOST") + "/tasks",
+func NewTaskService() *TaskService {
+	return &TaskService{
+		host:     os.Getenv("API_HOST"),
+		endpoint: "/tasks",
 	}
 }

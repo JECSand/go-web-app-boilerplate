@@ -10,7 +10,14 @@
 
 
 </div>
-{{ template "templates/components/forms/login.html" . }}
+{{if .Auth.Authenticated}}
+<h1>Welcome, {{ .Auth.Username }}</h1>
+{{else}}
+<div class="logincontainer">
+    {{ template "templates/molecules/form.html" . }}
+</div>
+{{end}}
+
 
 <div class="text2">
     {{ if not .Auth.Authenticated }}

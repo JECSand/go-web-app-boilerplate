@@ -1,0 +1,35 @@
+{{ if ne .Label "" }}
+    <label for={{ .Id }}>{{ .Label }}</label><br>
+{{ end }}
+
+{{ if eq .Category "input" }}
+
+    {{ if ne .Value "" }}
+    <input type={{ .Type }} id={{ .Id }} name={{ .Id }} value={{ .Value }}><br>
+    {{ else }}
+    <input type={{ .Type }} id={{ .Id }} name={{ .Id }}><br>
+    {{ end }}
+
+{{ else if eq .Category "select" }}
+
+    {{ if .Multi }}
+    <select id={{ .Id }} name={ .Id }} size="4" multiple>
+    {{ else }}
+    <select id={{ .Id }} name={ .Id }}>
+    {{ end }}
+        {{range .Options}}
+        {{ if .Selected }}
+            <option value={{ .Id }} selected>{{ .Label }}</option>
+        {{ else }}
+            <option value={{ .Id }}>{{ .Label }}</option>
+        {{ end }}
+        {{ end }}
+    </select>
+
+{{ else if eq .Category "text" }}
+
+<textarea name={{ .Id }} rows={{ .Rows }} cols={{ .Cols }}>
+{{ .Value }}
+</textarea>
+
+{{ end }}

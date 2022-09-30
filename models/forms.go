@@ -2,91 +2,6 @@ package models
 
 import "net/http"
 
-// Form structures a generic form
-type Form struct {
-	Name   string  `json:"name,omitempty"`
-	Type   string  `json:"type,omitempty"`
-	Class  string  `json:"class,omitempty"`
-	Id     string  `json:"id,omitempty"`
-	Fields []Field `json:"fields,omitempty"`
-	Button Button  `json:"button,omitempty"`
-	Method string  `json:"method,omitempty"`
-	Action string  `json:"action,omitempty"`
-}
-
-// NewForm
-// TODO FINISH THIS NEW FORM FUNCTION
-func (f *Form) NewForm(auth Auth, fields []Field, button Button) Form {
-	return Form{Fields: fields, Button: button}
-}
-
-// InitializeForm for a new form
-func InitializeForm(formMeta []string, fieldStrs [][]string, button Button) Form {
-	newForm := Form{}
-	var fields []Field
-	// Field Vector String Array, this is order
-	// Name, Class, Id, Type, Label, DefaultVal
-	fields = LoadFields(fieldStrs)
-	newForm.Name = formMeta[0]
-	newForm.Type = formMeta[1]
-	newForm.Class = formMeta[2]
-	newForm.Id = formMeta[3]
-	newForm.Method = formMeta[4]
-	newForm.Action = formMeta[5]
-	newForm.Fields = fields
-	newForm.Button = button
-	return newForm
-}
-
-// InitializeSettingsForm for a settings form
-func InitializeSettingsForm(user *User) Form {
-	// Field Vector String Array, this is order
-	// NAME, TYPE, CLASS, ID, METHOD, ACTION
-	formMeta := []string{"Update", "User", "form1", "form2", "PATCH", ""}
-	// Name, Class, Id, Type, Label, DefaultVal
-	initStr := []string{"UserName", "update", "username", "text", "Username", user.Username}
-	fNameStr := []string{"first_name", "update", "name", "text", "First Name", user.FirstName}
-	lNameStr := []string{"last_name", "update", "name", "text", "Last Name", user.LastName}
-	EmailStr := []string{"email", "update", "email", "text", "Email", user.Email}
-	fieldStrs := [][]string{initStr, fNameStr, lNameStr, EmailStr}
-	form := InitializeForm(formMeta, fieldStrs, Button{Name: "update", Class: "form1", Id: "form2", Type: "submit", Label: "Submit"})
-	return form
-}
-
-// RegistrationForm structures a register form
-type RegistrationForm struct {
-	FirstName string `json:"firstname,omitempty"`
-	LastName  string `json:"lastname,omitempty"`
-	Email     string `json:"email,omitempty"`
-	UserName  string `json:"username,omitempty"`
-	Password  string `json:"password,omitempty"`
-	CPassword string `json:"cpassword,omitempty"`
-}
-
-/*
-// Register executes the auth register andler
-func (rm *RegistrationForm) Register() *Auth {
-	auth := Auth{}
-	auth.Register(rm.FirstName, rm.LastName, rm.Email, rm.UserName, rm.Password)
-	return auth
-}
-*/
-
-// LoginForm structures a login form
-type LoginForm struct {
-	Email    string `json:"email,omitempty"`
-	Password string `json:"password,omitempty"`
-}
-
-/*
-// Login executes a LoginForm handler
-func (rm *LoginForm) Login() *Auth {
-	auth := Auth{}
-	auth.Authenticate(rm.UserName, rm.Password)
-	return auth
-}
-*/
-
 // CreateUserForm ...
 type CreateUserForm struct {
 	FirstName string `json:"firstname,omitempty"`
@@ -137,6 +52,7 @@ type UpdateUserForm struct {
 	Form      Form   `json:"form,omitempty"`
 }
 
+/*
 // Initialize ...
 func (uuf *UpdateUserForm) Initialize(uuid string) {
 	// Field Vector String Array, this is order
@@ -149,8 +65,9 @@ func (uuf *UpdateUserForm) Initialize(uuid string) {
 	fieldStrs := [][]string{initStr, fNameStr, lNameStr}
 	form := InitializeForm(formMeta, fieldStrs, Button{Name: "update", Class: "form1", Id: "form2", Type: "submit", Label: "Submit"})
 	uuf.Form = form
-
 }
+
+*/
 
 // LoadRequest ...
 func (uuf *UpdateUserForm) LoadRequest(r *http.Request) {

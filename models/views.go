@@ -1,14 +1,3 @@
-/*
-Author: Connor Sanders
-Copyright: Synercloud, LLC 2020
-Version: 0.0.1
-Released: 12/10/2020
-
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-		Golang Frontend Boilerplate V0.0.1
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-*/
-
 package models
 
 import "fmt"
@@ -20,6 +9,7 @@ type IndexModel struct {
 	SubRoute string
 	Route    string
 	Auth     *Auth
+	Form     *Form
 }
 
 // RegisterModel of dynamic data used for register view
@@ -29,6 +19,7 @@ type RegisterModel struct {
 	SubRoute string
 	Route    string
 	Auth     *Auth
+	Form     *Form
 }
 
 // LoginModel of dynamic data used for login view
@@ -39,6 +30,7 @@ type LoginModel struct {
 	SubRoute string
 	Route    string
 	Auth     *Auth
+	Form     *Form
 }
 
 // BuildRoute ...
@@ -125,8 +117,8 @@ type AccountModel struct {
 	SubRoute string
 	Route    string
 	Auth     *Auth
-	User     User
-	Form     Form
+	User     *User
+	Form     *Form
 }
 
 // BuildRoute ...
@@ -137,21 +129,10 @@ func (acm *AccountModel) BuildRoute() {
 	fmt.Println("routetest:", acm.Route)
 }
 
-/*
-// LoadUser for info display - TODO PASS USER IN FROM CONTROLLER
-func (acm *AccountModel) LoadUser() {
-	user := User{Id: acm.Auth.UserId}
-	user.Get(acm.Auth)
-	acm.User = user
-	if acm.SubRoute == "settings" {
-		form := InitializeSettingsForm(acm.User)
-		acm.Form = form
-	}
-}
-*/
-
 // Initialize a new Account Page Data Model
 func (acm *AccountModel) Initialize() {
 	acm.BuildRoute()
-	//acm.LoadUser()
+	if acm.SubRoute == "settings" {
+		acm.Form = InitializeSettingsForm(acm.User)
+	}
 }

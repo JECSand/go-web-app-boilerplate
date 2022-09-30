@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"github.com/JECSand/go-web-app-boilerplate/models"
 	"github.com/JECSand/go-web-app-boilerplate/services"
 	"github.com/julienschmidt/httprouter"
@@ -18,12 +17,13 @@ type AuthController struct {
 func (p *AuthController) RegisterPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// TODO - Get Auth from Session Manager Here
 	auth, _ := p.manager.authCheck(r)
-	model := models.IndexModel{Name: "home", Title: "Home", Auth: auth}
+	rForm := models.InitializeRegistrationForm()
+	model := models.IndexModel{Name: "home", Title: "Home", Auth: auth, Form: rForm}
 	if auth.Authenticated {
 		p.manager.Viewer.RenderTemplate(w, "templates/index.html", &model)
 		return
 	}
-	rModel := models.IndexModel{Name: "register", Title: "Register", Auth: auth}
+	rModel := models.IndexModel{Name: "register", Title: "Register", Auth: auth, Form: rForm}
 	p.manager.Viewer.RenderTemplate(w, "templates/register.html", &rModel)
 }
 
@@ -31,15 +31,13 @@ func (p *AuthController) RegisterPage(w http.ResponseWriter, r *http.Request, ps
 func (p *AuthController) LoginPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// TODO - Get Auth from Session Manager Here
 	auth, _ := p.manager.authCheck(r)
-	fmt.Println("\n\nCHECK AUTH: ", auth)
 	model := models.IndexModel{Name: "home", Title: "Home", Auth: auth}
-	lModel := models.LoginModel{Name: "login", Title: "Login", Auth: auth}
-	//lModel.BuildRoute()
+	lForm := models.InitializeSignInForm()
+	lModel := models.LoginModel{Name: "login", Title: "Login", Auth: auth, Form: lForm}
 	if auth.Authenticated {
 		p.manager.Viewer.RenderTemplate(w, "templates/index.html", &model)
 		return
 	}
-	fmt.Println("\n\nCHECK AUTH 2: ", auth)
 	p.manager.Viewer.RenderTemplate(w, "templates/login.html", &lModel)
 }
 
@@ -56,9 +54,7 @@ func (p *AuthController) LoginHandler(w http.ResponseWriter, r *http.Request, ps
 		Email:    r.FormValue("email"),
 		Password: r.FormValue("password"),
 	}
-	fmt.Println("\n\nCHECK AUTH REQUEST USER: ", user)
 	auth, err := p.authService.Authenticate(user)
-	fmt.Println("\n\nCHECK AUTH REPLY: ", auth, err)
 	if err != nil || auth.Status != http.StatusOK {
 		p.manager.Viewer.RenderTemplate(w, "templates/login.html", &model)
 		return
