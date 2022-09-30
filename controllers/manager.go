@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"github.com/JECSand/go-web-app-boilerplate/models"
 	"github.com/JECSand/go-web-app-boilerplate/services"
 	"github.com/JECSand/go-web-app-boilerplate/views"
@@ -49,18 +48,14 @@ func (p *ControllerManager) authCheck(r *http.Request) (*models.Auth, *http.Cook
 
 // Protected ensures that a user is logged in to view page
 func (p *ControllerManager) Protected(next http.HandlerFunc) http.HandlerFunc {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
 		auth, _ := p.authCheck(r)
-		model := models.LoginModel{Name: "login", Title: "Login", Auth: auth}
-		model.BuildRoute()
-		fmt.Println("\n\nCHECK AUTH 3: ", auth)
 		if !auth.Authenticated {
-			p.Viewer.RenderTemplate(w, "templates/login.html", &model)
-			return
+			http.Redirect(w, r, "/login", 303)
 		} else {
 			next.ServeHTTP(w, r)
 		}
-	})
+	}
 }
 
 // NewBasicController initialized a BasicViews struct for rendering Basic Views
@@ -79,7 +74,7 @@ func (p *ControllerManager) NewAuthController(as *services.AuthService) *AuthCon
 }
 
 // NewAccountController initialized a BasicViews struct for rendering Account Views
-func (p *ControllerManager) NewAccountController(uService *services.APIService[*models.User]) *AccountController {
+func (p *ControllerManager) NewAccountController(uService *services.UserService) *AccountController {
 	return &AccountController{
 		manager:     p,
 		userService: uService,
@@ -87,7 +82,7 @@ func (p *ControllerManager) NewAccountController(uService *services.APIService[*
 }
 
 // NewAdminController initialized a BasicViews struct for rendering Admin Views
-func (p *ControllerManager) NewAdminController(uService *services.APIService[*models.User], gService *services.APIService[*models.Group]) *AdminController {
+func (p *ControllerManager) NewAdminController(uService *services.UserService, gService *services.GroupService) *AdminController {
 	return &AdminController{
 		manager:      p,
 		userService:  uService,

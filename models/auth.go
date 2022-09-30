@@ -2,8 +2,10 @@ package models
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -17,6 +19,7 @@ type Auth struct {
 	AuthToken     string
 	APIKey        string
 	Authenticated bool
+	RootAdmin     bool
 	LastLogin     string
 	LoginIP       string
 	Status        int
@@ -25,30 +28,38 @@ type Auth struct {
 // GetAuthString converts the structures attributes into a string (todo - look into using json marshall/unmarshall)
 func (a *Auth) GetAuthString() string {
 	authStr := "false"
+	rootStr := "false"
 	if a.Authenticated {
 		authStr = "true"
 	}
-	var reString string
-	reString = a.Username + "||" + a.UserId + "||" + a.GroupId + "||" + a.Role + "||" + authStr + "||" + a.AuthToken + "||" + a.LastLogin + "||" + a.LoginIP
-	return reString
+	if a.RootAdmin {
+		rootStr = "true"
+	}
+	return a.Username + "||" + a.UserId + "||" + a.GroupId + "||" + a.Role + "||" + authStr + "||" + rootStr + "||" + a.AuthToken + "||" + a.LastLogin + "||" + a.LoginIP
 }
 
 // LoadAuthString loads a stringed Auth struct
 func (a *Auth) LoadAuthString(authString string) {
 	authBool := false
+	rootBool := false
 	sString := strings.Split(authString, "||")
 	authStr := sString[4]
+	rootStr := sString[5]
 	if authStr == "true" {
 		authBool = true
+	}
+	if rootStr == "true" {
+		rootBool = true
 	}
 	a.Username = sString[0]
 	a.UserId = sString[1]
 	a.GroupId = sString[2]
 	a.Role = sString[3]
 	a.Authenticated = authBool
-	a.AuthToken = sString[5]
-	a.LastLogin = sString[6]
-	a.LoginIP = sString[7]
+	a.RootAdmin = rootBool
+	a.AuthToken = sString[6]
+	a.LastLogin = sString[7]
+	a.LoginIP = sString[8]
 }
 
 // Delete all data in Auth struct
@@ -58,6 +69,7 @@ func (a *Auth) Delete() {
 	a.GroupId = ""
 	a.Role = ""
 	a.Authenticated = false
+	a.RootAdmin = false
 	a.AuthToken = ""
 	a.LastLogin = ""
 	a.LoginIP = ""
@@ -80,7 +92,7 @@ func (a *Auth) Load(resp *http.Response) error {
 		return err
 	}
 	a.Status = resp.StatusCode
-	if a.Status == http.StatusOK {
+	if a.Status == http.StatusOK || a.Status == http.StatusCreated {
 		a.Username = user.Username
 		a.UserId = user.Id
 		a.GroupId = user.GroupId
@@ -88,7 +100,10 @@ func (a *Auth) Load(resp *http.Response) error {
 		a.AuthToken = authToken[0]
 		a.LastLogin = currentTime.String()
 		a.Authenticated = true
+		a.RootAdmin = user.RootAdmin
 		a.LoginIP = "Unknown"
+		return nil
 	}
-	return nil
+	codeStr := strconv.Itoa(a.Status)
+	return errors.New("auth request status returned with error status of " + codeStr)
 }

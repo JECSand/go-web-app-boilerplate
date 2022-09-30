@@ -22,6 +22,7 @@ func (p *BasicController) IndexPage(w http.ResponseWriter, r *http.Request, ps h
 	auth, cookie := p.manager.authCheck(r)
 	model := models.IndexModel{Name: "register", Title: "Register", Auth: auth}
 	if !auth.Authenticated {
+		model.Form = models.InitializeRegistrationForm()
 		p.manager.Viewer.RenderTemplate(w, "templates/index.html", &model)
 		return
 	}

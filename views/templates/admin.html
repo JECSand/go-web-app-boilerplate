@@ -1,20 +1,18 @@
 {{ template "templates/components/header.html" . }}
 <div>
     {{ if .Auth.Authenticated }}
-        {{ if eq .Auth.Role "master_admin" "admin" }}
+        {{ if eq .Auth.Role "admin" }}
             <div class="headercontainer">
                 <h2 class="w3-wide">Admin</h2>
             </div>
         {{ if eq .Route "admin" }}
             <div class="text2">
                 <a href="/admin/usermenu">Manage Users</a><br>
-                {{ if eq .Auth.Role "master_admin" }}
+                {{ if .Auth.RootAdmin }}
                     <a href="/admin/groupmenu">Manage Groups</a><br>
                 {{ else }}
                     <a href="/admin/groupmenu">Manage Group</a><br>
                 {{ end }}
-
-
             </div>
         {{ end }}
         {{ if eq .SubRoute "settings" }}

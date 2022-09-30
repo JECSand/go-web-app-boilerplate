@@ -17,7 +17,7 @@
         {{if .Auth.Authenticated}}
         <li class="right"><a href="/logout">Logout</a></li>
         <li class="right"><a href="/account">My Account</a></li>
-            {{if eq .Auth.Role "master_admin" }}
+            {{if eq .Auth.Role "admin" }}
                 <li class="right"><a href="/admin">Admin</a></li>
             {{end}}
 

@@ -1,21 +1,22 @@
 package models
 
-// Field
+// Field ...
 type Field struct {
-	Name       string
-	Class      string
-	Id         string
-	Type       string
-	Label      string
-	DefaultVal string
+	Name     string
+	Class    string
+	Id       string
+	Type     string
+	Label    string
+	Value    string
+	Category string
 }
 
-// LoadFields
+// LoadFields ...
 func LoadFields(fieldStrs [][]string) []Field {
 	var fields []Field
 	// Name, Class, Id, Type, Label, DefaultVal
 	for _, f := range fieldStrs {
-		newField := Field{f[0], f[1], f[2], f[3], f[4], f[5]}
+		newField := Field{f[0], f[1], f[2], f[3], f[4], f[5], f[5]}
 		fields = append(fields, newField)
 	}
 	return fields
@@ -33,16 +34,6 @@ func (f *Form) NewForm(auth Auth, fields []Field, button Button) Form {
 	return Form{Fields: fields, Button: button}
 }
 */
-
-// Button
-type Button struct {
-	Name  string
-	Class string
-	Id    string
-	Type  string
-	Label string
-}
-
 /*
 func (bm *Button) Update() Auth {
 	auth := Auth{}

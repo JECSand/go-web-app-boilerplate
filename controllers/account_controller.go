@@ -11,7 +11,7 @@ import (
 // AccountController structures the set of app page views
 type AccountController struct {
 	manager     *ControllerManager
-	userService *services.APIService[*models.User]
+	userService *services.UserService
 }
 
 // AccountPage renders the Account Page
@@ -20,6 +20,13 @@ func (p *AccountController) AccountPage(w http.ResponseWriter, r *http.Request) 
 	params := httprouter.ParamsFromContext(r.Context())
 	fmt.Println("VarsTEST:", params.ByName("child"))
 	model := models.AccountModel{Title: "Account", SubRoute: params.ByName("child"), Name: "account", Auth: auth}
+	if model.SubRoute == "settings" {
+		user, err := p.userService.Get(auth, &models.User{Id: auth.UserId})
+		if err != nil {
+			panic(err)
+		}
+		model.User = user
+	}
 	model.Initialize()
 	if !auth.Authenticated {
 		lModel := models.LoginModel{Title: "Login", Name: "login", Auth: auth}
@@ -29,7 +36,6 @@ func (p *AccountController) AccountPage(w http.ResponseWriter, r *http.Request) 
 	if model.SubRoute == "settings" {
 		model.Title = "Account Settings"
 		model.Name = "Account Settings"
-
 	}
 	p.manager.Viewer.RenderTemplate(w, "templates/account.html", &model)
 }
@@ -55,7 +61,6 @@ func (p *AccountController) AccountSettingsHandler(w http.ResponseWriter, r *htt
 		p.manager.Viewer.RenderTemplate(w, "templates/index.html", &model)
 		return
 	}
-	form := models.InitializeSettingsForm(user)
-	model.Form = form
+	model.Form = models.InitializeSettingsForm(user)
 	p.manager.Viewer.RenderTemplate(w, "templates/account.html", &model)
 }

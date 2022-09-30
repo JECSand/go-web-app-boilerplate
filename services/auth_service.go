@@ -23,20 +23,18 @@ func (a *AuthService) AuthHeaders(auth *models.Auth) [][]string {
 
 // authenticate a user session
 func (a *AuthService) authenticate(body []byte, authType string) (*fetch.Fetch, error) {
-	endpoint := a.host + "/auth"
-	newReq := NewAPIRequest("")
+	url := a.host + "/auth"
 	if authType == "registration" {
-		endpoint = "/auth/register"
+		url = a.host + "/auth/register"
 	}
-	fmt.Println("\nCHECK ENDPOINT: ", endpoint)
-	return newReq.Post(endpoint, body)
+	newReq := NewRequest(url, "")
+	return newReq.Post(body)
 }
 
 // invalidate a user session
 func (a *AuthService) invalidate(authToken string) (*fetch.Fetch, error) {
-	endpoint := a.host + "/auth"
-	newReq := NewAPIRequest(authToken)
-	return newReq.Delete(endpoint)
+	newReq := NewRequest(a.host+"/auth", authToken)
+	return newReq.Delete()
 }
 
 // Register a new User
