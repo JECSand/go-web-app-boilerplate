@@ -80,6 +80,7 @@ type AdminModel struct {
 	Route      string
 	Id         string
 	Method     string
+	Form       *Form
 	UserTable  UserTable
 	GroupTable GroupTable
 	Users      []*User

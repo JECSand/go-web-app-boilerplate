@@ -2,7 +2,14 @@
     <label for={{ .Id }}>{{ .Label }}</label><br>
 {{ end }}
 
-{{ if eq .Category "input" }}
+{{ if eq .Category "submit" }}
+    {{ if ne .Class "" }}
+    <input type={{ .Type }} class={{ .Class }} value={{ .Value }}><br>
+    {{ else }}
+    <input type={{ .Type }} value={{ .Value }}><br>
+    {{ end }}
+
+{{ else if eq .Category "input" }}
 
     {{ if ne .Value "" }}
     <input type={{ .Type }} id={{ .Id }} name={{ .Id }} value={{ .Value }}><br>
