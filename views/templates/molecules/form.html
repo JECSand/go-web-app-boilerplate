@@ -1,6 +1,0 @@
- <form method={{ .Form.Method }} id={{ .Form.Id }}>
-        {{range .Form.Fields}}
-            {{ template "templates/atoms/fields.html" . }}
-        {{end}}
- </form>
- {{ template "templates/atoms/buttons.html" .Form }}

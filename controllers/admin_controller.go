@@ -27,6 +27,7 @@ func (p *AdminController) AdminPage(w http.ResponseWriter, r *http.Request) {
 	//the subroute gives an index error and crashes the app if sURL[1]. If it is zero however it will work but it will never
 	//work for create since that needs to be vars 1 for the if to catch it.
 	fmt.Println("subRoute1:", subRoute)
+	createForm := models.InitializePopupCreatUserForm()
 	model := models.AdminModel{
 		Name:     "admin",
 		Title:    "Admin Settings",
@@ -35,6 +36,7 @@ func (p *AdminController) AdminPage(w http.ResponseWriter, r *http.Request) {
 		Auth:     auth,
 		Id:       updateId,
 		Method:   "GET",
+		Form:     createForm,
 	}
 	model.Initialize()
 	// 3: TODO Render EDIT FORM based on subRoute (either groups or users in this scenario)

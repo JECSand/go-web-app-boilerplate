@@ -57,6 +57,23 @@ func NewInput(name string, label string, class string, id string, iType string, 
 	}
 }
 
+// NewButtonInput ...
+func NewButtonInput(name string, label string, class string, id string, iType string, val string) *InputField {
+	return &InputField{
+		Name:     name,
+		Label:    label,
+		Class:    class,
+		Id:       id,
+		Type:     iType,
+		Value:    val,
+		Multi:    false,
+		Options:  nil,
+		Rows:     "",
+		Cols:     "",
+		Category: "submit",
+	}
+}
+
 // NewSelectInput ...
 func NewSelectInput(name string, label string, class string, id string, iType string, ops []*SelectOptions, m bool) *InputField {
 	return &InputField{
