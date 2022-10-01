@@ -1,28 +1,26 @@
 {{ template "templates/components/header.html" . }}
-<div class="headercontainer">
-
-    <h2>{{ .Route }}</h2>
-    {{if .Auth.Authenticated}}
-        <h2 class="w3-wide">Welcome</h2>
-    {{else}}
-        <h2 class="w3-wide">Login</h2>
-    {{end}}
-
-
+<div class="row loginbackground">
+    <div class="column middle">
+        <div class="headercontainer">
+            <h2>{{ .Route }}</h2>
+            {{if .Auth.Authenticated}}
+            <h2 class="w3-wide text">Welcome</h2>
+            {{else}}
+            <h2 class="w3-wide text">Login</h2>
+            {{end}}
+        </div>
+        {{if .Auth.Authenticated}}
+        <h1>Welcome, {{ .Auth.Username }}</h1>
+        {{else}}
+        <div class="form-container">
+            {{ template "templates/components/organisms/forms.html" . }}
+        </div>
+        {{end}}
+        <div class="text2">
+            {{ if not .Auth.Authenticated }}
+            <a href="/register">or create a new account</a><br>
+            {{ end }}
+        </div>
+    </div>
 </div>
-{{if .Auth.Authenticated}}
-<h1>Welcome, {{ .Auth.Username }}</h1>
-{{else}}
-<div class="logincontainer">
-    {{ template "templates/components/organisms/forms.html" . }}
-</div>
-{{end}}
-
-
-<div class="text2">
-    {{ if not .Auth.Authenticated }}
-        <a href="/register">or create a new account</a><br>
-    {{ end }}
-</div>
-
 {{ template "templates/components/footer.html" . }}

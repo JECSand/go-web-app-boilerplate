@@ -11,7 +11,7 @@ func InitializeSignInForm() *Form {
 	emailField := NewInput("Email", "Email", "update", "email", "text", "")
 	pwField := NewInput("Password", "Password", "update", "password", "password", "")
 	fields := []*InputField{emailField, pwField}
-	button := &Button{Name: "update", Class: "form1", Id: "form1", Type: "submit", Label: "Submit", Category: "form"}
+	button := &Button{Name: "update", Class: "btn", Id: "form1", Type: "submit", Label: "Submit", Category: "form"}
 	buttons := []*Button{button}
 	return NewForm(formMeta, fields, buttons, nil)
 }
@@ -29,7 +29,7 @@ func InitializeRegistrationForm() *Form {
 	lnField := NewInput("Last Name", "Last Name", "update", "last_name", "text", "")
 	emailField := NewInput("Email", "Email", "update", "email", "text", "")
 	fields := []*InputField{unField, pwField, cpwField, fnField, lnField, emailField}
-	button := &Button{Name: "update", Class: "form1", Id: "form1", Type: "submit", Label: "Submit", Category: "form"}
+	button := &Button{Name: "update", Class: "btn", Id: "form1", Type: "submit", Label: "Submit", Category: "form"}
 	buttons := []*Button{button}
 	return NewForm(formMeta, fields, buttons, nil)
 }

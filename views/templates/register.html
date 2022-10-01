@@ -3,9 +3,9 @@
 
     <h2>{{ .Route }}</h2>
     {{ if .Auth.Authenticated }}
-    <h2 class="w3-wide">Welcome</h2>
+    <h2 class="w3-wide text">Welcome</h2>
     {{ else }}
-    <h2 class="w3-wide">Create an account</h2>
+    <h2 class="w3-wide text">Create an account</h2>
     {{ end }}
 
 </div>
@@ -14,7 +14,7 @@
 {{if .Auth.Authenticated}}
 <h1>Welcome, {{ .Auth.Username }}</h1>
 {{else}}
-<div class="container">
+<div class="form-container">
     {{ template "templates/components/organisms/forms.html" . }}
 </div>
 {{end}}
