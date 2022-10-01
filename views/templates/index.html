@@ -1,4 +1,4 @@
-{{ template "templates/components/header.html" . }}
+{{ template "templates/components/organisms/header.html" . }}
 <div class="headercontainer">
     <h2>{{ .Route }}</h2>
     {{ if .Auth.Authenticated }}
@@ -24,4 +24,4 @@
     {{ end }}
 </div>
 
-{{ template "templates/components/footer.html" . }}
+{{ template "templates/components/organisms/footer.html" . }}

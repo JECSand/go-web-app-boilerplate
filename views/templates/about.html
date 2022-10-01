@@ -1,4 +1,4 @@
-{{ template "templates/components/header.html" . }}
+{{ template "templates/components/organisms/header.html" . }}
 
 <div class="headercontainer">
     {{if .Auth.Authenticated}}
@@ -22,4 +22,4 @@
     {{else}}
     <a href="/login">Please login to view</a><br>
     {{end}}
-{{ template "templates/components/footer.html" . }}
+{{ template "templates/components/organisms/footer.html" . }}

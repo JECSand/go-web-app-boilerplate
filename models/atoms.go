@@ -1,6 +1,44 @@
 package models
 
 /*
+Alert Types
+*/
+
+// Alert ...
+type Alert struct {
+	Message    string
+	ClickClose bool
+	Category   string
+}
+
+// NewAlert constructs and returns a new Link
+func NewAlert(message string, cc bool) *Alert {
+	return &Alert{
+		Message:    message,
+		ClickClose: cc,
+		Category:   "default",
+	}
+}
+
+// NewSuccessAlert constructs and returns a new Link
+func NewSuccessAlert(message string, cc bool) *Alert {
+	return &Alert{
+		Message:    message,
+		ClickClose: cc,
+		Category:   "success",
+	}
+}
+
+// NewErrorAlert constructs and returns a new Link
+func NewErrorAlert(message string, cc bool) *Alert {
+	return &Alert{
+		Message:    message,
+		ClickClose: cc,
+		Category:   "error",
+	}
+}
+
+/*
 Link Types
 */
 

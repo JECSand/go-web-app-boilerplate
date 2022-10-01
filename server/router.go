@@ -42,8 +42,8 @@ func GetRouter(p *controllers.ControllerManager, b *controllers.BasicController,
 	router.Handler("GET", "/admin/:child/:id", p.Protected(ad.AdminPage)) // 3) GET ADMIN USER OR GROUP UPDATE FORM
 
 	// Admin Group Handler Routes
-	router.Handler("GET", "/groups/:id", p.Protected(ad.GroupAdminPage))
-	//router.Handler("POST", "/admin/groups", p.Protected(p.CreateGroupHandler))
+	//router.Handler("GET", "/admin/groups/:id", p.Protected(ad.GroupAdminPage))
+	router.Handler("POST", "/admin", p.Protected(ad.CreateGroupHandler))
 	//router.Handler("PATCH", "/admin/groups/:id", p.Protected(p.UpdateGroupHandler))
 	//router.Handler("DELETE", "/admin/groups/:id", p.Protected(p.DeleteGroupHandler))
 
