@@ -45,7 +45,7 @@ func InitializeSettingsForm(user *User) *Form {
 	lnField := NewInput("Last Name", "Last Name", "update", "last_name", "text", user.LastName)
 	emailField := NewInput("Email", "Email", "update", "email", "text", user.Email)
 	fields := []*InputField{unField, fnField, lnField, emailField}
-	button := &Button{Name: "update", Class: "form1", Id: "form2", Type: "submit", Label: "Submit", Category: "form"}
+	button := &Button{Name: "update", Class: "btn", Id: "form2", Type: "submit", Label: "Submit", Category: "form"}
 	buttons := []*Button{button}
 	return NewForm(formMeta, fields, buttons, nil)
 }

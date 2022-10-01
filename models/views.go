@@ -81,6 +81,7 @@ type AdminModel struct {
 	Id         string
 	Method     string
 	Form       *Form
+	GroupsList *List
 	UserTable  UserTable
 	GroupTable GroupTable
 	Users      []*User

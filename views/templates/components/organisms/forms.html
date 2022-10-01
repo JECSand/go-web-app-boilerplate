@@ -1,6 +1,6 @@
 
-{{ if eq .Form.Category "popup" }}
-{{ template "templates/components/atoms/buttons.html" .Form.Popup }}
+{{ if eq .Category "popup" }}
+{{ template "templates/components/atoms/buttons.html" .Popup }}
 <script>
     function openForm(id) {
         document.getElementById(id).style.display = "block";
@@ -10,12 +10,12 @@
         document.getElementById(id).style.display = "none";
     }
 </script>
-<div class="form-popup" id={{ .Form.Id }}>
-    <form method={{ .Form.Method }} id={{ .Form.Id }} class={{ .Form.Class }} action={{ .Form.Action }}>
-        {{range .Form.Inputs}}
+<div class="form-popup" id={{ .Id }}>
+    <form method={{ .Method }} id={{ .Id }} class={{ .Class }} action={{ .Action }}>
+        {{range .Inputs}}
         {{ template "templates/components/atoms/inputs.html" . }}
         {{end}}
-        {{range .Form.Buttons}}
+        {{range .Buttons}}
         {{ template "templates/components/atoms/buttons.html" . }}
         {{end}}
     </form>
@@ -23,17 +23,17 @@
 {{ end }}
 
 
-{{ if eq .Form.Category "default" }}
-    {{ if ne .Form.Class "" }}
-    <form method={{ .Form.Method }} class={{ .Form.Class }} id={{ .Form.Id }}>
+{{ if eq .Category "default" }}
+    {{ if ne .Class "" }}
+    <form method={{ .Method }} class={{ .Class }} id={{ .Id }}>
     {{ else }}
-    <form method={{ .Form.Method }} id={{ .Form.Id }}>
+    <form method={{ .Method }} id={{ .Id }}>
     {{ end }}
-    {{range .Form.Inputs}}
+    {{range .Inputs}}
         {{ template "templates/components/atoms/inputs.html" . }}
     {{end}}
     </form>
-    {{range .Form.Buttons}}
+    {{range .Buttons}}
     {{ template "templates/components/atoms/buttons.html" . }}
     {{ end }}
 {{ end }}

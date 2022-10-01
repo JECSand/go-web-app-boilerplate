@@ -13,6 +13,17 @@ type Link struct {
 	Category string
 }
 
+// NewLink constructs and returns a new Link
+func NewLink(class string, id string, ref string, label string) *Link {
+	return &Link{
+		Class:    class,
+		Id:       id,
+		Ref:      ref,
+		Label:    label,
+		Category: "default",
+	}
+}
+
 /*
 Button Types
 */

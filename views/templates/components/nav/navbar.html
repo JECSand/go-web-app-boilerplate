@@ -12,32 +12,32 @@
     <link rel="stylesheet" href="/static/styles/nav.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <ul class="topnav" id="myTopnav">
-        <li><a class="active" href="/">Home</a></li>
+        <li><a class="nav active" href="/">Home</a></li>
         <li class="dropdown">
-            <a href="/variable" href="javascript:void(0)" class="dropbtn">Variable <i class="fa fa-caret-down"></i><i class="fa fa-caret-up"></i></a>
+            <a href="/variable" href="javascript:void(0)" class="nav dropbtn">Variable <i class="fa fa-caret-down"></i><i class="fa fa-caret-up"></i></a>
             <div class="dropdown-content">
-                <a href="/variable/dawg">dawg</a>
-                <a href="/variable/buddy">buddy</a>
-                <a href="/variable/boy">boy</a>
+                <a class="nav" href="/variable/dawg">dawg</a>
+                <a class="nav" href="/variable/buddy">buddy</a>
+                <a class="nav" href="/variable/boy">boy</a>
             </div>
         </li>
-        <li><a href="/about">About</a></li>
+        <li><a class="nav" href="/about">About</a></li>
         {{if .Auth.Authenticated}}
-        <li class="right"><a href="/logout">Logout</a></li>
-        <li class="right"><a href="/account">My Account</a></li>
+        <li class="right"><a class="nav" href="/logout">Logout</a></li>
+        <li class="right"><a class="nav" href="/account">My Account</a></li>
         {{if eq .Auth.Role "admin" }}
-        <li class="right"><a href="/admin">Admin</a></li>
+        <li class="right"><a class="nav" href="/admin">Admin</a></li>
         {{end}}
         {{else}}
-        <li class="right"><a href="/login">Login</a></li>
+        <li class="right"><a class="nav" href="/login">Login</a></li>
         {{end}}
         <li class="open-icon">
-            <a href="javascript:void(0);" class="open-icon" onclick="toggleMenu()">
+            <a href="javascript:void(0);" class="nav open-icon" onclick="toggleMenu()">
                 <i class="fa fa-bars"></i>
             </a>
         </li>
         <li class="close-icon">
-            <a href="javascript:void(0);" class="close-icon" onclick="toggleMenu()">
+            <a href="javascript:void(0);" class="nav close-icon" onclick="toggleMenu()">
                 <i class="fa fa-close"></i>
             </a>
         </li>

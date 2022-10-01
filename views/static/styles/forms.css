@@ -32,6 +32,12 @@
     margin: auto;
 }
 
+/* Add styles to the form container */
+.column-form {
+    margin: unset;
+    float: unset;
+}
+
 /* Full-width input fields */
 .form-container input[type=text], .form-container input[type=password] {
     width: 100%;

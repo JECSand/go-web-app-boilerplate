@@ -29,35 +29,40 @@ func GetRouter(p *controllers.ControllerManager, b *controllers.BasicController,
 	router.GET("/about", b.AboutPage)
 	router.GET("/about/:child", b.AboutPage)
 
-	// Admin Page Routes
-	router.Handler("GET", "/admin", p.Protected(ad.AdminPage)) // 1) GET GENERIC ADMIN VIEW
-
-	router.Handler("GET", "/admin/:child", p.Protected(ad.AdminPage)) // 2) GET ADMIN USER OR GROUP DATA TABLE
-	// ID CAN BE EITHER A UUID OR CREATE - CREATE LOADS CREATE FORM
-	router.Handler("GET", "/admin/:child/:id", p.Protected(ad.AdminPage)) // 3) GET ADMIN USER OR GROUP UPDATE FORM
-	// Admin Group Handler Routes
-	//router.Handler("POST", "/admin/:child", p.Protected(ad.CreateHandler))
-	// TO LOAD AN UPDATE FORM SPECIFICALLY WHEN APP USER CLICKS UPDATE FOR A GROUP LISTED IN GROUP DATATABLE
-	// HANDLERS TO SUBMIT UPDATE FORM OR DELETE A GROUP
-	//router.Handler("PATCH", "/admin/:child/:id", p.Protected(ad.UpdateHandler))
-	//router.Handler("DELETE", "/admin/:child/:id", p.Protected(ad.DeleteHandler))
-
-	//router.Handler("PATCH", "/admin/usermenu", p.Protected(p.AdminPage)) // 2) GET ADMIN USER OR GROUP DATA TABLE
-
-	// Admin User Handler Routes
-	//router.Handler("POST", "/admin/users", p.Protected(p.CreateUserHandler))
-	// TO LOAD AN UPDATE FORM SPECIFICALLY WHEN APP USER CLICKS UPDATE FOR A USER LISTED IN USER DATATABLE
-	//router.Handler("GET", "/admin/users/:id", p.Protected(p.AdminPage))
-	// HANDLERS TO SUBMIT UPDATE FORM OR DELETE A USER
-	//router.Handler("PATCH", "/admin/users/:id", p.Protected(p.UpdateUserHandler))
-	//router.Handler("DELETE", "/admin/users/:id", p.Protected(p.DeleteUserHandler))
-
 	// Account Route
 	router.Handler("GET", "/account", p.Protected(ac.AccountPage))
 	router.Handler("GET", "/account/:child", p.Protected(ac.AccountPage))
 
 	// Account Settings Route
 	router.Handler("PATCH", "/account/settings", p.Protected(ac.AccountSettingsHandler))
+
+	// Admin Page Routes
+	router.Handler("GET", "/admin", p.Protected(ad.AdminPage))            // 1) GET GENERIC ADMIN VIEW
+	router.Handler("GET", "/admin/:child", p.Protected(ad.AdminPage))     // 2) GET ADMIN USER OR GROUP DATA TABLE
+	router.Handler("GET", "/admin/:child/:id", p.Protected(ad.AdminPage)) // 3) GET ADMIN USER OR GROUP UPDATE FORM
+
+	// Admin Group Handler Routes
+	router.Handler("GET", "/groups/:id", p.Protected(ad.GroupAdminPage))
+	//router.Handler("POST", "/admin/groups", p.Protected(p.CreateGroupHandler))
+	//router.Handler("PATCH", "/admin/groups/:id", p.Protected(p.UpdateGroupHandler))
+	//router.Handler("DELETE", "/admin/groups/:id", p.Protected(p.DeleteGroupHandler))
+
+	// Admin User Handler Routes
+	//router.Handler("POST", "/admin/users", p.Protected(p.CreateUserHandler))
+	//router.Handler("PATCH", "/admin/users/:id", p.Protected(p.UpdateUserHandler))
+	//router.Handler("DELETE", "/admin/users/:id", p.Protected(p.DeleteUserHandler))
+
+	// Admin Group Handler Routes
+	//router.Handler("POST", "/admin/:child", p.Protected(ad.CreateHandler))
+	// TO LOAD AN UPDATE FORM SPECIFICALLY WHEN APP USER CLICKS UPDATE FOR A GROUP LISTED IN GROUP DATATABLE
+	// HANDLERS TO SUBMIT UPDATE FORM OR DELETE A GROUP
+	//router.Handler("PATCH", "/admin/:child/:id", p.Protected(ad.UpdateHandler))
+	//router.Handler("DELETE", "/admin/:child/:id", p.Protected(ad.DeleteHandler))
+	//router.Handler("PATCH", "/admin/usermenu", p.Protected(p.AdminPage)) // 2) GET ADMIN USER OR GROUP DATA TABLE
+
+	// TO LOAD AN UPDATE FORM SPECIFICALLY WHEN APP USER CLICKS UPDATE FOR A USER LISTED IN USER DATATABLE
+	//router.Handler("GET", "/admin/users/:id", p.Protected(p.AdminPage))
+	// HANDLERS TO SUBMIT UPDATE FORM OR DELETE A USER
 
 	// Variable Route
 	router.GET("/variable", b.VariablePage)

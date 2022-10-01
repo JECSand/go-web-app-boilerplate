@@ -7,38 +7,6 @@ body {
     margin: 0;
 }
 
-/* Create three unequal columns that floats next to each other */
-.column {
-    float: left;
-    padding: 10px;
-}
-
-/* Left and right column */
-.column.side {
-    width: 25%;
-}
-
-/* Middle column */
-.column.middle {
-    width: 50%;
-}
-
-.column.left {
-    width: 25%;
-}
-
-.column.right {
-    width: 75%;
-    float: right;
-}
-
-/* Clear floats after the columns */
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
 .container {
     width: 400px;
     height: 370px;
@@ -76,6 +44,12 @@ body {
     text-align: center;
     color: #333;
 }
+
+.three-cols {
+    position: relative;
+    color: #333;
+}
+
 .text3 {
     position: relative;
     text-align: left;
@@ -89,23 +63,63 @@ body {
     color: #333;
 }
 
-/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of
- each other instead of next to each other */
-@media screen and (max-width: 600px) {
-    .column.left {
-        width: 100%;
-    }
-    .column.right {
-        width: 0;
-    }
-    .login-image {
-        display: none;
-    }
+
+/* Create three unequal columns that floats next to each other */
+.column {
+    float: left;
+    padding: 10px;
+}
+
+.criteria {
+    display: flex;
+    flex-direction: row;
+}
+.columnOne {
+    width: 30%;
+    box-sizing: border-box;
+    /*whatever element it is applied to...*/
+    padding: 0 0 0 10px;
+}
+.columnTwo {
+    width: 20%;
+    box-sizing: border-box;
+    /*whatever element it is applied to...*/
+    border-top: 0;
+    border-bottom: 0;
+    border-left: 3px solid blue;
+    border-right: 3px solid blue;
+    padding: 0 0 0 10px;
+}
+.columnThree {
+    display:flex;
+    flex-direction: column;
+    width: 50%;
+    box-sizing: border-box;
+    /*whatever element it is applied to...*/
+    border-top: 0;
+    border-bottom: 0;
+    border-left: 0;
+    padding: 0 0 0 10px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
 }
 
 /* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 600px) {
-    .column.side, .column.middle {
+    .column {
         width: 100%;
+    }
+}
+@media (max-width: 767px) {
+    .criteria, .columnThree {
+        display:block;
+    }
+    .columnOne, .columnTwo, .columnThree {
+        width:100%;
     }
 }
