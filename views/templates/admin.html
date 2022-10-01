@@ -14,15 +14,15 @@
                     <a href="/admin/groupmenu">Manage Group</a><br>
                 {{ end }}
             </div>
-    {{ template "templates/components/organisms/forms.html" . }}
+    <div class="list-container">
+        {{ template "templates/components/organisms/lists.html" .GroupsList }}
+    <div>
+    {{ template "templates/components/organisms/forms.html" .Form }}
         {{ end }}
         {{ if eq .SubRoute "settings" }}
              {{ template "templates/components/admin/adminusers.html" . }}
          {{ end }}
-
-
         {{ end }}
-
     {{ end }}
 </div>
 {{ template "templates/components/footer.html" . }}

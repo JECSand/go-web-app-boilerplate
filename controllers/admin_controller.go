@@ -27,16 +27,73 @@ func (p *AdminController) AdminPage(w http.ResponseWriter, r *http.Request) {
 	//the subroute gives an index error and crashes the app if sURL[1]. If it is zero however it will work but it will never
 	//work for create since that needs to be vars 1 for the if to catch it.
 	fmt.Println("subRoute1:", subRoute)
+	loadGroups, err := p.groupService.GetMany(auth)
+	if err != nil {
+		panic(err)
+	}
+	gList := models.NewLinkedGroupsList(loadGroups)
 	createForm := models.InitializePopupCreatUserForm()
 	model := models.AdminModel{
-		Name:     "admin",
-		Title:    "Admin Settings",
-		Route:    "admin",
-		SubRoute: subRoute,
-		Auth:     auth,
-		Id:       updateId,
-		Method:   "GET",
-		Form:     createForm,
+		Name:       "admin",
+		Title:      "Admin Settings",
+		Route:      "admin",
+		SubRoute:   subRoute,
+		Auth:       auth,
+		Id:         updateId,
+		Method:     "GET",
+		Form:       createForm,
+		Groups:     loadGroups,
+		GroupsList: gList,
+	}
+	model.Initialize()
+	// 3: TODO Render EDIT FORM based on subRoute (either groups or users in this scenario)
+	if !auth.Authenticated {
+		lModel := models.LoginModel{Title: "Login", Name: "login", Auth: auth}
+		p.manager.Viewer.RenderTemplate(w, "templates/login.html", &lModel)
+		return
+	}
+	if model.SubRoute == "usermenu" {
+		model.Title = "Admin Settings"
+		model.Name = "Admin Settings"
+	}
+
+	p.manager.Viewer.RenderTemplate(w, "templates/admin.html", &model)
+}
+
+// GroupAdminPage renders the Admin Page
+func (p *AdminController) GroupAdminPage(w http.ResponseWriter, r *http.Request) {
+	auth, _ := p.manager.authCheck(r)
+	params := httprouter.ParamsFromContext(r.Context())
+	//fmt.Println("VarsTEST:", params.ByName("id"))
+	//vars returns and empty map array
+	subRoute := params.ByName("child")
+	updateId := params.ByName("id")
+	fmt.Println("ID Admin:", updateId)
+	//the subroute gives an index error and crashes the app if sURL[1]. If it is zero however it will work but it will never
+	//work for create since that needs to be vars 1 for the if to catch it.
+	fmt.Println("subRoute1:", subRoute)
+	loadGroups, err := p.groupService.GetMany(auth)
+	// TODO - Create GET /groups/{gId}/users
+	// 	CREATE GROUP ADMIN PAGE WITH:
+	//		Group Edit Form
+	//		List of Linked Users
+	//		Create User pop-up button (make current Create User button into "Create Group")
+	if err != nil {
+		panic(err)
+	}
+	gList := models.NewLinkedGroupsList(loadGroups)
+	createForm := models.InitializePopupCreatUserForm()
+	model := models.AdminModel{
+		Name:       "admin",
+		Title:      "Group Settings",
+		Route:      "admin",
+		SubRoute:   subRoute,
+		Auth:       auth,
+		Id:         updateId,
+		Method:     "GET",
+		Form:       createForm,
+		Groups:     loadGroups,
+		GroupsList: gList,
 	}
 	model.Initialize()
 	// 3: TODO Render EDIT FORM based on subRoute (either groups or users in this scenario)

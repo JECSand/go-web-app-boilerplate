@@ -1,6 +1,5 @@
 {{ template "templates/components/header.html" . }}
-<div class="row loginbackground">
-    <div class="column middle">
+<div class="row">
         <div class="headercontainer">
             <h2>{{ .Route }}</h2>
             {{if .Auth.Authenticated}}
@@ -13,7 +12,7 @@
         <h1>Welcome, {{ .Auth.Username }}</h1>
         {{else}}
         <div class="form-container">
-            {{ template "templates/components/organisms/forms.html" . }}
+            {{ template "templates/components/organisms/forms.html" .Form }}
         </div>
         {{end}}
         <div class="text2">
@@ -21,6 +20,5 @@
             <a href="/register">or create a new account</a><br>
             {{ end }}
         </div>
-    </div>
 </div>
 {{ template "templates/components/footer.html" . }}

@@ -1,28 +1,26 @@
 {{ template "templates/components/header.html" . }}
+
+{{ if .Auth.Authenticated }}
+   {{ if eq .Route "account/" }}
 <div class="headercontainer">
-    {{ if .Auth.Authenticated }}
         <h2 class="w3-wide text">My Account</h2>
-    {{ else }}
-        <h2 class="w3-wide text">My Account</h2>
-    {{ end }}
 </div>
-
 <div class="text2">
-    {{ if .Auth.Authenticated }}
-
-        {{ if eq .Route "account/" }}
-
         <a href="/account/settings">Account Settings</a><br>
         <a href="/account/groups">Groups</a><br>
-        {{end}}
-
-        {{ if eq .SubRoute "settings" }}
-
-            {{ template "templates/components/account/settings.html" . }}
-        {{ end }}
+</div>
+    {{ else if eq .SubRoute "settings" }}
+<div class="headercontainer">
+    <h2 class="w3-wide text">Account Settings</h2>
+</div>
+<div class="criteria">
+        {{ template "templates/components/account/settings.html" . }}
+</div>
     {{ else }}
         <a href="/login">Please login to view</a><br>
     {{ end }}
-</div>
+{{ else }}
+    <a href="/login">Please login to view</a><br>
+{{ end }}
 
 {{ template "templates/components/footer.html" . }}
