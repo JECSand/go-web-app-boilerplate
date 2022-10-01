@@ -1,6 +1,19 @@
 package models
 
 /*
+Link Types
+*/
+
+// Link ...
+type Link struct {
+	Class    string
+	Id       string
+	Ref      string
+	Label    string
+	Category string
+}
+
+/*
 Button Types
 */
 

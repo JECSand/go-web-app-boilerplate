@@ -2,18 +2,18 @@
 {{ if eq .Form.Category "popup" }}
 {{ template "templates/components/atoms/buttons.html" .Form.Popup }}
 <script>
-    function openForm() {
-        document.getElementById({{ .Form.Id }}).style.display = "block";
+    function openForm(id) {
+        document.getElementById(id).style.display = "block";
     }
 
-    function closeForm() {
-        document.getElementById({{ .Form.Id }}).style.display = "none";
+    function closeForm(id) {
+        document.getElementById(id).style.display = "none";
     }
 </script>
 <div class="form-popup" id={{ .Form.Id }}>
     <form method={{ .Form.Method }} id={{ .Form.Id }} class={{ .Form.Class }} action={{ .Form.Action }}>
-        {{range .Form.Fields}}
-        {{ template "templates/components/atoms/fields.html" . }}
+        {{range .Form.Inputs}}
+        {{ template "templates/components/atoms/inputs.html" . }}
         {{end}}
         {{range .Form.Buttons}}
         {{ template "templates/components/atoms/buttons.html" . }}
@@ -25,8 +25,8 @@
 
 {{ if eq .Form.Category "default" }}
 <form method={{ .Form.Method }} id={{ .Form.Id }}>
-        {{range .Form.Fields}}
-            {{ template "templates/components/atoms/fields.html" . }}
+        {{range .Form.Inputs}}
+            {{ template "templates/components/atoms/inputs.html" . }}
         {{end}}
 </form>
 {{range .Form.Buttons}}

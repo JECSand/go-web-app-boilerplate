@@ -14,7 +14,7 @@
                     <a href="/admin/groupmenu">Manage Group</a><br>
                 {{ end }}
             </div>
-    {{ template "templates/components/molecules/form.html" . }}
+    {{ template "templates/components/organisms/forms.html" . }}
         {{ end }}
         {{ if eq .SubRoute "settings" }}
              {{ template "templates/components/admin/adminusers.html" . }}
