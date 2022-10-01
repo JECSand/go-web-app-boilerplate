@@ -24,12 +24,16 @@
 
 
 {{ if eq .Form.Category "default" }}
-<form method={{ .Form.Method }} id={{ .Form.Id }}>
-        {{range .Form.Inputs}}
-            {{ template "templates/components/atoms/inputs.html" . }}
-        {{end}}
-</form>
-{{range .Form.Buttons}}
-{{ template "templates/components/atoms/buttons.html" . }}
-{{end}}
+    {{ if ne .Form.Class "" }}
+    <form method={{ .Form.Method }} class={{ .Form.Class }} id={{ .Form.Id }}>
+    {{ else }}
+    <form method={{ .Form.Method }} id={{ .Form.Id }}>
+    {{ end }}
+    {{range .Form.Inputs}}
+        {{ template "templates/components/atoms/inputs.html" . }}
+    {{end}}
+    </form>
+    {{range .Form.Buttons}}
+    {{ template "templates/components/atoms/buttons.html" . }}
+    {{ end }}
 {{ end }}
