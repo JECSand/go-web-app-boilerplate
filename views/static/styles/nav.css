@@ -12,7 +12,6 @@ ul.topnav {
 ul.topnav li {float: left;}
 
 ul.topnav li a {
-
     display: block;
     color: white;
     text-align: center;
@@ -32,6 +31,10 @@ li a, .dropbtn {
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
+}
+
+a.dropbtn .fa.fa-caret-up {
+    display: none;
 }
 
 li a:hover, .dropdown:hover .dropbtn {
@@ -75,18 +78,30 @@ div.dropdown-content a {
     background-color: #111;
 }
 
+.dropdown:hover .fa.fa-caret-down {
+    display: none;
+}
+
+.dropdown:hover .fa.fa-caret-up {
+    display: inline-block;
+}
+
 /* Page Nav Routing Div */
 div.navroute {
     padding:0 16px
 }
 
-li.icon {
+li.open-icon {
+    display: none;
+}
+
+li.close-icon {
     display: none;
 }
 
 @media screen and (max-width: 600px) {
     ul.topnav li:not(:first-child) {display: none;}
-    ul.topnav li.icon {
+    ul.topnav li.open-icon {
         float: right;
         display: block;
     }
@@ -94,7 +109,11 @@ li.icon {
 
 @media screen and (max-width: 600px) {
     ul.topnav.responsive {position: relative;}
-    ul.topnav.responsive li.icon {
+    ul.topnav.responsive li.open-icon {
+        display: none;
+    }
+    ul.topnav.responsive li.close-icon {
+        display: block;
         position: absolute;
         right: 0;
         top: 0;
