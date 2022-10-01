@@ -7,9 +7,9 @@
 {{ end }}
 
 {{ if eq .Category "close-click"  }}
-<button type={{ .Type }} class={{ .Class }} onclick=closeForm()>{{ .Label }}</button>
+<button type={{ .Type }} class={{ .Class }} onclick=closeForm({{ .Id }})>{{ .Label }}</button>
 {{ end }}
 
 {{ if eq .Category "open-click"  }}
-<button class={{ .Class }} onclick=openForm()>{{ .Label }}</button>
+<button class={{ .Class }} onclick=openForm({{ .Id }})>{{ .Label }}</button>
 {{ end }}

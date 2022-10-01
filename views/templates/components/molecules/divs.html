@@ -1,0 +1,20 @@
+{{ if ne .Class "" }}
+    {{ if ne .Id "" }}
+        <div class={{ .Class }} id={{ .Id }}>
+    {{ else }}
+        <div class={{ .Class }}>
+    {{ end }}
+{{ else }}
+    {{ if ne .Id "" }}
+        <div id={{ .Id }}>
+    {{ else }}
+        <div>
+    {{ end }}
+{{ end }}
+
+{{ if eq .Category "links" }}
+    {{range .Links}}
+    {{ template "templates/components/atoms/links.html" . }}
+    {{ end }}
+{{ end }}
+</div>
