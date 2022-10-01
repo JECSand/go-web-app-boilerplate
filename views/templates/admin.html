@@ -1,28 +1,22 @@
-{{ template "templates/components/header.html" . }}
+{{ template "templates/components/organisms/header.html" . }}
 <div>
     {{ if .Auth.Authenticated }}
-        {{ if eq .Auth.Role "admin" }}
-            <div class="headercontainer">
-                <h2 class="w3-wide text">Admin</h2>
-            </div>
-        {{ if eq .Route "admin" }}
-            <div class="text2">
-                <a href="/admin/usermenu">Manage Users</a><br>
-                {{ if .Auth.RootAdmin }}
-                    <a href="/admin/groupmenu">Manage Groups</a><br>
-                {{ else }}
-                    <a href="/admin/groupmenu">Manage Group</a><br>
-                {{ end }}
-            </div>
-    <div class="list-container">
-        {{ template "templates/components/organisms/lists.html" .GroupsList }}
-    <div>
-    {{ template "templates/components/organisms/forms.html" .Form }}
-        {{ end }}
-        {{ if eq .SubRoute "settings" }}
-             {{ template "templates/components/admin/adminusers.html" . }}
-         {{ end }}
+    {{ if .Status }}
+        {{ template "templates/components/atoms/alerts.html" .Alert }}
+    {{ end }}
+    {{ if eq .Auth.Role "admin" }}
+        <div class="headercontainer">
+            <h2 class="w3-wide text">Admin</h2>
+        </div>
+        {{ if .Auth.RootAdmin }}
+            <div class="list-container">
+                {{ template "templates/components/organisms/lists.html" .ListGroups }}
+            <div>
+            {{ template "templates/components/organisms/forms.html" .CreateGroup }}
+        {{ else }}
+            {{ template "templates/components/organisms/forms.html" .CreateUser }}
         {{ end }}
     {{ end }}
+    {{ end }}
 </div>
-{{ template "templates/components/footer.html" . }}
+{{ template "templates/components/organisms/footer.html" . }}

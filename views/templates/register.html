@@ -1,4 +1,4 @@
-{{ template "templates/components/header.html" . }}
+{{ template "templates/components/organisms/header.html" . }}
 <div class="headercontainer">
 
     <h2>{{ .Route }}</h2>
@@ -15,7 +15,7 @@
 <h1>Welcome, {{ .Auth.Username }}</h1>
 {{else}}
 <div class="form-container">
-    {{ template "templates/components/organisms/forms.html" . }}
+    {{ template "templates/components/organisms/forms.html" .Form }}
 </div>
 {{end}}
 
@@ -25,4 +25,4 @@
     {{ end }}
 </div>
 
-{{ template "templates/components/footer.html" . }}
+{{ template "templates/components/organisms/footer.html" . }}

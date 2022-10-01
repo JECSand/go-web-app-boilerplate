@@ -73,20 +73,21 @@ func (vm *VariableModel) BuildRoute() {
 
 // AdminModel ...
 type AdminModel struct {
-	Title      string
-	Variable   string
-	Name       string
-	SubRoute   string
-	Route      string
-	Id         string
-	Method     string
-	Form       *Form
-	GroupsList *List
-	UserTable  UserTable
-	GroupTable GroupTable
-	Users      []*User
-	Groups     []*Group
-	Auth       *Auth
+	Title       string
+	Variable    string
+	Name        string
+	SubRoute    string
+	Route       string
+	Id          string
+	Method      string
+	CreateGroup *Form
+	CreateUser  *Form
+	ListGroups  *List
+	Users       []*User
+	Groups      []*Group
+	Auth        *Auth
+	Alert       *Alert
+	Status      bool
 }
 
 // BuildRoute ...
@@ -104,11 +105,6 @@ func (adm *AdminModel) BuildRoute() {
 // Initialize a new Admin Page Data Model
 func (adm *AdminModel) Initialize() {
 	adm.BuildRoute()
-	if adm.SubRoute == "users" {
-		adm.UserTable.Initialize(adm.Users, adm.Method, adm.Id)
-	} else if adm.SubRoute == "groups" {
-		adm.GroupTable.Initialize(adm.Groups, adm.Method, adm.Id)
-	}
 }
 
 // AccountModel ...
@@ -120,6 +116,7 @@ type AccountModel struct {
 	Route    string
 	Auth     *Auth
 	User     *User
+	Alert    *Alert
 	Form     *Form
 }
 
