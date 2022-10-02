@@ -11,5 +11,9 @@
 {{ end }}
 
 {{ if eq .Category "open-click"  }}
+{{ if eq .Name "delete" }}
+<button class={{ .Class }} onclick=openForm({{ .Id }})>&#9940;</button>
+{{ else }}
 <button class={{ .Class }} onclick=openForm({{ .Id }})>{{ .Label }}</button>
+{{ end }}
 {{ end }}

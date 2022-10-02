@@ -1,30 +1,29 @@
 package models
 
-// NewGroupsList initializes a new list of groups for rendering
-func NewGroupsList(groups []*Group) *List {
+// NewList initializes a new list of groups for rendering
+func NewList[T DataModel](m []T) *List {
 	var listItems []*ListItem
-	for _, gr := range groups {
-		listItems = append(listItems, NewListItem("group", gr.Id, gr.Name))
+	for _, gr := range m {
+		listItems = append(listItems, NewListItem("group", gr.GetID(), gr.GetLabel()))
 	}
-	return NewUnorderedList("groups", "labeled", listItems)
+	return NewUnorderedList("groups", "", listItems)
 }
 
-// NewLinkedGroupsList initializes a new linked list of groups for rendering
-func NewLinkedGroupsList(groups []*Group) *List {
+// NewLinkedList initializes a new linked list of DataModel for rendering
+func NewLinkedList[T DataModel](m []T, delete bool) *List {
 	var listItems []*ListItem
-	for _, gr := range groups {
-		gLink := NewLink("group", "", "/admin/groups/"+gr.Id, gr.Name, false)
-		listItems = append(listItems, NewLinkListItem("group", gr.Id, gLink))
+	for _, gr := range m {
+		gLink := NewLink("pill", "", "/admin/"+gr.GetClass(true)+"/"+gr.GetID(), gr.GetLabel(), false)
+		var ops []*ItemOption
+		if delete {
+			// NewDeleteOption(delForm *Form, btn *Button)
+			defForm := InitializePopupDeleteForm(gr)
+			btn := defForm.Popup
+			defForm.Popup = nil
+			delOp := NewDeleteOption(defForm, btn)
+			ops = append(ops, delOp)
+		}
+		listItems = append(listItems, NewLinkListItem("pill", gr.GetID(), gLink, ops))
 	}
-	return NewUnorderedList("groups", "linked", listItems)
-}
-
-// NewLinkedUsersList initializes a new linked list of groups for rendering
-func NewLinkedUsersList(users []*User) *List {
-	var listItems []*ListItem
-	for _, gr := range users {
-		gLink := NewLink("user", "", "/admin/users/"+gr.Id, gr.Email, false)
-		listItems = append(listItems, NewLinkListItem("user", gr.Id, gLink))
-	}
-	return NewUnorderedList("users", "linked", listItems)
+	return NewUnorderedList("linked", "", listItems)
 }

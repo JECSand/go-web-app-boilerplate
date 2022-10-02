@@ -13,7 +13,7 @@ func InitializeSignInForm() *Form {
 	fields := []*InputField{emailField, pwField}
 	button := &Button{Name: "update", Class: "btn", Id: "form1", Type: "submit", Label: "Submit", Category: "form"}
 	buttons := []*Button{button}
-	return NewForm(formMeta, fields, buttons, nil)
+	return NewForm(formMeta, fields, buttons, nil, nil)
 }
 
 // InitializeRegistrationForm for a settings form
@@ -31,7 +31,7 @@ func InitializeRegistrationForm() *Form {
 	fields := []*InputField{unField, pwField, cpwField, fnField, lnField, emailField}
 	button := &Button{Name: "update", Class: "btn", Id: "form1", Type: "submit", Label: "Submit", Category: "form"}
 	buttons := []*Button{button}
-	return NewForm(formMeta, fields, buttons, nil)
+	return NewForm(formMeta, fields, buttons, nil, nil)
 }
 
 // InitializeUserSettingsForm for a settings form
@@ -48,7 +48,7 @@ func InitializeUserSettingsForm(user *User) *Form {
 	fields := []*InputField{unField, fnField, lnField, emailField}
 	button := &Button{Name: "update", Class: "btn", Id: "updateUser", Type: "submit", Label: "Submit", Category: "form"}
 	buttons := []*Button{button}
-	return NewForm(formMeta, fields, buttons, nil)
+	return NewForm(formMeta, fields, buttons, nil, nil)
 }
 
 // InitializeGroupSettingsForm for a settings form
@@ -61,7 +61,21 @@ func InitializeGroupSettingsForm(group *Group) *Form {
 	fields := []*InputField{nameField}
 	button := &Button{Name: "update", Class: "btn", Id: "updateGroup", Type: "submit", Label: "Submit", Category: "form"}
 	buttons := []*Button{button}
-	return NewForm(formMeta, fields, buttons, nil)
+	return NewForm(formMeta, fields, buttons, nil, nil)
+}
+
+// InitializePopupDeleteForm for deletes a data record
+func InitializePopupDeleteForm[T DataModel](m T) *Form {
+	formId := "delete" + m.GetClass(false) + m.GetID()
+	formMeta := []string{"Create", "delete-form", "form-container", formId, "DELETE", "/admin/" + m.GetClass(true) + "/" + m.GetID(), "popup"}
+	idField := NewInput("Id", "", "delete", "id", "hidden", m.GetID())
+	fields := []*InputField{idField}
+	subButton := NewButtonInput("Submit", "", "btn delete", "", "submit", "Delete")
+	fields = append(fields, subButton)
+	clsButton := &Button{Name: "update", Class: "btn cancel delete", Id: formId, Type: "button", Label: "Cancel", Category: "close-click"}
+	opButton := &Button{Name: "delete", Class: "open-button delete", Id: formId, Type: "button", Label: "", Category: "open-click"}
+	buttons := []*Button{clsButton}
+	return NewForm(formMeta, fields, buttons, opButton, nil)
 }
 
 // InitializePopupCreateUserForm for a settings form
@@ -91,15 +105,15 @@ func InitializePopupCreateUserForm(availGroups []*Group, setRole bool) *Form {
 	subButton := NewButtonInput("Submit", "", "btn", "", "submit", "Submit")
 	fields = append(fields, subButton)
 	clsButton := &Button{Name: "update", Class: "btn cancel", Id: "createUser", Type: "button", Label: "Close", Category: "close-click"}
-	opButton := &Button{Name: "update", Class: "open-button", Id: "createUser", Type: "button", Label: "Create User", Category: "open-click"}
+	opButton := &Button{Name: "update", Class: "open-button create", Id: "createUser", Type: "button", Label: "Create User", Category: "open-click"}
 	buttons := []*Button{clsButton}
 	formMeta = append(formMeta, formAction)
 	formMeta = append(formMeta, "popup")
-	return NewForm(formMeta, fields, buttons, opButton)
+	return NewForm(formMeta, fields, buttons, opButton, &Script{Load: true, Category: "popupForm"})
 }
 
-// InitializePopupCreatGroupForm for a settings form
-func InitializePopupCreatGroupForm() *Form {
+// InitializePopupCreateGroupForm for a settings form
+func InitializePopupCreateGroupForm() *Form {
 	// Field Vector String Array, this is order
 	// NAME, TYPE, CLASS, ID, METHOD, ACTION, CATEGORY
 	formMeta := []string{"Create", "Group", "form-container", "createGroup", "POST", "/admin/groups", "popup"}
@@ -108,7 +122,7 @@ func InitializePopupCreatGroupForm() *Form {
 	subButton := NewButtonInput("Submit", "", "btn", "", "submit", "Submit")
 	fields := []*InputField{unField, subButton}
 	clsButton := &Button{Name: "update", Class: "btn cancel", Id: "createGroup", Type: "button", Label: "Close", Category: "close-click"}
-	opButton := &Button{Name: "update", Class: "open-button", Id: "createGroup", Type: "button", Label: "Create Group", Category: "open-click"}
+	opButton := &Button{Name: "update", Class: "open-button create", Id: "createGroup", Type: "button", Label: "Create Group", Category: "open-click"}
 	buttons := []*Button{clsButton}
-	return NewForm(formMeta, fields, buttons, opButton)
+	return NewForm(formMeta, fields, buttons, opButton, &Script{Load: true, Category: "popupForm"})
 }

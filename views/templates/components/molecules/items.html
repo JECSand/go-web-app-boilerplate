@@ -17,6 +17,12 @@
 {{ end }}
 
 {{ if eq .Category "link" }}
+    {{ range .Options }}
+    {{ if eq .Category "delete" }}
+    {{ template "templates/components/atoms/buttons.html" .Button }}
+    {{ template "templates/components/organisms/forms.html" .Form }}
+    {{ end }}
+    {{ end }}
     {{ template "templates/components/atoms/links.html" .Link }}
 {{ end }}
 

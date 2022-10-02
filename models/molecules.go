@@ -4,6 +4,24 @@ package models
 ListItem Types
 */
 
+// ItemOption ...
+type ItemOption struct {
+	Form     *Form
+	Button   *Button
+	Label    string
+	Category string
+}
+
+// NewDeleteOption ...
+func NewDeleteOption(delForm *Form, btn *Button) *ItemOption {
+	return &ItemOption{
+		Form:     delForm,
+		Button:   btn,
+		Label:    "",
+		Category: "delete",
+	}
+}
+
 // ListItem ...
 type ListItem struct {
 	Class    string
@@ -12,6 +30,7 @@ type ListItem struct {
 	Link     *Link
 	Div      *Div
 	Button   *Button
+	Options  []*ItemOption
 	Category string
 }
 
@@ -26,11 +45,12 @@ func NewListItem(class string, id string, label string) *ListItem {
 }
 
 // NewLinkListItem ...
-func NewLinkListItem(class string, id string, link *Link) *ListItem {
+func NewLinkListItem(class string, id string, link *Link, ops []*ItemOption) *ListItem {
 	return &ListItem{
 		Class:    class,
 		Id:       id,
 		Link:     link,
+		Options:  ops,
 		Category: "link",
 	}
 }

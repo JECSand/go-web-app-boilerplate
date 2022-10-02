@@ -18,7 +18,7 @@ func InitializeUserSettings(user *User) *Settings {
 func InitializeGroupSettings(group *Group, users []*User) *Settings {
 	SettingsForm := InitializeGroupSettingsForm(group)
 	// 1. NewLinkDiv(class string, id string, label string, head *Heading, links []*Link)
-	uList := NewLinkedUsersList(users)
+	uList := NewLinkedList(users, false)
 	usersCol := NewListDiv("columnOne", "", "", NewColumnHeading("Group Users", ""), uList)
 	// 2. NewLinkDiv(class string, id string, label string, head *Heading, links []*Link)
 	nameLink := NewLink("active", "", "", group.Name, true)
