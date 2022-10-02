@@ -16,6 +16,8 @@ type DTOModel interface {
 type DataModel interface {
 	GetJSON() []byte
 	GetID() string
+	GetLabel() string
+	GetClass(pl bool) string
 }
 
 // DataModels is an abstraction of the db model types
@@ -54,6 +56,19 @@ func (g *Group) GetID() string {
 	return g.Id
 }
 
+// GetLabel returns the Group label
+func (g *Group) GetLabel() string {
+	return g.Name
+}
+
+// GetClass returns the Class string
+func (g *Group) GetClass(pl bool) string {
+	if pl {
+		return "groups"
+	}
+	return "group"
+}
+
 /*
 ================ User DTOs ==================
 */
@@ -90,6 +105,19 @@ func (u *User) GetID() string {
 	return u.Id
 }
 
+// GetLabel returns the User label
+func (u *User) GetLabel() string {
+	return u.Email
+}
+
+// GetClass returns the Class string
+func (u *User) GetClass(pl bool) string {
+	if pl {
+		return "users"
+	}
+	return "user"
+}
+
 /*
 ================ Task DTOs ==================
 */
@@ -122,6 +150,19 @@ func (t *Task) GetJSON() []byte {
 // GetID returns the Task ID
 func (t *Task) GetID() string {
 	return t.Id
+}
+
+// GetLabel returns the Task label
+func (t *Task) GetLabel() string {
+	return t.Name
+}
+
+// GetClass returns the Class string
+func (t *Task) GetClass(pl bool) string {
+	if pl {
+		return "tasks"
+	}
+	return "task"
 }
 
 /*

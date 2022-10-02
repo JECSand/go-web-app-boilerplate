@@ -1,11 +1,38 @@
 /* Add styles to the list container */
 .list-container {
-    max-width: 300px;
+    max-width: 340px;
     padding: 10px;
     background-color: white;
     margin: auto;
 }
 
-a.group {
+ul.linked {
+    text-align: center;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+}
+
+ul.linked li a.pill {
+    background-color: #ddd;
+    display: block;
     color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 16px;
+    word-wrap: break-word
+}
+
+ul.linked a.pill:hover {
+    background-color: #f1f1f1;
+}
+
+@media screen and (max-width: 775px) {
+    ul.linked  {
+        max-width: 300px;
+    }
 }

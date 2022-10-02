@@ -31,8 +31,8 @@ func (p *AdminController) AdminPage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Redirect(w, r, "/logout", 303)
 	}
-	gList := models.NewLinkedGroupsList(loadGroups)
-	createForm := models.InitializePopupCreatGroupForm()
+	gList := models.NewLinkedList(loadGroups, true)
+	createForm := models.InitializePopupCreateGroupForm()
 	model := models.AdminModel{
 		Name:        "admin",
 		Title:       "Admin Settings",
@@ -71,8 +71,8 @@ func (p *AdminController) AdminGroupsPage(w http.ResponseWriter, r *http.Request
 	if err != nil {
 		http.Redirect(w, r, "/logout", 303)
 	}
-	gList := models.NewLinkedGroupsList(loadGroups)
-	createForm := models.InitializePopupCreatGroupForm()
+	gList := models.NewLinkedList(loadGroups, true)
+	createForm := models.InitializePopupCreateGroupForm()
 	model := models.AdminModel{
 		Name:        "admin",
 		Title:       "Admin Settings",
@@ -150,8 +150,8 @@ func (p *AdminController) AdminCreateGroupHandler(w http.ResponseWriter, r *http
 	if err != nil && errMsg == "" {
 		errMsg = err.Error()
 	}
-	gList := models.NewLinkedGroupsList(loadGroups)
-	createForm := models.InitializePopupCreatGroupForm()
+	gList := models.NewLinkedList(loadGroups, true)
+	createForm := models.InitializePopupCreateGroupForm()
 	model := models.AdminModel{
 		Name:        "admin",
 		Title:       "Group Settings",
@@ -173,7 +173,6 @@ func (p *AdminController) AdminCreateGroupHandler(w http.ResponseWriter, r *http
 		alert = models.NewSuccessAlert(group.Name+" Created", true)
 	}
 	model.Alert = alert
-	//http.Redirect(w, r, "/admin", 201)
 	p.manager.Viewer.RenderTemplate(w, "templates/admin.html", &model)
 	return
 }
@@ -219,6 +218,7 @@ func (p *AdminController) AdminCreateUserHandler(w http.ResponseWriter, r *http.
 		GroupSettings: groupSettings,
 		CreateUser:    createForm,
 		Users:         groupUsers.Users,
+		Status:        true,
 	}
 	var alert *models.Alert
 	if errMsg != "" {

@@ -13,13 +13,14 @@ type Form struct {
 	Inputs   []*InputField `json:"inputs,omitempty"`
 	Buttons  []*Button     `json:"buttons,omitempty"`
 	Popup    *Button       `json:"popup,omitempty"`
+	Script   *Script       `json:"script,omitempty"`
 	Method   string        `json:"method,omitempty"`
 	Action   string        `json:"action,omitempty"`
 	Category string        `json:"category,omitempty"`
 }
 
 // NewForm for a new form
-func NewForm(formMeta []string, fields []*InputField, buttons []*Button, popup *Button) *Form {
+func NewForm(formMeta []string, fields []*InputField, buttons []*Button, popup *Button, script *Script) *Form {
 	newForm := Form{}
 	// Field Vector String Array, this is order
 	// Name, Class, Id, Type, Label, DefaultVal
@@ -35,6 +36,7 @@ func NewForm(formMeta []string, fields []*InputField, buttons []*Button, popup *
 	if popup != nil {
 		newForm.Popup = popup
 	}
+	newForm.Script = script
 	return &newForm
 }
 

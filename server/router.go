@@ -66,8 +66,8 @@ func GetRouter(p *controllers.ControllerManager, b *controllers.BasicController,
 	// HANDLERS TO SUBMIT UPDATE FORM OR DELETE A USER
 
 	// Variable Route
-	router.GET("/variable", b.VariablePage)
-	router.GET("/variable/:child", b.VariablePage)
+	router.GET("/tasks", b.VariablePage)
+	router.GET("/tasks/:child", b.VariablePage)
 
 	// Example route that encounters an error
 	router.GET("/broken/handler", b.BrokenPage)

@@ -1,6 +1,16 @@
 package models
 
 /*
+Script Types
+*/
+
+// Script ...
+type Script struct {
+	Load     bool
+	Category string
+}
+
+/*
 Heading Types
 */
 
