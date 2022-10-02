@@ -180,6 +180,31 @@ func (d *Groups) Count() int {
 	return len(d.Items)
 }
 
+// GroupUsersDTO is used when returning a group with its associated users
+type GroupUsersDTO struct {
+	Group *Group  `json:"group"`
+	Users []*User `json:"users"`
+}
+
+// GetJSON checks the data in the DTO for issues
+func (d *GroupUsersDTO) GetJSON() []byte {
+	b, _ := json.Marshal(d)
+	return b
+}
+
+// Validate checks the data in the DTO for issues
+func (d *GroupUsersDTO) Validate() error {
+	if len(d.Users) == 0 {
+		return errors.New("empty")
+	}
+	return nil
+}
+
+// Count checks the data in the DTO for issues
+func (d *GroupUsersDTO) Count() int {
+	return len(d.Users)
+}
+
 /*
 ================ Task DTOs ==================
 */

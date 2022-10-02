@@ -1,12 +1,7 @@
 {{ template "templates/components/organisms/header.html" . }}
 
-<div class="headercontainer">
-    {{if .Auth.Authenticated}}
-    <h2 class="w3-wide text">Table Settings</h2>
-    {{else}}
-    <h2 class="w3-wide text">Table Settings</h2>
-    {{end}}
-</div>
+{{ template "templates/components/atoms/headings.html" .Heading }}
+
 <div class="text2">
     {{if .Auth.Authenticated}}
     <div class="row">

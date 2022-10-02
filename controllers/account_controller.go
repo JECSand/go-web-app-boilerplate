@@ -26,16 +26,19 @@ func (p *AccountController) AccountPage(w http.ResponseWriter, r *http.Request) 
 			panic(err)
 		}
 		model.User = user
+		model.Settings = models.InitializeUserSettings(model.User)
 	}
-	model.Initialize()
+	model.BuildRoute()
 	if !auth.Authenticated {
-		lModel := models.LoginModel{Title: "Login", Name: "login", Auth: auth}
+		lModel := models.LoginModel{Title: "Login", Name: "login", Auth: auth, Heading: models.NewHeading("Login", "w3-wide text")}
 		p.manager.Viewer.RenderTemplate(w, "templates/login.html", &lModel)
 		return
 	}
+	model.Heading = models.NewHeading("My Account", "w3-wide text")
 	if model.SubRoute == "settings" {
 		model.Title = "Account Settings"
 		model.Name = "Account Settings"
+		model.Heading = models.NewHeading("Account Settings", "w3-wide text")
 	}
 	p.manager.Viewer.RenderTemplate(w, "templates/account.html", &model)
 }
@@ -61,6 +64,6 @@ func (p *AccountController) AccountSettingsHandler(w http.ResponseWriter, r *htt
 		p.manager.Viewer.RenderTemplate(w, "templates/index.html", &model)
 		return
 	}
-	model.Form = models.InitializeSettingsForm(user)
+	model.Settings = models.InitializeUserSettings(model.User)
 	p.manager.Viewer.RenderTemplate(w, "templates/account.html", &model)
 }

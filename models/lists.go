@@ -13,8 +13,18 @@ func NewGroupsList(groups []*Group) *List {
 func NewLinkedGroupsList(groups []*Group) *List {
 	var listItems []*ListItem
 	for _, gr := range groups {
-		gLink := NewLink("group", "", "/groups/"+gr.Id, gr.Name)
+		gLink := NewLink("group", "", "/admin/groups/"+gr.Id, gr.Name, false)
 		listItems = append(listItems, NewLinkListItem("group", gr.Id, gLink))
 	}
-	return NewUnorderedList("groups", "labeled", listItems)
+	return NewUnorderedList("groups", "linked", listItems)
+}
+
+// NewLinkedUsersList initializes a new linked list of groups for rendering
+func NewLinkedUsersList(users []*User) *List {
+	var listItems []*ListItem
+	for _, gr := range users {
+		gLink := NewLink("user", "", "/admin/users/"+gr.Id, gr.Email, false)
+		listItems = append(listItems, NewLinkListItem("user", gr.Id, gLink))
+	}
+	return NewUnorderedList("users", "linked", listItems)
 }

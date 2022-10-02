@@ -1,24 +1,15 @@
 {{ template "templates/components/organisms/header.html" . }}
 <div class="row">
-        <div class="headercontainer">
-            <h2>{{ .Route }}</h2>
-            {{if .Auth.Authenticated}}
-            <h2 class="w3-wide text">Welcome</h2>
-            {{else}}
-            <h2 class="w3-wide text">Login</h2>
-            {{end}}
-        </div>
-        {{if .Auth.Authenticated}}
+    {{ template "templates/components/atoms/headings.html" .Heading }}
+    {{if .Auth.Authenticated}}
         <h1>Welcome, {{ .Auth.Username }}</h1>
-        {{else}}
+    {{else}}
         <div class="form-container">
             {{ template "templates/components/organisms/forms.html" .Form }}
         </div>
-        {{end}}
         <div class="text2">
-            {{ if not .Auth.Authenticated }}
             <a href="/register">or create a new account</a><br>
-            {{ end }}
         </div>
+    {{end}}
 </div>
 {{ template "templates/components/organisms/footer.html" . }}

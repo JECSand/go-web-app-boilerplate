@@ -37,18 +37,19 @@ func GetRouter(p *controllers.ControllerManager, b *controllers.BasicController,
 	router.Handler("PATCH", "/account/settings", p.Protected(ac.AccountSettingsHandler))
 
 	// Admin Page Routes
-	router.Handler("GET", "/admin", p.Protected(ad.AdminPage))            // 1) GET GENERIC ADMIN VIEW
-	router.Handler("GET", "/admin/:child", p.Protected(ad.AdminPage))     // 2) GET ADMIN USER OR GROUP DATA TABLE
-	router.Handler("GET", "/admin/:child/:id", p.Protected(ad.AdminPage)) // 3) GET ADMIN USER OR GROUP UPDATE FORM
+	router.Handler("GET", "/admin", p.Protected(ad.AdminPage))
+	router.Handler("GET", "/admin/users", p.Protected(ad.AdminPage))
+	router.Handler("GET", "/admin/users/:id", p.Protected(ad.AdminPage))
 
 	// Admin Group Handler Routes
-	//router.Handler("GET", "/admin/groups/:id", p.Protected(ad.GroupAdminPage))
-	router.Handler("POST", "/admin", p.Protected(ad.CreateGroupHandler))
+	router.Handler("GET", "/admin/groups", p.Protected(ad.AdminGroupsPage))
+	router.Handler("GET", "/admin/groups/:id", p.Protected(ad.AdminGroupPage))
+	router.Handler("POST", "/admin/groups", p.Protected(ad.AdminCreateGroupHandler))
 	//router.Handler("PATCH", "/admin/groups/:id", p.Protected(p.UpdateGroupHandler))
 	//router.Handler("DELETE", "/admin/groups/:id", p.Protected(p.DeleteGroupHandler))
 
 	// Admin User Handler Routes
-	//router.Handler("POST", "/admin/users", p.Protected(p.CreateUserHandler))
+	router.Handler("POST", "/admin/groups/:id", p.Protected(ad.AdminCreateUserHandler))
 	//router.Handler("PATCH", "/admin/users/:id", p.Protected(p.UpdateUserHandler))
 	//router.Handler("DELETE", "/admin/users/:id", p.Protected(p.DeleteUserHandler))
 
