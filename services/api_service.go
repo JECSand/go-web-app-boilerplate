@@ -3,6 +3,7 @@ package services
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"github.com/JECSand/fetch"
 	"github.com/JECSand/go-web-app-boilerplate/models"
 	"io"
@@ -89,6 +90,9 @@ type APIRequest[T models.DTOModel] struct {
 // loadModel loads returned json data into a dataModel
 func (api *APIRequest[T]) loadModel(resp *http.Response) (T, error) {
 	var m T
+	if resp.StatusCode != 200 && resp.StatusCode != 201 {
+		return m, errors.New("response status error")
+	}
 	body, err := io.ReadAll(io.LimitReader(resp.Body, 1048576))
 	if err != nil {
 		return m, err
@@ -275,6 +279,16 @@ func (s *GroupService) Delete(auth *models.Auth, filter *models.Group) (*models.
 	f, err := req.Delete()
 	if err != nil {
 		return &models.Group{}, err
+	}
+	return f, nil
+}
+
+// GetGroupUsers returns a models.GroupUsersDTO struct dataModel
+func (s *GroupService) GetGroupUsers(auth *models.Auth, filter *models.Group) (*models.GroupUsersDTO, error) {
+	req := &APIRequest[*models.GroupUsersDTO]{url: s.host + s.endpoint + "/" + filter.GetID() + "/users", auth: auth}
+	f, err := req.Get()
+	if err != nil {
+		return &models.GroupUsersDTO{}, err
 	}
 	return f, nil
 }

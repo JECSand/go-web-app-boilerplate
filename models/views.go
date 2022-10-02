@@ -8,6 +8,7 @@ type IndexModel struct {
 	Name     string
 	SubRoute string
 	Route    string
+	Heading  *Heading
 	Auth     *Auth
 	Form     *Form
 }
@@ -18,6 +19,7 @@ type RegisterModel struct {
 	Name     string
 	SubRoute string
 	Route    string
+	Heading  *Heading
 	Auth     *Auth
 	Form     *Form
 }
@@ -29,6 +31,7 @@ type LoginModel struct {
 	Name     string
 	SubRoute string
 	Route    string
+	Heading  *Heading
 	Auth     *Auth
 	Form     *Form
 }
@@ -46,6 +49,7 @@ type AboutModel struct {
 	Name     string
 	SubRoute string
 	Route    string
+	Heading  *Heading
 	Auth     *Auth
 }
 
@@ -62,6 +66,7 @@ type VariableModel struct {
 	Name     string
 	SubRoute string
 	Route    string
+	Heading  *Heading
 	Auth     *Auth
 }
 
@@ -73,21 +78,25 @@ func (vm *VariableModel) BuildRoute() {
 
 // AdminModel ...
 type AdminModel struct {
-	Title       string
-	Variable    string
-	Name        string
-	SubRoute    string
-	Route       string
-	Id          string
-	Method      string
-	CreateGroup *Form
-	CreateUser  *Form
-	ListGroups  *List
-	Users       []*User
-	Groups      []*Group
-	Auth        *Auth
-	Alert       *Alert
-	Status      bool
+	Title         string
+	Variable      string
+	Name          string
+	SubRoute      string
+	Route         string
+	Id            string
+	Method        string
+	Heading       *Heading
+	CreateGroup   *Form
+	CreateUser    *Form
+	GroupSettings *Settings
+	UserSettings  *Settings
+	ListGroups    *List
+	ListUsers     *List
+	Users         []*User
+	Groups        []*Group
+	Auth          *Auth
+	Alert         *Alert
+	Status        bool
 }
 
 // BuildRoute ...
@@ -114,10 +123,12 @@ type AccountModel struct {
 	Name     string
 	SubRoute string
 	Route    string
+	Heading  *Heading
 	Auth     *Auth
 	User     *User
 	Alert    *Alert
-	Form     *Form
+	Settings *Settings
+	//SettingsForm *Form
 }
 
 // BuildRoute ...
@@ -131,7 +142,4 @@ func (acm *AccountModel) BuildRoute() {
 // Initialize a new Account Page Data Model
 func (acm *AccountModel) Initialize() {
 	acm.BuildRoute()
-	if acm.SubRoute == "settings" {
-		acm.Form = InitializeSettingsForm(acm.User)
-	}
 }

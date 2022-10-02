@@ -1,26 +1,7 @@
-{{if .Auth.Authenticated}}
-    <div class="columnOne">
-        <h2>Options</h2>
-        <a class="active" href="/account/settings">Change User Info</a><br>
-        <a href="/account/settings/password">Change Password</a><br>
-        <a href="/account/settings/permissions">Change Permissions</a><br>
+{{ template "templates/components/molecules/divs.html" .Col1 }}
+<div class="columnThree">
+    <div class="form-container column-form">
+        {{ template "templates/components/organisms/forms.html" .SettingsForm }}
     </div>
-
-    <div class="columnThree">
-        <div class="form-container column-form">
-        {{ template "templates/components/organisms/forms.html" .Form }}
-        </div>
-    </div>
-
-    <div class="columnTwo">
-        <h2>Current Info</h2>
-        <a> Username: {{ .Auth.Username }}</a><br>
-        <a> Role: {{ .Auth.Role }}</a><br>
-        <a> First Name: {{ .User.FirstName }}</a><br>
-        <a> Last Name: {{ .User.LastName }}</a><br>
-        <a> Email: {{ .User.Email }}</a><br>
-    </div>
-
-{{else}}
-    <a href="/login">Please login to view</a><br>
-{{end}}
+</div>
+{{ template "templates/components/molecules/divs.html" .Col3 }}

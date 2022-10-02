@@ -1,6 +1,28 @@
 package models
 
 /*
+Heading Types
+*/
+
+// Heading ...
+type Heading struct {
+	Class    string
+	Id       string
+	Label    string
+	Category string
+}
+
+// NewHeading ...
+func NewHeading(label string, class string) *Heading {
+	return &Heading{Class: class, Label: label, Category: "default"}
+}
+
+// NewColumnHeading ...
+func NewColumnHeading(label string, class string) *Heading {
+	return &Heading{Class: class, Label: label, Category: "column"}
+}
+
+/*
 Alert Types
 */
 
@@ -48,16 +70,18 @@ type Link struct {
 	Id       string
 	Ref      string
 	Label    string
+	Break    bool
 	Category string
 }
 
 // NewLink constructs and returns a new Link
-func NewLink(class string, id string, ref string, label string) *Link {
+func NewLink(class string, id string, ref string, label string, br bool) *Link {
 	return &Link{
 		Class:    class,
 		Id:       id,
 		Ref:      ref,
 		Label:    label,
+		Break:    br,
 		Category: "default",
 	}
 }
@@ -85,6 +109,20 @@ type SelectOptions struct {
 	Value    string
 	Label    string
 	Selected bool
+}
+
+// GetGroupSelectOptions ...
+func GetGroupSelectOptions(groups []*Group) []*SelectOptions {
+	var ops []*SelectOptions
+	for _, g := range groups {
+		ops = append(ops, &SelectOptions{Value: g.Id, Label: g.Name})
+	}
+	return ops
+}
+
+// GetRoleSelectOptions ...
+func GetRoleSelectOptions() []*SelectOptions {
+	return []*SelectOptions{{Value: "admin", Label: "Admin"}, {Value: "member", Label: "Member"}}
 }
 
 // InputField ...

@@ -20,10 +20,12 @@ func (p *AuthController) RegisterPage(w http.ResponseWriter, r *http.Request, ps
 	rForm := models.InitializeRegistrationForm()
 	model := models.IndexModel{Name: "home", Title: "Home", Auth: auth, Form: rForm}
 	if auth.Authenticated {
+		model.Heading = models.NewHeading("Welcome", "w3-wide text")
 		p.manager.Viewer.RenderTemplate(w, "templates/index.html", &model)
 		return
 	}
 	rModel := models.IndexModel{Name: "register", Title: "Register", Auth: auth, Form: rForm}
+	rModel.Heading = models.NewHeading("Register", "w3-wide text")
 	p.manager.Viewer.RenderTemplate(w, "templates/register.html", &rModel)
 }
 
@@ -31,9 +33,9 @@ func (p *AuthController) RegisterPage(w http.ResponseWriter, r *http.Request, ps
 func (p *AuthController) LoginPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// TODO - Get Auth from Session Manager Here
 	auth, _ := p.manager.authCheck(r)
-	model := models.IndexModel{Name: "home", Title: "Home", Auth: auth}
+	model := models.IndexModel{Name: "home", Title: "Home", Auth: auth, Heading: models.NewHeading("Welcome", "w3-wide text")}
 	lForm := models.InitializeSignInForm()
-	lModel := models.LoginModel{Name: "login", Title: "Login", Auth: auth, Form: lForm}
+	lModel := models.LoginModel{Name: "login", Title: "Login", Auth: auth, Form: lForm, Heading: models.NewHeading("Login", "w3-wide text")}
 	if auth.Authenticated {
 		p.manager.Viewer.RenderTemplate(w, "templates/index.html", &model)
 		return

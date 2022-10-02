@@ -64,17 +64,32 @@ type Div struct {
 	Class    string
 	Id       string
 	Label    string
+	Heading  *Heading
 	Links    []*Link
+	List     *List
 	Category string
 }
 
 // NewLinkDiv ...
-func NewLinkDiv(class string, id string, label string, links []*Link) *Div {
+func NewLinkDiv(class string, id string, label string, head *Heading, links []*Link) *Div {
 	return &Div{
 		Class:    class,
 		Id:       id,
 		Label:    label,
+		Heading:  head,
 		Links:    links,
 		Category: "links",
+	}
+}
+
+// NewListDiv ...
+func NewListDiv(class string, id string, label string, head *Heading, list *List) *Div {
+	return &Div{
+		Class:    class,
+		Id:       id,
+		Label:    label,
+		Heading:  head,
+		List:     list,
+		Category: "list",
 	}
 }

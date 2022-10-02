@@ -20,15 +20,15 @@
 {{ else if eq .Category "select" }}
 
     {{ if .Multi }}
-    <select id={{ .Id }} name={ .Id }} size="4" multiple>
+    <select name={{ .Id }} id={{ .Id }} size="4" multiple>
     {{ else }}
-    <select id={{ .Id }} name={ .Id }}>
+    <select name={{ .Id }} id={{ .Id }} >
     {{ end }}
         {{range .Options}}
         {{ if .Selected }}
-            <option value={{ .Id }} selected>{{ .Label }}</option>
+            <option value={{ .Value }} selected>{{ .Label }}</option>
         {{ else }}
-            <option value={{ .Id }}>{{ .Label }}</option>
+            <option value={{ .Value }}>{{ .Label }}</option>
         {{ end }}
         {{ end }}
     </select>

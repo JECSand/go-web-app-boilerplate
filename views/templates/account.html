@@ -1,21 +1,16 @@
 {{ template "templates/components/organisms/header.html" . }}
 
 {{ if .Auth.Authenticated }}
-   {{ if eq .Route "account/" }}
-<div class="headercontainer">
-        <h2 class="w3-wide text">My Account</h2>
-</div>
-<div class="text2">
-        <a href="/account/settings">Account Settings</a><br>
-        <a href="/account/groups">Groups</a><br>
-</div>
+    {{ template "templates/components/atoms/headings.html" .Heading }}
+    {{ if eq .Route "account/" }}
+        <div class="text2">
+            <a href="/account/settings">Account Settings</a><br>
+            <a href="/account/groups">Groups</a><br>
+        </div>
     {{ else if eq .SubRoute "settings" }}
-<div class="headercontainer">
-    <h2 class="w3-wide text">Account Settings</h2>
-</div>
-<div class="criteria">
-        {{ template "templates/components/abstractions/settings.html" . }}
-</div>
+        <div class="criteria">
+            {{ template "templates/components/abstractions/settings.html" .Settings }}
+        </div>
     {{ else }}
         <a href="/login">Please login to view</a><br>
     {{ end }}
