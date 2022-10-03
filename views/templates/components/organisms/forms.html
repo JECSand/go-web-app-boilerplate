@@ -21,9 +21,13 @@
 
 {{ if eq .Category "default" }}
     {{ if ne .Class "" }}
-    <form method={{ .Method }} class={{ .Class }} id={{ .Id }}>
+        {{ if ne .Action "" }}
+            <form method={{ .Method }} class={{ .Class }} id={{ .Id }} action={{ .Action }}>
+        {{ else }}
+            <form method={{ .Method }} class={{ .Class }} id={{ .Id }}>
+        {{ end }}
     {{ else }}
-    <form method={{ .Method }} id={{ .Id }}>
+        <form method={{ .Method }} id={{ .Id }}>
     {{ end }}
     {{ range .Inputs }}
         {{ template "templates/components/atoms/inputs.html" . }}
