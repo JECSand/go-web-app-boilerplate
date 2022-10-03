@@ -90,7 +90,7 @@ type APIRequest[T models.DTOModel] struct {
 // loadModel loads returned json data into a dataModel
 func (api *APIRequest[T]) loadModel(resp *http.Response) (T, error) {
 	var m T
-	if resp.StatusCode != 200 && resp.StatusCode != 201 {
+	if resp.StatusCode != 200 && resp.StatusCode != 201 && resp.StatusCode != 202 {
 		return m, errors.New("response status error")
 	}
 	body, err := io.ReadAll(io.LimitReader(resp.Body, 1048576))

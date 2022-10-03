@@ -6,7 +6,7 @@ import "fmt"
 func InitializeSignInForm() *Form {
 	// Field Vector String Array, this is order
 	// NAME, TYPE, CLASS, ID, METHOD, ACTION
-	formMeta := []string{"Sign In", "Auth", "form1", "form1", "POST", "/auth", "default"}
+	formMeta := []string{"Sign In", "Auth", "form1", "form1", "POST", "", "default"}
 	// Name, Class, Id, Type, Label, DefaultVal
 	emailField := NewInput("Email", "Email", "update", "email", "text", "")
 	pwField := NewInput("Password", "Password", "update", "password", "password", "")
@@ -55,7 +55,7 @@ func InitializeUserSettingsForm(user *User) *Form {
 func InitializeGroupSettingsForm(group *Group) *Form {
 	// Field Vector String Array, this is order
 	// NAME, TYPE, CLASS, ID, METHOD, ACTION
-	formMeta := []string{"Update", "Group", "form1", "updateGroup", "PATCH", "", "default"}
+	formMeta := []string{"Update", "Group", "form1", "updateGroup", "POST", "/admin/" + group.GetClass(true) + "/" + group.GetID() + "/update", "default"}
 	// Name, Class, Id, Type, Label, DefaultVal
 	nameField := NewInput("Group Name", "Group Name", "update", "name", "text", group.Name)
 	fields := []*InputField{nameField}
@@ -67,7 +67,7 @@ func InitializeGroupSettingsForm(group *Group) *Form {
 // InitializePopupDeleteForm for deletes a data record
 func InitializePopupDeleteForm[T DataModel](m T) *Form {
 	formId := "delete" + m.GetClass(false) + m.GetID()
-	formMeta := []string{"Create", "delete-form", "form-container", formId, "DELETE", "/admin/" + m.GetClass(true) + "/" + m.GetID(), "popup"}
+	formMeta := []string{"Create", "delete-form", "form-container", formId, "GET", "/admin/" + m.GetClass(true) + "/" + m.GetID() + "/delete", "popup"}
 	idField := NewInput("Id", "", "delete", "id", "hidden", m.GetID())
 	fields := []*InputField{idField}
 	subButton := NewButtonInput("Submit", "", "btn delete", "", "submit", "Delete")

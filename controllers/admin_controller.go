@@ -30,6 +30,7 @@ func (p *AdminController) AdminPage(w http.ResponseWriter, r *http.Request) {
 	loadGroups, err := p.groupService.GetMany(auth)
 	if err != nil {
 		http.Redirect(w, r, "/logout", 303)
+		return
 	}
 	gList := models.NewLinkedList(loadGroups, true, true)
 	createForm := models.InitializePopupCreateGroupForm()
@@ -63,13 +64,14 @@ func (p *AdminController) AdminGroupsPage(w http.ResponseWriter, r *http.Request
 	//vars returns and empty map array
 	subRoute := params.ByName("child")
 	updateId := params.ByName("id")
-	fmt.Println("ID Admin Group: ", updateId)
-	//the subroute gives an index error and crashes the app if sURL[1]. If it is zero however it will work but it will never
-	//work for create since that needs to be vars 1 for the if to catch it.
+	// Loop over header names
+	del := r.URL.Query().Get("deleted")
+	fmt.Println("\n\nID Admin Group: ", updateId)
 	fmt.Println("subRoute1:", subRoute)
 	loadGroups, err := p.groupService.GetMany(auth)
 	if err != nil {
 		http.Redirect(w, r, "/logout", 303)
+		return
 	}
 	gList := models.NewLinkedList(loadGroups, true, true)
 	createForm := models.InitializePopupCreateGroupForm()
@@ -92,6 +94,16 @@ func (p *AdminController) AdminGroupsPage(w http.ResponseWriter, r *http.Request
 		p.manager.Viewer.RenderTemplate(w, "templates/login.html", &lModel)
 		return
 	}
+	if del != "" {
+		var alert *models.Alert
+		if del == "yes" {
+			alert = models.NewSuccessAlert("Group Deleted", true)
+		} else {
+			alert = models.NewErrorAlert("Error Deleting Group", true)
+		}
+		model.Alert = alert
+		model.Status = true
+	}
 	p.manager.Viewer.RenderTemplate(w, "templates/admin.html", &model)
 }
 
@@ -99,6 +111,7 @@ func (p *AdminController) AdminGroupsPage(w http.ResponseWriter, r *http.Request
 func (p *AdminController) AdminGroupPage(w http.ResponseWriter, r *http.Request) {
 	auth, _ := p.manager.authCheck(r)
 	params := httprouter.ParamsFromContext(r.Context())
+	up := r.URL.Query().Get("updated")
 	fmt.Println("VarsTEST:", params.ByName("id"))
 	paramId := params.ByName("id")
 	fmt.Println("ID Admin:", paramId)
@@ -130,6 +143,16 @@ func (p *AdminController) AdminGroupPage(w http.ResponseWriter, r *http.Request)
 		lModel := models.LoginModel{Title: "Login", Name: "login", Auth: auth, Heading: models.NewHeading("Login", "w3-wide text")}
 		p.manager.Viewer.RenderTemplate(w, "templates/login.html", &lModel)
 		return
+	}
+	if up != "" {
+		var alert *models.Alert
+		if up == "yes" {
+			alert = models.NewSuccessAlert("Group Updated", true)
+		} else {
+			alert = models.NewErrorAlert("Error Updating Group", true)
+		}
+		model.Alert = alert
+		model.Status = true
 	}
 	p.manager.Viewer.RenderTemplate(w, "templates/admin.html", &model)
 }
@@ -229,5 +252,46 @@ func (p *AdminController) AdminCreateUserHandler(w http.ResponseWriter, r *http.
 	model.Alert = alert
 	//http.Redirect(w, r, "/admin", 201)
 	p.manager.Viewer.RenderTemplate(w, "templates/admin.html", &model)
+	return
+}
+
+// AdminDeleteGroupHandler creates a new user group
+func (p *AdminController) AdminDeleteGroupHandler(w http.ResponseWriter, r *http.Request) {
+	delMsg := "yes"
+	auth, _ := p.manager.authCheck(r)
+	group := &models.Group{
+		Id: r.FormValue("id"),
+	}
+	if !auth.RootAdmin { // if user not Root Admin end session
+		http.Redirect(w, r, "/logout", 303)
+		return
+	}
+	_, err := p.groupService.Delete(auth, group)
+	if err != nil {
+		delMsg = "no"
+	}
+	http.Redirect(w, r, "/admin/groups?deleted="+delMsg, 303)
+	return
+}
+
+// AdminUpdateGroupHandler creates a new user group
+func (p *AdminController) AdminUpdateGroupHandler(w http.ResponseWriter, r *http.Request) {
+	upMsg := "yes"
+	auth, _ := p.manager.authCheck(r)
+	params := httprouter.ParamsFromContext(r.Context())
+	paramId := params.ByName("id")
+	group := &models.Group{
+		Id:   paramId,
+		Name: r.FormValue("name"),
+	}
+	if !auth.RootAdmin { // if user not Root Admin end session
+		http.Redirect(w, r, "/logout", 303)
+		return
+	}
+	_, err := p.groupService.Update(auth, group)
+	if err != nil {
+		upMsg = "no"
+	}
+	http.Redirect(w, r, "/admin/groups/"+paramId+"?updated="+upMsg, 303)
 	return
 }
