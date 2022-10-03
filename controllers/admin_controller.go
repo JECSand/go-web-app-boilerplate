@@ -31,7 +31,7 @@ func (p *AdminController) AdminPage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Redirect(w, r, "/logout", 303)
 	}
-	gList := models.NewLinkedList(loadGroups, true)
+	gList := models.NewLinkedList(loadGroups, true, true)
 	createForm := models.InitializePopupCreateGroupForm()
 	model := models.AdminModel{
 		Name:        "admin",
@@ -71,7 +71,7 @@ func (p *AdminController) AdminGroupsPage(w http.ResponseWriter, r *http.Request
 	if err != nil {
 		http.Redirect(w, r, "/logout", 303)
 	}
-	gList := models.NewLinkedList(loadGroups, true)
+	gList := models.NewLinkedList(loadGroups, true, true)
 	createForm := models.InitializePopupCreateGroupForm()
 	model := models.AdminModel{
 		Name:        "admin",
@@ -150,7 +150,7 @@ func (p *AdminController) AdminCreateGroupHandler(w http.ResponseWriter, r *http
 	if err != nil && errMsg == "" {
 		errMsg = err.Error()
 	}
-	gList := models.NewLinkedList(loadGroups, true)
+	gList := models.NewLinkedList(loadGroups, true, true)
 	createForm := models.InitializePopupCreateGroupForm()
 	model := models.AdminModel{
 		Name:        "admin",

@@ -31,6 +31,19 @@ ul.linked a.pill:hover {
     background-color: #f1f1f1;
 }
 
+.list-filter p {
+    position: absolute;
+    margin-left: 10px;
+}
+
+.linked.filter {
+    width: 100%; /* Full-width */
+    font-size: 16px; /* Increase font-size */
+    padding: 12px 20px 12px 40px; /* Add some padding */
+    border: 1px solid #ddd; /* Add a grey border */
+    margin-bottom: 12px; /* Add some space below the input */
+}
+
 @media screen and (max-width: 775px) {
     ul.linked  {
         max-width: 300px;

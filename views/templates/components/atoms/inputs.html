@@ -39,4 +39,11 @@
 {{ .Value }}
 </textarea>
 
+{{ else if eq .Category "search" }}
+    {{ if .Script }}
+        {{ template "templates/components/atoms/scripts.html" .Script }}
+    {{ end }}
+    <div class="list-filter">
+        <p>&#x1F50D;</p><input type="text" class={{ .Class }} id={{ .Id }} onkeyup="searchList({{ .Type }}, {{ .Id }})" placeholder={{ .Value }}><br>
+    </div>
 {{ end }}

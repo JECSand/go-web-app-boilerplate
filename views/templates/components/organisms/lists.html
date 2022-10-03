@@ -1,3 +1,7 @@
+{{ if .SearchBar }}
+    {{ template "templates/components/atoms/inputs.html" .SearchBar }}
+{{ end }}
+
 {{ if eq .Category "unordered" }}
     {{ if ne .Class "" }}
         {{ if ne .Id "" }}
@@ -25,7 +29,7 @@
         {{ if ne .Id "" }}
            <ol id={{ .Id }}>
         {{ else }}
-           <ol>
+           <ul>
         {{ end }}
     {{ end }}
 {{ end }}
@@ -36,7 +40,7 @@
 {{end}}
 
 {{ if eq .Category "unordered" }}
-</ol>
+</ul>
 {{ end }}
 
 {{ if eq .Category "ordered" }}
