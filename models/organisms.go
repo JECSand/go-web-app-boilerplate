@@ -46,19 +46,21 @@ Lists
 
 // List structures a generic form
 type List struct {
-	Class    string      `json:"class,omitempty"`
-	Id       string      `json:"id,omitempty"`
-	Items    []*ListItem `json:"inputs,omitempty"`
-	Category string      `json:"category,omitempty"`
+	Class     string      `json:"class,omitempty"`
+	Id        string      `json:"id,omitempty"`
+	Items     []*ListItem `json:"inputs,omitempty"`
+	SearchBar *InputField `json:"search_bar,omitempty"`
+	Category  string      `json:"category,omitempty"`
 }
 
 // NewUnorderedList for a new ul
-func NewUnorderedList(class string, id string, items []*ListItem) *List {
+func NewUnorderedList(class string, id string, items []*ListItem, filter *InputField) *List {
 	return &List{
-		Class:    class,
-		Id:       id,
-		Items:    items,
-		Category: "unordered",
+		Class:     class,
+		Id:        id,
+		Items:     items,
+		SearchBar: filter,
+		Category:  "unordered",
 	}
 }
 

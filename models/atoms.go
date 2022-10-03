@@ -141,13 +141,32 @@ type InputField struct {
 	Label    string
 	Class    string
 	Id       string
-	Type     string
+	Type     string // acts as the formId in searchBar inputs
 	Value    string
 	Multi    bool
 	Options  []*SelectOptions
 	Rows     string
 	Cols     string
+	Script   *Script
 	Category string
+}
+
+// NewSearchInput ... (itYPE = formId)
+func NewSearchInput(class string, id string, iType string, val string) *InputField {
+	return &InputField{
+		Name:     "",
+		Label:    "",
+		Class:    class,
+		Id:       id,
+		Type:     iType,
+		Value:    val,
+		Multi:    false,
+		Options:  nil,
+		Rows:     "",
+		Cols:     "",
+		Script:   &Script{Category: "searchBar"},
+		Category: "search",
+	}
 }
 
 // NewInput ...
@@ -163,6 +182,7 @@ func NewInput(name string, label string, class string, id string, iType string, 
 		Options:  nil,
 		Rows:     "",
 		Cols:     "",
+		Script:   nil,
 		Category: "input",
 	}
 }
@@ -180,6 +200,7 @@ func NewButtonInput(name string, label string, class string, id string, iType st
 		Options:  nil,
 		Rows:     "",
 		Cols:     "",
+		Script:   nil,
 		Category: "submit",
 	}
 }
@@ -197,6 +218,7 @@ func NewSelectInput(name string, label string, class string, id string, iType st
 		Options:  ops,
 		Rows:     "",
 		Cols:     "",
+		Script:   nil,
 		Category: "select",
 	}
 }
@@ -214,6 +236,7 @@ func NewTextInput(name string, label string, class string, id string, rows strin
 		Options:  nil,
 		Rows:     rows,
 		Cols:     cols,
+		Script:   nil,
 		Category: "text",
 	}
 }
