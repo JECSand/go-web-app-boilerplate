@@ -1,7 +1,5 @@
 package models
 
-import "fmt"
-
 // InitializeSignInForm for a settings form
 func InitializeSignInForm() *Form {
 	// Field Vector String Array, this is order
@@ -35,17 +33,23 @@ func InitializeRegistrationForm() *Form {
 }
 
 // InitializeUserSettingsForm for a settings form
-func InitializeUserSettingsForm(user *User) *Form {
-	// Field Vector String Array, this is order
-	// NAME, TYPE, CLASS, ID, METHOD, ACTION
-	formMeta := []string{"Update", "User", "form1", "updateUser", "PATCH", "", "default"}
-	// Name, Class, Id, Type, Label, DefaultVal
-	fmt.Println("\n\nCHECK THIS USER BRO: ", user)
+func InitializeUserSettingsForm(user *User, admin bool) *Form {
+	action := "/account/settings"
+	if admin {
+		action = "/admin/" + user.GetClass(true) + "/" + user.GetID() + "/update"
+	}
+	formMeta := []string{"Update", "User", "form1", "updateUser", "POST", action, "default"}
 	unField := NewInput("User Name", "User Name", "update", "username", "text", user.Username)
 	fnField := NewInput("First Name", "First Name", "update", "first_name", "text", user.FirstName)
 	lnField := NewInput("Last Name", "Last Name", "update", "last_name", "text", user.LastName)
 	emailField := NewInput("Email", "Email", "update", "email", "text", user.Email)
 	fields := []*InputField{unField, fnField, lnField, emailField}
+	if admin {
+		pwField := NewInput("Password", "Password", "update", "password", "password", "")
+		cpwField := NewInput("Password", "Confirm Password", "password", "cpassword", "password", "")
+		roleField := NewSelectInput("User Role", "User Role", "update", "role", "text", GetRoleSelectOptions(user.Role), false)
+		fields = append(fields, pwField, cpwField, roleField)
+	}
 	button := &Button{Name: "update", Class: "btn", Id: "updateUser", Type: "submit", Label: "Submit", Category: "form"}
 	buttons := []*Button{button}
 	return NewForm(formMeta, fields, buttons, nil, nil)
@@ -99,7 +103,7 @@ func InitializePopupCreateUserForm(availGroups []*Group, setRole bool) *Form {
 		fields = append(fields, groupField)
 	}
 	if setRole {
-		groupField := NewSelectInput("User Role", "User Role", "update", "role", "text", GetRoleSelectOptions(), false)
+		groupField := NewSelectInput("User Role", "User Role", "update", "role", "text", GetRoleSelectOptions(""), false)
 		fields = append(fields, groupField)
 	}
 	subButton := NewButtonInput("Submit", "", "btn", "", "submit", "Submit")

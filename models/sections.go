@@ -1,8 +1,8 @@
 package models
 
 // InitializeUserSettings ...
-func InitializeUserSettings(user *User) *Settings {
-	SettingsForm := InitializeUserSettingsForm(user)
+func InitializeUserSettings(user *User, admin bool) *Settings {
+	SettingsForm := InitializeUserSettingsForm(user, admin)
 	// 1. NewLinkDiv(class string, id string, label string, head *Heading, links []*Link)
 	infoLink := NewLink("active", "", "/account/settings", "Change User Info", true)
 	pwLink := NewLink("", "", "/account/settings/password", "Change Password", true)
@@ -18,7 +18,7 @@ func InitializeUserSettings(user *User) *Settings {
 func InitializeGroupSettings(group *Group, users []*User) *Settings {
 	SettingsForm := InitializeGroupSettingsForm(group)
 	// 1. NewLinkDiv(class string, id string, label string, head *Heading, links []*Link)
-	uList := NewLinkedList(users, false, false)
+	uList := NewLinkedList(users, true, true)
 	usersCol := NewListDiv("columnOne", "", "", NewColumnHeading("Group Users", ""), uList)
 	// 2. NewLinkDiv(class string, id string, label string, head *Heading, links []*Link)
 	nameLink := NewLink("active", "", "", group.Name, true)

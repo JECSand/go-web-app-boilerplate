@@ -131,8 +131,14 @@ func GetGroupSelectOptions(groups []*Group) []*SelectOptions {
 }
 
 // GetRoleSelectOptions ...
-func GetRoleSelectOptions() []*SelectOptions {
-	return []*SelectOptions{{Value: "admin", Label: "Admin"}, {Value: "member", Label: "Member"}}
+func GetRoleSelectOptions(defVal string) []*SelectOptions {
+	if defVal == "" {
+		return []*SelectOptions{{Value: "admin", Label: "Admin"}, {Value: "member", Label: "Member"}}
+	}
+	if defVal == "admin" {
+		return []*SelectOptions{{Value: "admin", Label: "Admin", Selected: true}, {Value: "member", Label: "Member"}}
+	}
+	return []*SelectOptions{{Value: "admin", Label: "Admin"}, {Value: "member", Label: "Member", Selected: true}}
 }
 
 // InputField ...
