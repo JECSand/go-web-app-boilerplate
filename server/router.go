@@ -38,7 +38,7 @@ func GetRouter(p *controllers.ControllerManager, b *controllers.BasicController,
 	// Admin Page Routes
 	router.Handler("GET", "/admin", p.Protected(ad.AdminPage))
 	router.Handler("GET", "/admin/users", p.Protected(ad.AdminPage))
-	router.Handler("GET", "/admin/users/:id", p.Protected(ad.AdminPage))
+	router.Handler("GET", "/admin/users/:id", p.Protected(ad.AdminUserPage))
 
 	// Admin Group Handler Routes
 	router.Handler("GET", "/admin/groups", p.Protected(ad.AdminGroupsPage))
@@ -50,7 +50,7 @@ func GetRouter(p *controllers.ControllerManager, b *controllers.BasicController,
 	// Admin User Handler Routes
 	router.Handler("POST", "/admin/groups/:id", p.Protected(ad.AdminCreateUserHandler))
 	//router.Handler("POST", "/admin/users/:id/update", p.Protected(ad.UpdateUserHandler))
-	//router.Handler("GET", "/admin/users/:id/delete", p.Protected(ad.DeleteUserHandler))
+	router.Handler("GET", "/admin/users/:id/delete", p.Protected(ad.AdminDeleteUserHandler))
 
 	// Task Route
 	router.GET("/tasks", b.VariablePage)

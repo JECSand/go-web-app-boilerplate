@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <ul class="topnav" id="myTopnav">
         <li><a class="nav active" href="/">Home</a></li>
+        {{ if .Auth.Authenticated }}
         <li class="dropdown">
             <a href="/tasks" href="javascript:void(0)" class="nav dropbtn">Tasks <i class="fa fa-caret-down"></i><i class="fa fa-caret-up"></i></a>
             <div class="dropdown-content">
@@ -21,16 +22,17 @@
                 <a class="nav" href="/tasks/completed">Completed</a>
             </div>
         </li>
+        {{ end }}
         <li><a class="nav" href="/about">About</a></li>
-        {{if .Auth.Authenticated}}
+        {{ if .Auth.Authenticated }}
         <li class="right"><a class="nav" href="/logout">Logout</a></li>
         <li class="right"><a class="nav" href="/account">My Account</a></li>
-        {{if eq .Auth.Role "admin" }}
+        {{ if eq .Auth.Role "admin" }}
         <li class="right"><a class="nav" href="/admin">Admin</a></li>
-        {{end}}
-        {{else}}
+        {{ end }}
+        {{ else }}
         <li class="right"><a class="nav" href="/login">Login</a></li>
-        {{end}}
+        {{ end }}
         <li class="open-icon">
             <a href="javascript:void(0);" class="nav open-icon" onclick="toggleMenu()">
                 <i class="fa fa-bars"></i>

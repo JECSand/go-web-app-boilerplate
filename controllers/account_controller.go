@@ -26,7 +26,7 @@ func (p *AccountController) AccountPage(w http.ResponseWriter, r *http.Request) 
 			panic(err)
 		}
 		model.User = user
-		model.Settings = models.InitializeUserSettings(model.User)
+		model.Settings = models.InitializeUserSettings(model.User, false)
 	}
 	model.BuildRoute()
 	if !auth.Authenticated {
@@ -64,6 +64,6 @@ func (p *AccountController) AccountSettingsHandler(w http.ResponseWriter, r *htt
 		p.manager.Viewer.RenderTemplate(w, "templates/index.html", &model)
 		return
 	}
-	model.Settings = models.InitializeUserSettings(model.User)
+	model.Settings = models.InitializeUserSettings(model.User, false)
 	p.manager.Viewer.RenderTemplate(w, "templates/account.html", &model)
 }

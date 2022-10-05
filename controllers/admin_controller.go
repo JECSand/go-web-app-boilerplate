@@ -49,8 +49,7 @@ func (p *AdminController) AdminPage(w http.ResponseWriter, r *http.Request) {
 	}
 	model.Initialize()
 	if !auth.Authenticated {
-		lModel := models.LoginModel{Title: "Login", Name: "login", Auth: auth, Heading: models.NewHeading("Login", "w3-wide text")}
-		p.manager.Viewer.RenderTemplate(w, "templates/login.html", &lModel)
+		http.Redirect(w, r, "/logout", 303)
 		return
 	}
 	p.manager.Viewer.RenderTemplate(w, "templates/admin.html", &model)
@@ -90,8 +89,7 @@ func (p *AdminController) AdminGroupsPage(w http.ResponseWriter, r *http.Request
 	}
 	model.Initialize()
 	if !auth.Authenticated {
-		lModel := models.LoginModel{Title: "Login", Name: "login", Auth: auth, Heading: models.NewHeading("Login", "w3-wide text")}
-		p.manager.Viewer.RenderTemplate(w, "templates/login.html", &lModel)
+		http.Redirect(w, r, "/logout", 303)
 		return
 	}
 	if del != "" {
@@ -107,11 +105,59 @@ func (p *AdminController) AdminGroupsPage(w http.ResponseWriter, r *http.Request
 	p.manager.Viewer.RenderTemplate(w, "templates/admin.html", &model)
 }
 
+// AdminUserPage renders the Admin Page for a specific Group
+func (p *AdminController) AdminUserPage(w http.ResponseWriter, r *http.Request) {
+	auth, _ := p.manager.authCheck(r)
+	params := httprouter.ParamsFromContext(r.Context())
+	up := r.URL.Query().Get("updated")
+
+	fmt.Println("VarsTEST:", params.ByName("id"))
+	paramId := params.ByName("id")
+	fmt.Println("ID Admin:", paramId)
+	if !auth.RootAdmin && paramId != auth.GroupId { // if user not Root Admin scope to auth GroupID of user
+		paramId = auth.GroupId
+	}
+	user, err := p.userService.Get(auth, &models.User{Id: paramId})
+	if err != nil {
+		http.Redirect(w, r, "/logout", 303)
+		return
+	}
+	userSettings := models.InitializeUserSettings(user, true)
+	model := models.AdminModel{
+		Name:         "admin",
+		Title:        "User Settings",
+		Route:        "admin",
+		SubRoute:     "users",
+		Auth:         auth,
+		Id:           paramId,
+		Method:       "GET",
+		Heading:      models.NewHeading("User Settings", "w3-wide text"),
+		UserSettings: userSettings,
+	}
+	model.Initialize()
+	if !auth.Authenticated {
+		http.Redirect(w, r, "/logout", 303)
+		return
+	}
+	if up != "" {
+		var alert *models.Alert
+		if up == "yes" {
+			alert = models.NewSuccessAlert("User Updated", true)
+		} else if up == "no" {
+			alert = models.NewErrorAlert("Error Updating User", true)
+		}
+		model.Alert = alert
+		model.Status = true
+	}
+	p.manager.Viewer.RenderTemplate(w, "templates/admin.html", &model)
+}
+
 // AdminGroupPage renders the Admin Page for a specific Group
 func (p *AdminController) AdminGroupPage(w http.ResponseWriter, r *http.Request) {
 	auth, _ := p.manager.authCheck(r)
 	params := httprouter.ParamsFromContext(r.Context())
 	up := r.URL.Query().Get("updated")
+	del := r.URL.Query().Get("deleted")
 	fmt.Println("VarsTEST:", params.ByName("id"))
 	paramId := params.ByName("id")
 	fmt.Println("ID Admin:", paramId)
@@ -140,16 +186,20 @@ func (p *AdminController) AdminGroupPage(w http.ResponseWriter, r *http.Request)
 	}
 	model.Initialize()
 	if !auth.Authenticated {
-		lModel := models.LoginModel{Title: "Login", Name: "login", Auth: auth, Heading: models.NewHeading("Login", "w3-wide text")}
-		p.manager.Viewer.RenderTemplate(w, "templates/login.html", &lModel)
+		http.Redirect(w, r, "/logout", 303)
 		return
 	}
-	if up != "" {
+	if up != "" || del != "" {
 		var alert *models.Alert
 		if up == "yes" {
 			alert = models.NewSuccessAlert("Group Updated", true)
-		} else {
+		} else if up == "no" {
 			alert = models.NewErrorAlert("Error Updating Group", true)
+		}
+		if del == "yes" {
+			alert = models.NewSuccessAlert("User Deleted", true)
+		} else if del == "no" {
+			alert = models.NewErrorAlert("Error Deleting User", true)
 		}
 		model.Alert = alert
 		model.Status = true
@@ -252,6 +302,29 @@ func (p *AdminController) AdminCreateUserHandler(w http.ResponseWriter, r *http.
 	model.Alert = alert
 	//http.Redirect(w, r, "/admin", 201)
 	p.manager.Viewer.RenderTemplate(w, "templates/admin.html", &model)
+	return
+}
+
+// AdminDeleteUserHandler creates a new user group
+func (p *AdminController) AdminDeleteUserHandler(w http.ResponseWriter, r *http.Request) {
+	delMsg := "yes"
+	auth, _ := p.manager.authCheck(r)
+	user := &models.User{
+		Id: r.FormValue("id"),
+	}
+	user, err := p.userService.Get(auth, user)
+	if err != nil {
+		delMsg = "no"
+	}
+	if !auth.RootAdmin && user.GroupId != auth.GroupId { // if user not Root Admin end session
+		http.Redirect(w, r, "/logout", 303)
+		return
+	}
+	_, err = p.userService.Delete(auth, user)
+	if err != nil {
+		delMsg = "no"
+	}
+	http.Redirect(w, r, "/admin/groups/"+user.GroupId+"?deleted="+delMsg, 303)
 	return
 }
 
