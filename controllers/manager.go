@@ -74,10 +74,11 @@ func (p *ControllerManager) NewAuthController(as *services.AuthService) *AuthCon
 }
 
 // NewAccountController initialized a BasicViews struct for rendering Account Views
-func (p *ControllerManager) NewAccountController(uService *services.UserService) *AccountController {
+func (p *ControllerManager) NewAccountController(uService *services.UserService, as *services.AuthService) *AccountController {
 	return &AccountController{
 		manager:     p,
 		userService: uService,
+		authService: as,
 	}
 }
 

@@ -33,11 +33,10 @@ func (p *AuthController) RegisterPage(w http.ResponseWriter, r *http.Request, ps
 func (p *AuthController) LoginPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// TODO - Get Auth from Session Manager Here
 	auth, _ := p.manager.authCheck(r)
-	model := models.IndexModel{Name: "home", Title: "Home", Auth: auth, Heading: models.NewHeading("Welcome", "w3-wide text")}
 	lForm := models.InitializeSignInForm()
 	lModel := models.LoginModel{Name: "login", Title: "Login", Auth: auth, Form: lForm, Heading: models.NewHeading("Login", "w3-wide text")}
 	if auth.Authenticated {
-		p.manager.Viewer.RenderTemplate(w, "templates/index.html", &model)
+		http.Redirect(w, r, "/", 303)
 		return
 	}
 	p.manager.Viewer.RenderTemplate(w, "templates/login.html", &lModel)
@@ -47,7 +46,16 @@ func (p *AuthController) LoginPage(w http.ResponseWriter, r *http.Request, ps ht
 func (p *AuthController) LoginHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// TODO - Get Auth from Session Manager Here
 	auth, cookie := p.manager.authCheck(r)
-	model := models.LoginModel{Name: "login", Title: "Login", Auth: auth}
+	lForm := models.InitializeSignInForm()
+	model := models.LoginModel{
+		Name:    "login",
+		Title:   "Login",
+		Auth:    auth,
+		Form:    lForm,
+		Heading: models.NewHeading("Login", "w3-wide text"),
+		Status:  true,
+		Alert:   models.NewErrorAlert("Invalid Credentials", true),
+	}
 	if r.Method != http.MethodPost {
 		p.manager.Viewer.RenderTemplate(w, "templates/login.html", &model)
 		return
@@ -74,7 +82,12 @@ func (p *AuthController) LoginHandler(w http.ResponseWriter, r *http.Request, ps
 func (p *AuthController) RegistrationHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// TODO - Get Auth from Session Manager Here
 	auth, _ := p.manager.authCheck(r)
-	model := models.IndexModel{Name: "register", Title: "Register", Auth: auth}
+	model := models.IndexModel{
+		Name:    "register",
+		Title:   "Register",
+		Auth:    auth,
+		Heading: models.NewHeading("Register", "w3-wide text"),
+	}
 	if r.Method != http.MethodPost {
 		p.manager.Viewer.RenderTemplate(w, "templates/index.html", &model)
 		return

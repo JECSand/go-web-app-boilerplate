@@ -1,5 +1,8 @@
 {{ template "templates/components/organisms/header.html" . }}
 <div class="row">
+    {{ if .Status }}
+        {{ template "templates/components/atoms/alerts.html" .Alert }}
+    {{ end }}
     {{ template "templates/components/atoms/headings.html" .Heading }}
     {{if .Auth.Authenticated}}
         <h1>Welcome, {{ .Auth.Username }}</h1>

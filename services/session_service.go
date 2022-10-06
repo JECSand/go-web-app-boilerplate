@@ -151,7 +151,6 @@ func (m *SessionService) NewSession(auth *models.Auth) (*http.Cookie, error) {
 
 // GetSession returns a user Auth session
 func (m *SessionService) GetSession(cookie *http.Cookie) (*models.Auth, error) {
-	fmt.Println("\n\nGET SESSION COOKIE: ", cookie)
 	sessionID := cookie.Value
 	authStr, err := m.RedisManager.Get(sessionID)
 	if err != nil {

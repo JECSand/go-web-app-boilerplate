@@ -2,10 +2,7 @@ package models
 
 // InitializeSignInForm for a settings form
 func InitializeSignInForm() *Form {
-	// Field Vector String Array, this is order
-	// NAME, TYPE, CLASS, ID, METHOD, ACTION
 	formMeta := []string{"Sign In", "Auth", "form1", "form1", "POST", "", "default"}
-	// Name, Class, Id, Type, Label, DefaultVal
 	emailField := NewInput("Email", "Email", "update", "email", "text", "")
 	pwField := NewInput("Password", "Password", "update", "password", "password", "")
 	fields := []*InputField{emailField, pwField}
@@ -16,10 +13,7 @@ func InitializeSignInForm() *Form {
 
 // InitializeRegistrationForm for a settings form
 func InitializeRegistrationForm() *Form {
-	// Field Vector String Array, this is order
-	// NAME, TYPE, CLASS, ID, METHOD, ACTION
 	formMeta := []string{"Update", "User", "form1", "form1", "POST", "", "default"}
-	// Name, Class, Id, Type, Label, DefaultVal
 	unField := NewInput("User Name", "User Name", "update", "username", "text", "")
 	pwField := NewInput("Password", "Password", "update", "password", "password", "")
 	cpwField := NewInput("Password", "Confirm Password", "password", "cpassword", "password", "")
@@ -28,6 +22,17 @@ func InitializeRegistrationForm() *Form {
 	emailField := NewInput("Email", "Email", "update", "email", "text", "")
 	fields := []*InputField{unField, pwField, cpwField, fnField, lnField, emailField}
 	button := &Button{Name: "update", Class: "btn", Id: "form1", Type: "submit", Label: "Submit", Category: "form"}
+	buttons := []*Button{button}
+	return NewForm(formMeta, fields, buttons, nil, nil)
+}
+
+// InitializePasswordForm for updating a user password
+func InitializePasswordForm() *Form {
+	formMeta := []string{"Update Password", "Password", "form1", "updatePassword", "POST", "", "default"}
+	pwField := NewInput("New Password", "New Password", "update", "password", "password", "")
+	cpwField := NewInput("Current Password", "Current Password", "update", "cpassword", "password", "")
+	fields := []*InputField{pwField, cpwField}
+	button := &Button{Name: "update", Class: "btn", Id: "updatePassword", Type: "submit", Label: "Submit", Category: "form"}
 	buttons := []*Button{button}
 	return NewForm(formMeta, fields, buttons, nil, nil)
 }
@@ -57,10 +62,7 @@ func InitializeUserSettingsForm(user *User, admin bool) *Form {
 
 // InitializeGroupSettingsForm for a settings form
 func InitializeGroupSettingsForm(group *Group) *Form {
-	// Field Vector String Array, this is order
-	// NAME, TYPE, CLASS, ID, METHOD, ACTION
 	formMeta := []string{"Update", "Group", "form1", "updateGroup", "POST", "/admin/" + group.GetClass(true) + "/" + group.GetID() + "/update", "default"}
-	// Name, Class, Id, Type, Label, DefaultVal
 	nameField := NewInput("Group Name", "Group Name", "update", "name", "text", group.Name)
 	fields := []*InputField{nameField}
 	button := &Button{Name: "update", Class: "btn", Id: "updateGroup", Type: "submit", Label: "Submit", Category: "form"}
@@ -86,7 +88,6 @@ func InitializePopupDeleteForm[T DataModel](m T) *Form {
 func InitializePopupCreateUserForm(availGroups []*Group, setRole bool) *Form {
 	formAction := "/admin/users"
 	formMeta := []string{"Create", "User", "form-container", "createUser", "POST"}
-	// Name, Class, Id, Type, Label, DefaultVal
 	unField := NewInput("User Name", "User Name", "update", "username", "text", "")
 	pwField := NewInput("Password", "Password", "update", "password", "password", "")
 	cpwField := NewInput("Password", "Confirm Password", "password", "cpassword", "password", "")
@@ -118,10 +119,7 @@ func InitializePopupCreateUserForm(availGroups []*Group, setRole bool) *Form {
 
 // InitializePopupCreateGroupForm for a settings form
 func InitializePopupCreateGroupForm() *Form {
-	// Field Vector String Array, this is order
-	// NAME, TYPE, CLASS, ID, METHOD, ACTION, CATEGORY
 	formMeta := []string{"Create", "Group", "form-container", "createGroup", "POST", "/admin/groups", "popup"}
-	// Name, Class, Id, Type, Label, DefaultVal
 	unField := NewInput("Group Name", "Group Name", "update", "name", "text", "")
 	subButton := NewButtonInput("Submit", "", "btn", "", "submit", "Submit")
 	fields := []*InputField{unField, subButton}

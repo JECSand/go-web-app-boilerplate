@@ -1,9 +1,11 @@
 package services
 
 import (
-	"fmt"
+	"encoding/json"
+	"errors"
 	"github.com/JECSand/fetch"
 	"github.com/JECSand/go-web-app-boilerplate/models"
+	"io"
 	"os"
 )
 
@@ -57,19 +59,42 @@ func (a *AuthService) Register(user *models.User) (*models.Auth, error) {
 func (a *AuthService) Authenticate(user *models.User) (*models.Auth, error) {
 	var auth models.Auth
 	bodyStr := `{"email":"` + user.Email + `","password":"` + user.Password + `"}`
-	fmt.Println("\nCHECK BODY STRING: ", bodyStr)
 	f, err := a.authenticate([]byte(bodyStr), "login")
-	fmt.Println("\nCHECK AUTH ERROR: ", err)
 	if err != nil {
 		return nil, err
 	}
 	f.Resolve()
-	fmt.Println("\nCHECK AUTH res: ", f.Res)
 	err = auth.Load(f.Res)
 	if err != nil {
 		return nil, err
 	}
 	return &auth, nil
+}
+
+// UpdatePassword a User's password
+func (a *AuthService) UpdatePassword(pwDTO *models.UpdatePassword, auth *models.Auth) (*models.User, error) {
+	var user models.User
+	req := NewRequest(a.host+"/auth/password", auth.AuthToken)
+	f, err := req.Post(pwDTO.GetJSON())
+	if err != nil {
+		return &user, err
+	}
+	f.Resolve()
+	if f.Res.StatusCode != 202 {
+		return &user, errors.New("incorrect password")
+	}
+	body, err := io.ReadAll(io.LimitReader(f.Res.Body, 1048576))
+	if err != nil {
+		return &user, err
+	}
+	if err = f.Res.Body.Close(); err != nil {
+		return &user, err
+	}
+	err = json.Unmarshal(body, &user)
+	if err != nil {
+		return &user, err
+	}
+	return &user, nil
 }
 
 // Invalidate a User session

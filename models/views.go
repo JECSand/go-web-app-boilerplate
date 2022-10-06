@@ -22,6 +22,8 @@ type RegisterModel struct {
 	Heading  *Heading
 	Auth     *Auth
 	Form     *Form
+	Alert    *Alert
+	Status   bool
 }
 
 // LoginModel of dynamic data used for login view
@@ -34,6 +36,8 @@ type LoginModel struct {
 	Heading  *Heading
 	Auth     *Auth
 	Form     *Form
+	Alert    *Alert
+	Status   bool
 }
 
 // BuildRoute ...
@@ -118,17 +122,18 @@ func (adm *AdminModel) Initialize() {
 
 // AccountModel ...
 type AccountModel struct {
-	Title    string
-	Variable string
-	Name     string
-	SubRoute string
-	Route    string
-	Heading  *Heading
-	Auth     *Auth
-	User     *User
-	Alert    *Alert
-	Settings *Settings
-	//SettingsForm *Form
+	Title        string
+	Variable     string
+	Name         string
+	SubRoute     string
+	Route        string
+	Heading      *Heading
+	Auth         *Auth
+	User         *User
+	Settings     *Settings
+	PasswordForm *Form
+	Alert        *Alert
+	Status       bool
 }
 
 // BuildRoute ...

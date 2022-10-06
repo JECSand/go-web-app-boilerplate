@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"github.com/JECSand/go-web-app-boilerplate/models"
 	"github.com/JECSand/go-web-app-boilerplate/services"
 	"github.com/julienschmidt/httprouter"
@@ -23,10 +22,8 @@ func (p *AdminController) AdminPage(w http.ResponseWriter, r *http.Request) {
 	//vars returns and empty map array
 	subRoute := params.ByName("child")
 	updateId := params.ByName("id")
-	fmt.Println("ID Admin:", updateId)
 	//the subroute gives an index error and crashes the app if sURL[1]. If it is zero however it will work but it will never
 	//work for create since that needs to be vars 1 for the if to catch it.
-	fmt.Println("subRoute1:", subRoute)
 	loadGroups, err := p.groupService.GetMany(auth)
 	if err != nil {
 		http.Redirect(w, r, "/logout", 303)
@@ -59,14 +56,11 @@ func (p *AdminController) AdminPage(w http.ResponseWriter, r *http.Request) {
 func (p *AdminController) AdminGroupsPage(w http.ResponseWriter, r *http.Request) {
 	auth, _ := p.manager.authCheck(r)
 	params := httprouter.ParamsFromContext(r.Context())
-	//fmt.Println("VarsTEST:", params.ByName("id"))
 	//vars returns and empty map array
-	subRoute := params.ByName("child")
+	//subRoute := params.ByName("child")
 	updateId := params.ByName("id")
 	// Loop over header names
 	del := r.URL.Query().Get("deleted")
-	fmt.Println("\n\nID Admin Group: ", updateId)
-	fmt.Println("subRoute1:", subRoute)
 	loadGroups, err := p.groupService.GetMany(auth)
 	if err != nil {
 		http.Redirect(w, r, "/logout", 303)
@@ -110,14 +104,12 @@ func (p *AdminController) AdminUserPage(w http.ResponseWriter, r *http.Request) 
 	auth, _ := p.manager.authCheck(r)
 	params := httprouter.ParamsFromContext(r.Context())
 	up := r.URL.Query().Get("updated")
-
-	fmt.Println("VarsTEST:", params.ByName("id"))
 	paramId := params.ByName("id")
-	fmt.Println("ID Admin:", paramId)
-	if !auth.RootAdmin && paramId != auth.GroupId { // if user not Root Admin scope to auth GroupID of user
-		paramId = auth.GroupId
+	filter := &models.User{Id: paramId}
+	if !auth.RootAdmin { // if user not Root Admin scope to auth GroupID of user
+		filter.GroupId = auth.GroupId
 	}
-	user, err := p.userService.Get(auth, &models.User{Id: paramId})
+	user, err := p.userService.Get(auth, filter)
 	if err != nil {
 		http.Redirect(w, r, "/logout", 303)
 		return
@@ -158,9 +150,7 @@ func (p *AdminController) AdminGroupPage(w http.ResponseWriter, r *http.Request)
 	params := httprouter.ParamsFromContext(r.Context())
 	up := r.URL.Query().Get("updated")
 	del := r.URL.Query().Get("deleted")
-	fmt.Println("VarsTEST:", params.ByName("id"))
 	paramId := params.ByName("id")
-	fmt.Println("ID Admin:", paramId)
 	if !auth.RootAdmin && paramId != auth.GroupId { // if user not Root Admin scope to auth GroupID of user
 		paramId = auth.GroupId
 	}
@@ -263,7 +253,7 @@ func (p *AdminController) AdminCreateUserHandler(w http.ResponseWriter, r *http.
 		GroupId:   r.FormValue("group_id"),
 		Role:      r.FormValue("role"),
 	}
-	fmt.Println("\n\nCHECK NEW USR ROLE HERE: ", user.Role)
+	// TODO CHECK THAT PASSWORDS MATCH
 	if !auth.RootAdmin && user.GroupId != auth.GroupId { // if user not Root Admin scope to auth GroupID of user
 		user.GroupId = auth.GroupId
 	}
@@ -366,5 +356,33 @@ func (p *AdminController) AdminUpdateGroupHandler(w http.ResponseWriter, r *http
 		upMsg = "no"
 	}
 	http.Redirect(w, r, "/admin/groups/"+paramId+"?updated="+upMsg, 303)
+	return
+}
+
+// AdminUpdateUserHandler creates a new user group
+func (p *AdminController) AdminUpdateUserHandler(w http.ResponseWriter, r *http.Request) {
+	upMsg := "yes"
+	auth, _ := p.manager.authCheck(r)
+	params := httprouter.ParamsFromContext(r.Context())
+	paramId := params.ByName("id")
+	user := &models.User{
+		Id:        paramId,
+		FirstName: r.FormValue("first_name"),
+		LastName:  r.FormValue("last_name"),
+		Email:     r.FormValue("email"),
+		Username:  r.FormValue("username"),
+		Password:  r.FormValue("password"),
+		GroupId:   r.FormValue("group_id"),
+		Role:      r.FormValue("role"),
+	}
+	// TODO CHECK THAT PASSWORDS MATCH
+	if !auth.RootAdmin && user.GroupId != auth.GroupId { // if user not Root Admin scope to auth GroupID of user
+		user.GroupId = auth.GroupId
+	}
+	user, err := p.userService.Update(auth, user)
+	if err != nil {
+		upMsg = "no"
+	}
+	http.Redirect(w, r, "/admin/users/"+user.Id+"?updated="+upMsg, 303)
 	return
 }

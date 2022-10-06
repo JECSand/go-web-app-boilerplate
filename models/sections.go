@@ -4,9 +4,14 @@ package models
 func InitializeUserSettings(user *User, admin bool) *Settings {
 	SettingsForm := InitializeUserSettingsForm(user, admin)
 	// 1. NewLinkDiv(class string, id string, label string, head *Heading, links []*Link)
+	var links []*Link
 	infoLink := NewLink("active", "", "/account/settings", "Change User Info", true)
-	pwLink := NewLink("", "", "/account/settings/password", "Change Password", true)
-	optionsCol := NewLinkDiv("columnOne", "", "", NewColumnHeading("Options", ""), []*Link{infoLink, pwLink})
+	links = append(links, infoLink)
+	if !admin {
+		pwLink := NewLink("", "", "/account/password", "Change Password", true)
+		links = append(links, pwLink)
+	}
+	optionsCol := NewLinkDiv("columnOne", "", "", NewColumnHeading("Options", ""), links)
 	// 2. NewLinkDiv(class string, id string, label string, head *Heading, links []*Link)
 	unLink := NewLink("active", "", "", user.Username, true)
 	rLink := NewLink("active", "", "", user.Role, true)
