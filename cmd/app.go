@@ -5,6 +5,7 @@ import (
 	"github.com/JECSand/go-web-app-boilerplate/server"
 	"github.com/JECSand/go-web-app-boilerplate/services"
 	"github.com/JECSand/go-web-app-boilerplate/views"
+	"os"
 )
 
 // App is the highest level struct of the rest_api application. Stores the server, client, and config settings.
@@ -15,10 +16,11 @@ type App struct {
 // Initialize is a function used to initialize a new instantiation of the API Application
 func (a *App) Initialize(env string) error {
 	config, err := ConfigurationSettings(env)
-	if err != nil {
-		return err
+	if err != nil && os.Getenv("ENV") != "docker-dev" {
+		InitializeEnvironment() // default configs when config file unavailable
+	} else if os.Getenv("ENV") != "docker-dev" {
+		config.InitializeEnvironment()
 	}
-	config.InitializeEnvironment()
 	var globalSessions *services.SessionService
 	globalSessions = services.NewSessionService()
 	v := views.InitializeViewer()

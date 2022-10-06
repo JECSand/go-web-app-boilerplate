@@ -43,3 +43,12 @@ func (c *Configuration) InitializeEnvironment() {
 	os.Setenv("REDIS_PASSWORD", c.RedisPassword)
 	os.Setenv("ENV", c.ENV)
 }
+
+func InitializeEnvironment() {
+	os.Setenv("PORT", "8080")
+	os.Setenv("API_HOST", "http://localhost:8081")
+	os.Setenv("SESSION_MANAGER", "Default")
+	os.Setenv("REDIS_HOST", "localhost:55000")
+	os.Setenv("REDIS_PASSWORD", "redispw")
+	os.Setenv("ENV", "dev")
+}

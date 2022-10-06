@@ -1,13 +1,13 @@
+github.com/42wim/go.rice v0.0.0-20220806145944-89595af70cab h1:8fmLG2rZgILYhOUL3VITia27KnWlg02F8wrBGDvZjg8=
+github.com/42wim/go.rice v0.0.0-20220806145944-89595af70cab/go.mod h1:WjL9K8gL8qKPb8mTpesxWkZQWl93rbMv0sfDzi2pwAA=
+github.com/42wim/go.zipexe v0.0.0-20220806143830-85f957dec14b h1:qbrthABcLqw3d0fZJyVY4GAOProS/AGFkuHnfXqZH14=
+github.com/42wim/go.zipexe v0.0.0-20220806143830-85f957dec14b/go.mod h1:s0WHahLqwilRGfGUHULA/H8/GXg3TYuMiJcBoYycZq0=
 github.com/GeertJohan/go.incremental v1.0.0 h1:7AH+pY1XUgQE4Y1HcXYaMqAI0m9yrFqo/jt0CW30vsg=
 github.com/GeertJohan/go.incremental v1.0.0/go.mod h1:6fAjUhbVuX1KcMD3c8TEgVUqmo4seqhv0i0kdATSkM0=
-github.com/GeertJohan/go.rice v1.0.2 h1:PtRw+Tg3oa3HYwiDBZyvOJ8LdIyf6lAovJJtr7YOAYk=
-github.com/GeertJohan/go.rice v1.0.2/go.mod h1:af5vUNlDNkCjOZeSGFgIJxDje9qdjsO6hshx0gTmZt4=
 github.com/JECSand/fetch v0.0.0-20210617180318-e3bf8ef824ce h1:CITFWRymvCSgemQCBIGs1pFQYqnlhP69LYHmyTN1ZRY=
 github.com/JECSand/fetch v0.0.0-20210617180318-e3bf8ef824ce/go.mod h1:nms6O4iHVdMh0xDXqxqz8chJ5qpQn1IaVYYzGL/z46A=
 github.com/akavel/rsrc v0.8.0 h1:zjWn7ukO9Kc5Q62DOJCcxGpXC18RawVtYAGdz2aLlfw=
 github.com/akavel/rsrc v0.8.0/go.mod h1:uLoCtb9J+EyAqh+26kdrTgmzRBFPGOolLWKpdxkKq+c=
-github.com/daaku/go.zipexe v1.0.0 h1:VSOgZtH418pH9L16hC/JrgSNJbbAL26pj7lmD1+CGdY=
-github.com/daaku/go.zipexe v1.0.0/go.mod h1:z8IiR6TsVLEYKwXAoE/I+8ys/sDkgTzSL0CLnGVd57E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
