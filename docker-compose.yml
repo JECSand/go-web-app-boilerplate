@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - redis-container
+    ports:
+      - 8080:8080
+    networks:
+      - project
+    restart: always
+    environment:
+      PORT: "8080"
+      API_HOST: "http://localhost:8081"
+      SESSION_MANAGER: "Default"
+      REDIS_HOST: "localhost:55000"
+      REDIS_PASSWORD: "redispw"
+      ENV: docker-dev
+
+  redis-container:
+    image: redis:latest
+    restart: always
+    ports:
+      - 55000:55000
+    networks:
+      - project
+    expose:
+      - 55000
+    volumes:
+      - redis_data_container:/data/db
+
+networks:
+  project:
+    driver: bridge
+
+volumes:
+  redis_data_container:
