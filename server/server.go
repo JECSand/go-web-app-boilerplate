@@ -23,7 +23,7 @@ func NewServer(manager *controllers.ControllerManager, auth *services.AuthServic
 	s := Server{manager: manager}
 	basicController := s.manager.NewBasicController()
 	authController := s.manager.NewAuthController(auth)
-	accountController := s.manager.NewAccountController(u)
+	accountController := s.manager.NewAccountController(u, auth)
 	adminController := s.manager.NewAdminController(u, g)
 	s.Router = GetRouter(manager, basicController, authController, accountController, adminController)
 	return &s

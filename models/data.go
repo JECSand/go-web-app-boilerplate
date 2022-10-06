@@ -273,3 +273,27 @@ func (d *Tasks) Validate() error {
 func (d *Tasks) Count() int {
 	return len(d.Items)
 }
+
+/*
+================ Auth DTOs ==================
+*/
+
+// UpdatePassword is used when updating a user password
+type UpdatePassword struct {
+	NewPassword     string `json:"new_password"`
+	CurrentPassword string `json:"current_password"`
+}
+
+// GetJSON checks the data in the DTO for issues
+func (d *UpdatePassword) GetJSON() []byte {
+	b, _ := json.Marshal(d)
+	return b
+}
+
+// Validate checks the data in the DTO for issues
+func (d *UpdatePassword) Validate() error {
+	if d.CurrentPassword == d.NewPassword {
+		return errors.New("passwords cannot match")
+	}
+	return nil
+}
