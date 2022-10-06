@@ -1,26 +1,31 @@
-FROM golang AS builder
+# syntax=docker/dockerfile:1
 
-WORKDIR /src
-# Download dependencies
-COPY go.mod go.sum /
-RUN go mod download && \
-    go install github.com/GeertJohan/go.rice && \
-    go install github.com/GeertJohan/go.rice/rice
+FROM golang:1.19-alpine as builder
 
+WORKDIR /go/src/github.com/JECSand/go-web-app-boilerplate
+ENV GO111MODULE on
+COPY go.mod ./
+COPY go.sum ./
+RUN go mod download
 
-# Add source code
 COPY . .
-RUN CGO_ENABLED=0 go generate 'rice embed-go' && \
-    go build -o main .
+
+RUN go install github.com/42wim/go.rice && \
+    go install github.com/42wim/go.rice/rice && \
+    go install github.com/JECSand/go-web-app-boilerplate && \
+    cd /go/src/github.com/JECSand/go-web-app-boilerplate/views && \
+    rice embed-go && \
+    cd .. && \
+    go generate 'rice embed-go' && \
+    go build
 
 # Multi-Stage production build
 FROM alpine AS production
 RUN apk --no-cache add ca-certificates
 
-WORKDIR /app
+WORKDIR /github.com/JECSand/go-web-app-boilerplate
 # Retrieve the binary from the previous stage
-COPY --from=builder /src/main .
-# Expose port
+COPY --from=builder /go/src/github.com/JECSand/go-web-app-boilerplate/go-web-app-boilerplate /github.com/JECSand/go-web-app-boilerplate
 EXPOSE 8080
-# Set the binary as the entrypoint of the container
-CMD ["./main"]
+
+CMD [ "./go-web-app-boilerplate" ]

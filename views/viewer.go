@@ -2,7 +2,7 @@ package views
 
 import (
 	"fmt"
-	rice "github.com/GeertJohan/go.rice"
+	rice "github.com/42wim/go.rice"
 	"html/template"
 	"log"
 	"net/http"
@@ -10,6 +10,8 @@ import (
 	"path/filepath"
 	"strings"
 )
+
+//go:generate rice embed-go
 
 // splitPathURL
 func splitPathURL(r *http.Request) []string {

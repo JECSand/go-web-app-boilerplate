@@ -1,6 +1,9 @@
 package main
 
-import "github.com/JECSand/go-web-app-boilerplate/cmd"
+import (
+	_ "github.com/42wim/go.rice"
+	"github.com/JECSand/go-web-app-boilerplate/cmd"
+)
 
 //go:generate rice embed-go
 
