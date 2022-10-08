@@ -18,12 +18,8 @@ type AdminController struct {
 func (p *AdminController) AdminPage(w http.ResponseWriter, r *http.Request) {
 	auth, _ := p.manager.authCheck(r)
 	params := httprouter.ParamsFromContext(r.Context())
-	//fmt.Println("VarsTEST:", params.ByName("id"))
-	//vars returns and empty map array
 	subRoute := params.ByName("child")
 	updateId := params.ByName("id")
-	//the subroute gives an index error and crashes the app if sURL[1]. If it is zero however it will work but it will never
-	//work for create since that needs to be vars 1 for the if to catch it.
 	loadGroups, err := p.groupService.GetMany(auth)
 	if err != nil {
 		http.Redirect(w, r, "/logout", 303)

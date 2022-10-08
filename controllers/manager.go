@@ -90,3 +90,13 @@ func (p *ControllerManager) NewAdminController(uService *services.UserService, g
 		groupService: gService,
 	}
 }
+
+// NewTaskController initialized a BasicViews struct for rendering Admin Views
+func (p *ControllerManager) NewTaskController(uService *services.UserService, gService *services.GroupService, tService *services.TaskService) *TaskController {
+	return &TaskController{
+		manager:      p,
+		taskService:  tService,
+		userService:  uService,
+		groupService: gService,
+	}
+}

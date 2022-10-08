@@ -28,8 +28,9 @@ func (a *App) Initialize(env string) error {
 	authService := services.NewAuthService()
 	uService := services.NewUserService()
 	gService := services.NewGroupService()
+	tService := services.NewTaskService()
 	manager := controllers.NewManager(v, globalSessions)
-	a.server = server.NewServer(manager, authService, uService, gService)
+	a.server = server.NewServer(manager, authService, uService, gService, tService)
 	return nil
 }
 
