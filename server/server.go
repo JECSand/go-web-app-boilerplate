@@ -19,13 +19,14 @@ type Server struct {
 }
 
 // NewServer is a function used to initialize a new Server struct
-func NewServer(manager *controllers.ControllerManager, auth *services.AuthService, u *services.UserService, g *services.GroupService) *Server {
+func NewServer(manager *controllers.ControllerManager, auth *services.AuthService, u *services.UserService, g *services.GroupService, t *services.TaskService) *Server {
 	s := Server{manager: manager}
 	basicController := s.manager.NewBasicController()
 	authController := s.manager.NewAuthController(auth)
 	accountController := s.manager.NewAccountController(u, auth)
 	adminController := s.manager.NewAdminController(u, g)
-	s.Router = GetRouter(manager, basicController, authController, accountController, adminController)
+	taskController := s.manager.NewTaskController(u, g, t)
+	s.Router = GetRouter(manager, basicController, authController, accountController, adminController, taskController)
 	return &s
 }
 

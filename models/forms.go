@@ -96,7 +96,7 @@ func InitializePopupCreateUserForm(availGroups []*Group, setRole bool) *Form {
 	emailField := NewInput("Email", "Email", "update", "email", "text", "")
 	fields := []*InputField{unField, pwField, cpwField, fnField, lnField, emailField}
 	if len(availGroups) > 1 {
-		groupField := NewSelectInput("User Group", "User Group", "update", "group_id", "text", GetGroupSelectOptions(availGroups), false)
+		groupField := NewSelectInput("User Group", "User Group", "update", "group_id", "text", GetDataSelectOptions(availGroups), false)
 		fields = append(fields, groupField)
 	} else if len(availGroups) == 1 {
 		formAction = "/admin/groups/" + availGroups[0].Id
@@ -111,6 +111,31 @@ func InitializePopupCreateUserForm(availGroups []*Group, setRole bool) *Form {
 	fields = append(fields, subButton)
 	clsButton := &Button{Name: "update", Class: "btn cancel", Id: "createUser", Type: "button", Label: "Close", Category: "close-click"}
 	opButton := &Button{Name: "update", Class: "open-button create", Id: "createUser", Type: "button", Label: "Create User", Category: "open-click"}
+	buttons := []*Button{clsButton}
+	formMeta = append(formMeta, formAction)
+	formMeta = append(formMeta, "popup")
+	return NewForm(formMeta, fields, buttons, opButton, &Script{Load: true, Category: "popupForm"})
+}
+
+// InitializePopupCreateTaskForm for a settings form
+func InitializePopupCreateTaskForm(availUsers []*User) *Form {
+	formAction := "/tasks"
+	formMeta := []string{"Create", "Task", "form-container", "createTask", "POST"}
+	nameField := NewInput("Task Name", "Task Name", "update", "name", "text", "")
+	dueField := NewInput("Due", "Due", "update", "due", "datetime-local", "")
+	descField := NewTextAreaInput("Description", "Description", "update", "description", "10", "30", "")
+	fields := []*InputField{nameField, dueField, descField}
+	if len(availUsers) > 1 {
+		userField := NewSelectInput("Assign User", "Assign User", "update", "user_id", "text", GetDataSelectOptions(availUsers), false)
+		fields = append(fields, userField)
+	} else if len(availUsers) == 1 {
+		userField := NewInput("Assign User", "", "update", "user_id", "hidden", availUsers[0].Id)
+		fields = append(fields, userField)
+	}
+	subButton := NewButtonInput("Submit", "", "btn", "", "submit", "Submit")
+	fields = append(fields, subButton)
+	clsButton := &Button{Name: "update", Class: "btn cancel", Id: "createTask", Type: "button", Label: "Close", Category: "close-click"}
+	opButton := &Button{Name: "update", Class: "open-button create", Id: "createTask", Type: "button", Label: "Create Task", Category: "open-click"}
 	buttons := []*Button{clsButton}
 	formMeta = append(formMeta, formAction)
 	formMeta = append(formMeta, "popup")

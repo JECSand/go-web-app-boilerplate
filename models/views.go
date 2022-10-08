@@ -148,3 +148,33 @@ func (acm *AccountModel) BuildRoute() {
 func (acm *AccountModel) Initialize() {
 	acm.BuildRoute()
 }
+
+// TaskModel ...
+type TaskModel struct {
+	Title         string
+	Variable      string
+	Name          string
+	SubRoute      string
+	Route         string
+	Heading       *Heading
+	Auth          *Auth
+	User          *User
+	Settings      *Settings
+	CreateTask    *Form
+	OverviewTasks *List
+	Alert         *Alert
+	Status        bool
+}
+
+// BuildRoute ...
+func (tm *TaskModel) BuildRoute() {
+	route := tm.Name + "/" + tm.SubRoute
+	fmt.Println("subroutetest:", tm.SubRoute)
+	tm.Route = route
+	fmt.Println("routetest:", tm.Route)
+}
+
+// Initialize a new Account Page Data Model
+func (tm *TaskModel) Initialize() {
+	tm.BuildRoute()
+}

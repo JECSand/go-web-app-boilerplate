@@ -6,7 +6,8 @@ import (
 )
 
 // GetRouter returns a new HTTP Router
-func GetRouter(p *controllers.ControllerManager, b *controllers.BasicController, au *controllers.AuthController, ac *controllers.AccountController, ad *controllers.AdminController) *httprouter.Router {
+func GetRouter(p *controllers.ControllerManager, b *controllers.BasicController, au *controllers.AuthController,
+	ac *controllers.AccountController, ad *controllers.AdminController, t *controllers.TaskController) *httprouter.Router {
 
 	// mux handler
 	router := httprouter.New()
@@ -53,9 +54,12 @@ func GetRouter(p *controllers.ControllerManager, b *controllers.BasicController,
 	router.Handler("POST", "/admin/users/:id/update", p.Protected(ad.AdminUpdateUserHandler))
 	router.Handler("GET", "/admin/users/:id/delete", p.Protected(ad.AdminDeleteUserHandler))
 
-	// Task Route
-	router.GET("/tasks", b.VariablePage)
+	// Task Page Routes
+	router.Handler("GET", "/tasks", p.Protected(t.TaskPage))
 	router.GET("/tasks/:child", b.VariablePage)
+
+	// Task Handler Routes
+	router.Handler("POST", "/tasks", p.Protected(t.CreateTaskHandler))
 
 	// Example route that encounters an error
 	router.GET("/broken/handler", b.BrokenPage)

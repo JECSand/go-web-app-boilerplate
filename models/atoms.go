@@ -121,11 +121,11 @@ type SelectOptions struct {
 	Selected bool
 }
 
-// GetGroupSelectOptions ...
-func GetGroupSelectOptions(groups []*Group) []*SelectOptions {
+// GetDataSelectOptions ...
+func GetDataSelectOptions[T DataModel](m []T) []*SelectOptions {
 	var ops []*SelectOptions
-	for _, g := range groups {
-		ops = append(ops, &SelectOptions{Value: g.Id, Label: g.Name})
+	for _, g := range m {
+		ops = append(ops, &SelectOptions{Value: g.GetID(), Label: g.GetLabel()})
 	}
 	return ops
 }
@@ -229,8 +229,8 @@ func NewSelectInput(name string, label string, class string, id string, iType st
 	}
 }
 
-// NewTextInput ...
-func NewTextInput(name string, label string, class string, id string, rows string, cols string, val string) *InputField {
+// NewTextAreaInput ...
+func NewTextAreaInput(name string, label string, class string, id string, rows string, cols string, val string) *InputField {
 	return &InputField{
 		Name:     name,
 		Label:    label,
