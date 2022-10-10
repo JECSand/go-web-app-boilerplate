@@ -246,3 +246,37 @@ func NewTextAreaInput(name string, label string, class string, id string, rows s
 		Category: "text",
 	}
 }
+
+/*
+Table Types
+*/
+
+// TableData ...
+type TableData struct {
+	Value    string
+	Link     *Link
+	Class    string
+	Category string
+}
+
+// NewTableData ...
+func NewTableData(value string, class string) *TableData {
+	return &TableData{Value: value, Class: class, Category: "default"}
+}
+
+// NewLinkedTableData ...
+func NewLinkedTableData(valLink *Link, class string) *TableData {
+	return &TableData{Link: valLink, Class: class, Category: "default"}
+}
+
+// TableHeader ...
+type TableHeader struct {
+	Label    string
+	Class    string
+	Category string
+}
+
+// NewTableHeader ...
+func NewTableHeader(label string, class string) *TableHeader {
+	return &TableHeader{Label: label, Class: class, Category: "default"}
+}

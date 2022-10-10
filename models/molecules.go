@@ -113,3 +113,54 @@ func NewListDiv(class string, id string, label string, head *Heading, list *List
 		Category: "list",
 	}
 }
+
+/*
+Table Types
+*/
+
+// TableRow ...
+type TableRow struct {
+	Class        string
+	Id           string
+	TableData    []*TableData
+	TableHeaders []*TableHeader
+	Category     string
+}
+
+// NewTableRow ...
+func NewTableRow(class string, id string, td []*TableData) *TableRow {
+	return &TableRow{
+		Class:     class,
+		Id:        id,
+		TableData: td,
+		Category:  "default",
+	}
+}
+
+// NewTableHeaderRow ...
+func NewTableHeaderRow(class string, id string, th []*TableHeader) *TableRow {
+	return &TableRow{
+		Class:        class,
+		Id:           id,
+		TableHeaders: th,
+		Category:     "headers",
+	}
+}
+
+// TableBody ...
+type TableBody struct {
+	Class     string
+	Id        string
+	TableRows []*TableRow
+	Category  string
+}
+
+// NewTableBody ...
+func NewTableBody(class string, id string, tr []*TableRow) *TableBody {
+	return &TableBody{
+		Class:     class,
+		Id:        id,
+		TableRows: tr,
+		Category:  "default",
+	}
+}
