@@ -1,3 +1,6 @@
+{{ if .Script }}
+    {{ template "templates/components/atoms/scripts.html" .Script }}
+{{ end }}
 {{ if .SearchBar }}
     {{ template "templates/components/atoms/inputs.html" .SearchBar }}
 {{ end }}

@@ -8,6 +8,7 @@ ListItem Types
 type ItemOption struct {
 	Form     *Form
 	Button   *Button
+	Input    *InputField
 	Label    string
 	Category string
 }
@@ -19,6 +20,15 @@ func NewDeleteOption(delForm *Form, btn *Button) *ItemOption {
 		Button:   btn,
 		Label:    "",
 		Category: "delete",
+	}
+}
+
+// NewCheckOption ...
+func NewCheckOption(label string, input *InputField) *ItemOption {
+	return &ItemOption{
+		Input:    input,
+		Label:    label,
+		Category: "checkbox",
 	}
 }
 

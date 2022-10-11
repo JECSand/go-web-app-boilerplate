@@ -50,6 +50,7 @@ type List struct {
 	Id        string      `json:"id,omitempty"`
 	Items     []*ListItem `json:"inputs,omitempty"`
 	SearchBar *InputField `json:"search_bar,omitempty"`
+	Script    *Script     `json:"script,omitempty"`
 	Category  string      `json:"category,omitempty"`
 }
 

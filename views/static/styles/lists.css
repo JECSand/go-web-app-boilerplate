@@ -36,6 +36,11 @@ ul.linked a.pill:hover {
     margin-left: 10px;
 }
 
+.pill input[type=checkbox] {
+    float: right;
+    text-align: right;
+}
+
 .linked.filter {
     width: 100%; /* Full-width */
     font-size: 16px; /* Increase font-size */

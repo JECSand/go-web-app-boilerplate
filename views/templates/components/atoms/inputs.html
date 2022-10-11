@@ -9,6 +9,14 @@
     <input type={{ .Type }} value={{ .Value }}><br>
     {{ end }}
 
+{{ else if eq .Category "checkbox" }}
+
+    {{ if .Checked }}
+    <input type="checkbox" id={{ .Id }} class={{ .Class }} onclick="postCheck({{ .Value }}, {{ .Id }}, event)" checked>
+    {{ else }}
+    <input type="checkbox" id={{ .Id }} class={{ .Class }} onclick="postCheck({{ .Value }}, {{ .Id }}, event)">
+    {{ end }}
+
 {{ else if eq .Category "input" }}
 
     {{ if ne .Value "" }}

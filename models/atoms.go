@@ -149,8 +149,9 @@ type InputField struct {
 	Class    string
 	Id       string
 	Type     string // acts as the formId in searchBar inputs
-	Value    string
+	Value    string // acts as the RequestURL in checkbox type
 	Multi    bool
+	Checked  bool
 	Options  []*SelectOptions
 	Rows     string
 	Cols     string
@@ -173,6 +174,23 @@ func NewSearchInput(class string, id string, iType string, val string) *InputFie
 		Cols:     "",
 		Script:   &Script{Category: "searchBar"},
 		Category: "search",
+	}
+}
+
+// NewCheckboxInput ...
+func NewCheckboxInput(label string, class string, id string, chk bool, val string) *InputField {
+	return &InputField{
+		Label:    label,
+		Class:    class,
+		Id:       id,
+		Checked:  chk,
+		Value:    val,
+		Multi:    false,
+		Options:  nil,
+		Rows:     "",
+		Cols:     "",
+		Script:   nil,
+		Category: "checkbox",
 	}
 }
 
