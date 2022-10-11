@@ -85,7 +85,7 @@ func InitializePopupDeleteForm[T DataModel](m T) *Form {
 }
 
 // InitializePopupCreateUserForm for a settings form
-func InitializePopupCreateUserForm(availGroups []*Group, setRole bool) *Form {
+func InitializePopupCreateUserForm(availGroups []*Group, setRole bool, master bool) *Form {
 	formAction := "/admin/users"
 	formMeta := []string{"Create", "User", "form-container", "createUser", "POST"}
 	unField := NewInput("User Name", "User Name", "update", "username", "text", "")
@@ -96,6 +96,9 @@ func InitializePopupCreateUserForm(availGroups []*Group, setRole bool) *Form {
 	emailField := NewInput("Email", "Email", "update", "email", "text", "")
 	fields := []*InputField{unField, pwField, cpwField, fnField, lnField, emailField}
 	if len(availGroups) > 1 {
+		if master {
+			formAction += "?view=table"
+		}
 		groupField := NewSelectInput("User Group", "User Group", "update", "group_id", "text", GetDataSelectOptions(availGroups), false)
 		fields = append(fields, groupField)
 	} else if len(availGroups) == 1 {

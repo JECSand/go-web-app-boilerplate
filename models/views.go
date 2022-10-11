@@ -94,6 +94,7 @@ type AdminModel struct {
 	CreateUser    *Form
 	GroupSettings *Settings
 	UserSettings  *Settings
+	UsersTable    *Table
 	ListGroups    *List
 	ListUsers     *List
 	Users         []*User

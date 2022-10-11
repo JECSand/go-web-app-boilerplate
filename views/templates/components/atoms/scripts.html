@@ -28,8 +28,19 @@
         }
     }
 </script>
-{{ else if eq .Category "dataTable"}}
+{{ else if eq .Category "dataTableUsers"}}
 <script>
-
+    $(document).ready(function () {
+        $({{ .Id }}).DataTable({
+            columns: [
+                { data: 'email' },
+                { data: 'username' },
+                { data: 'first_name' },
+                { data: 'last_name' },
+                { data: 'group_id' },
+                { data: 'role' },
+            ],
+        });
+    });
 </script>
 {{ end }}

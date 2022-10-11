@@ -22,7 +22,7 @@
     {{ if .Multi }}
     <select name={{ .Id }} id={{ .Id }} size="4" multiple>
     {{ else }}
-    <select name={{ .Id }} id={{ .Id }} >
+    <select name={{ .Id }} id={{ .Id }}>
     {{ end }}
         {{range .Options}}
         {{ if .Selected }}
@@ -31,13 +31,13 @@
             <option value={{ .Value }}>{{ .Label }}</option>
         {{ end }}
         {{ end }}
-    </select>
+    </select><br>
 
 {{ else if eq .Category "text" }}
 
 <textarea name={{ .Id }} rows={{ .Rows }} cols={{ .Cols }}>
 {{ .Value }}
-</textarea>
+</textarea><br>
 
 {{ else if eq .Category "search" }}
     {{ if .Script }}

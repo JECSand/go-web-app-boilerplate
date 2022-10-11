@@ -52,10 +52,7 @@ func (p *AdminController) AdminPage(w http.ResponseWriter, r *http.Request) {
 func (p *AdminController) AdminGroupsPage(w http.ResponseWriter, r *http.Request) {
 	auth, _ := p.manager.authCheck(r)
 	params := httprouter.ParamsFromContext(r.Context())
-	//vars returns and empty map array
-	//subRoute := params.ByName("child")
 	updateId := params.ByName("id")
-	// Loop over header names
 	del := r.URL.Query().Get("deleted")
 	loadGroups, err := p.groupService.GetMany(auth)
 	if err != nil {
@@ -156,7 +153,7 @@ func (p *AdminController) AdminGroupPage(w http.ResponseWriter, r *http.Request)
 		return
 	}
 	groupSettings := models.InitializeGroupSettings(groupUsers.Group, groupUsers.Users)
-	createForm := models.InitializePopupCreateUserForm([]*models.Group{groupUsers.Group}, true)
+	createForm := models.InitializePopupCreateUserForm([]*models.Group{groupUsers.Group}, true, false)
 	model := models.AdminModel{
 		Name:          "admin",
 		Title:         "Group Settings",
@@ -186,6 +183,66 @@ func (p *AdminController) AdminGroupPage(w http.ResponseWriter, r *http.Request)
 			alert = models.NewSuccessAlert("User Deleted", true)
 		} else if del == "no" {
 			alert = models.NewErrorAlert("Error Deleting User", true)
+		}
+		model.Alert = alert
+		model.Status = true
+	}
+	p.manager.Viewer.RenderTemplate(w, "templates/admin.html", &model)
+}
+
+// MasterAdminUserPage renders the Admin Page for a specific Group
+func (p *AdminController) MasterAdminUserPage(w http.ResponseWriter, r *http.Request) {
+	auth, _ := p.manager.authCheck(r)
+	cr := r.URL.Query().Get("created")
+	gReq := p.groupService.NewGroupsRequest("", auth)
+	gFetch, err := gReq.GetAsync()
+	if err != nil {
+		http.Redirect(w, r, "/logout", 303)
+		return
+	}
+	uReq := p.userService.NewUsersRequest("", auth)
+	uFetch, err := uReq.GetAsync()
+	//users, err := p.userService.GetMany(auth)
+	if err != nil {
+		http.Redirect(w, r, "/logout", 303)
+		return
+	}
+	gFetch.Resolve()
+	g, err := gReq.LoadModel(gFetch.Res)
+	if err != nil {
+		http.Redirect(w, r, "/logout", 303)
+		return
+	}
+	createForm := models.InitializePopupCreateUserForm(g.Items, true, true)
+	uFetch.Resolve()
+	u, err := uReq.LoadModel(uFetch.Res)
+	if err != nil {
+		http.Redirect(w, r, "/logout", 303)
+		return
+	}
+	userTable := models.NewUsersTable(u.Items)
+	model := models.AdminModel{
+		Name:       "admin",
+		Title:      "User Management",
+		Route:      "admin",
+		SubRoute:   "users-table",
+		Auth:       auth,
+		Method:     "GET",
+		Heading:    models.NewHeading("User Management", "w3-wide text"),
+		UsersTable: userTable,
+		CreateUser: createForm,
+	}
+	model.Initialize()
+	if !auth.Authenticated {
+		http.Redirect(w, r, "/logout", 303)
+		return
+	}
+	if cr != "" {
+		var alert *models.Alert
+		if cr == "yes" {
+			alert = models.NewSuccessAlert("User Created", true)
+		} else if cr == "no" {
+			alert = models.NewErrorAlert("Error Creating User", true)
 		}
 		model.Alert = alert
 		model.Status = true
@@ -239,6 +296,7 @@ func (p *AdminController) AdminCreateGroupHandler(w http.ResponseWriter, r *http
 // AdminCreateUserHandler creates a new user group
 func (p *AdminController) AdminCreateUserHandler(w http.ResponseWriter, r *http.Request) {
 	var errMsg string
+	reqView := r.URL.Query().Get("view")
 	auth, _ := p.manager.authCheck(r)
 	user := &models.User{
 		FirstName: r.FormValue("first_name"),
@@ -258,13 +316,21 @@ func (p *AdminController) AdminCreateUserHandler(w http.ResponseWriter, r *http.
 	if err != nil {
 		errMsg = err.Error()
 	}
+	if reqView == "table" {
+		if errMsg != "" {
+			http.Redirect(w, r, "/admin/users-table?created=no", 303)
+			return
+		}
+		http.Redirect(w, r, "/admin/users-table?created=yes", 303)
+		return
+	}
 	groupUsers, err := p.groupService.GetGroupUsers(auth, &models.Group{Id: paramId})
 	if err != nil {
 		http.Redirect(w, r, "/logout", 303)
 		return
 	}
 	groupSettings := models.InitializeGroupSettings(groupUsers.Group, groupUsers.Users)
-	createForm := models.InitializePopupCreateUserForm([]*models.Group{groupUsers.Group}, true)
+	createForm := models.InitializePopupCreateUserForm([]*models.Group{groupUsers.Group}, true, false)
 	model := models.AdminModel{
 		Name:          "admin",
 		Title:         "Group Settings",

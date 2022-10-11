@@ -6,6 +6,7 @@ Script Types
 
 // Script ...
 type Script struct {
+	Id       string
 	Load     bool
 	Category string
 }
@@ -266,7 +267,7 @@ func NewTableData(value string, class string) *TableData {
 
 // NewLinkedTableData ...
 func NewLinkedTableData(valLink *Link, class string) *TableData {
-	return &TableData{Link: valLink, Class: class, Category: "default"}
+	return &TableData{Link: valLink, Class: class, Category: "link"}
 }
 
 // TableHeader ...
