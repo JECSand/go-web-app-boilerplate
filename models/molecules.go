@@ -137,6 +137,20 @@ func NewTableRow(class string, id string, td []*TableData) *TableRow {
 	}
 }
 
+// NewUserRow ...
+func NewUserRow(user *User) *TableRow {
+	idLink := NewLink("", "", "/admin/users/"+user.Id, user.Email, false)
+	uEmail := NewLinkedTableData(idLink, "")
+	uName := NewTableData(user.Username, "")
+	uFirst := NewTableData(user.FirstName, "")
+	uLast := NewTableData(user.LastName, "")
+	gLink := NewLink("", "", "/admin/groups/"+user.GroupId, user.GroupId, false)
+	uGroup := NewLinkedTableData(gLink, "")
+	uRole := NewTableData(user.Role, "")
+	tableData := []*TableData{uEmail, uName, uFirst, uLast, uGroup, uRole}
+	return NewTableRow("", user.Id, tableData)
+}
+
 // NewTableHeaderRow ...
 func NewTableHeaderRow(class string, id string, th []*TableHeader) *TableRow {
 	return &TableRow{
@@ -145,6 +159,18 @@ func NewTableHeaderRow(class string, id string, th []*TableHeader) *TableRow {
 		TableHeaders: th,
 		Category:     "headers",
 	}
+}
+
+// NewUserHeaderRow ...
+func NewUserHeaderRow() *TableRow {
+	uEmail := NewTableHeader("Email", "")
+	uName := NewTableHeader("Username", "")
+	uFirst := NewTableHeader("First Name", "")
+	uLast := NewTableHeader("Last Name", "")
+	uGroup := NewTableHeader("Group ID", "")
+	uRole := NewTableHeader("Role", "")
+	tableData := []*TableHeader{uEmail, uName, uFirst, uLast, uGroup, uRole}
+	return NewTableHeaderRow("", "", tableData)
 }
 
 // TableBody ...

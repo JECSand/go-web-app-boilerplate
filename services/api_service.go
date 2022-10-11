@@ -87,8 +87,8 @@ type APIRequest[T models.DTOModel] struct {
 	auth *models.Auth
 }
 
-// loadModel loads returned json data into a dataModel
-func (api *APIRequest[T]) loadModel(resp *http.Response) (T, error) {
+// LoadModel loads returned json data into a dataModel
+func (api *APIRequest[T]) LoadModel(resp *http.Response) (T, error) {
 	var m T
 	if resp.StatusCode != 200 && resp.StatusCode != 201 && resp.StatusCode != 202 {
 		return m, errors.New("response status error")
@@ -116,7 +116,12 @@ func (api *APIRequest[T]) Get() (T, error) {
 		return m, err
 	}
 	f.Resolve()
-	return api.loadModel(f.Res)
+	return api.LoadModel(f.Res)
+}
+
+// GetAsync a dataModel
+func (api *APIRequest[T]) GetAsync() (*fetch.Fetch, error) {
+	return NewRequest(api.url, api.auth.AuthToken).Get()
 }
 
 // Create a dataModel
@@ -128,7 +133,7 @@ func (api *APIRequest[T]) Create(data T) (T, error) {
 		return m, err
 	}
 	f.Resolve()
-	return api.loadModel(f.Res)
+	return api.LoadModel(f.Res)
 }
 
 // Update a dataModel
@@ -140,7 +145,7 @@ func (api *APIRequest[T]) Update(data T) (T, error) {
 		return m, err
 	}
 	f.Resolve()
-	return api.loadModel(f.Res)
+	return api.LoadModel(f.Res)
 }
 
 // Delete a dataModel
@@ -152,7 +157,7 @@ func (api *APIRequest[T]) Delete() (T, error) {
 		return m, err
 	}
 	f.Resolve()
-	return api.loadModel(f.Res)
+	return api.LoadModel(f.Res)
 }
 
 /*
@@ -163,6 +168,16 @@ func (api *APIRequest[T]) Delete() (T, error) {
 type UserService struct {
 	host     string
 	endpoint string
+}
+
+// NewUsersRequest ... where filter = "/" + filter.GetID() or just ""
+func (s *UserService) NewUsersRequest(filter string, auth *models.Auth) *APIRequest[*models.Users] {
+	return &APIRequest[*models.Users]{url: s.host + s.endpoint + filter, auth: auth}
+}
+
+// NewUserRequest ... filter string,
+func (s *UserService) NewUserRequest(filter string, auth *models.Auth) *APIRequest[*models.User] {
+	return &APIRequest[*models.User]{url: s.host + s.endpoint + filter, auth: auth}
 }
 
 // GetMany returns a slice of dataModels
@@ -231,6 +246,16 @@ func NewUserService() *UserService {
 type GroupService struct {
 	host     string
 	endpoint string
+}
+
+// NewGroupsRequest ...
+func (s *GroupService) NewGroupsRequest(filter string, auth *models.Auth) *APIRequest[*models.Groups] {
+	return &APIRequest[*models.Groups]{url: s.host + s.endpoint + filter, auth: auth}
+}
+
+// NewGroupRequest ...
+func (s *GroupService) NewGroupRequest(filter string, auth *models.Auth) *APIRequest[*models.Group] {
+	return &APIRequest[*models.Group]{url: s.host + s.endpoint + filter, auth: auth}
 }
 
 // GetMany returns a slice of dataModels
@@ -309,6 +334,16 @@ func NewGroupService() *GroupService {
 type TaskService struct {
 	host     string
 	endpoint string
+}
+
+// NewTasksRequest ...
+func (s *TaskService) NewTasksRequest(filter string, auth *models.Auth) *APIRequest[*models.Tasks] {
+	return &APIRequest[*models.Tasks]{url: s.host + s.endpoint + filter, auth: auth}
+}
+
+// NewTaskRequest ...
+func (s *TaskService) NewTaskRequest(filter string, auth *models.Auth) *APIRequest[*models.Task] {
+	return &APIRequest[*models.Task]{url: s.host + s.endpoint + filter, auth: auth}
 }
 
 // GetMany returns a slice of dataModels

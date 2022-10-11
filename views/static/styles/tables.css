@@ -1,3 +1,6 @@
-table, th, td {
-    border: 1px solid black;
+/* Add styles to the list container */
+.table-container {
+    padding: 10px;
+    background-color: white;
+    margin: auto;
 }
