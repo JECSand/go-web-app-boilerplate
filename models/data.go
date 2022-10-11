@@ -17,6 +17,7 @@ type DataModel interface {
 	GetJSON() []byte
 	GetID() string
 	GetLabel() string
+	GetBoolField(fType string) bool
 	GetClass(pl bool) string
 }
 
@@ -59,6 +60,14 @@ func (g *Group) GetID() string {
 // GetLabel returns the Group label
 func (g *Group) GetLabel() string {
 	return g.Name
+}
+
+// GetBoolField returns a bool value stored in Group
+func (g *Group) GetBoolField(fType string) bool {
+	if fType == "RootAdmin" {
+		return g.RootAdmin
+	}
+	return false
 }
 
 // GetClass returns the Class string
@@ -110,6 +119,14 @@ func (u *User) GetLabel() string {
 	return u.Email
 }
 
+// GetBoolField returns a bool value stored in User
+func (u *User) GetBoolField(fType string) bool {
+	if fType == "RootAdmin" {
+		return u.RootAdmin
+	}
+	return false
+}
+
 // GetClass returns the Class string
 func (u *User) GetClass(pl bool) string {
 	if pl {
@@ -155,6 +172,14 @@ func (t *Task) GetID() string {
 // GetLabel returns the Task label
 func (t *Task) GetLabel() string {
 	return t.Name
+}
+
+// GetBoolField returns a bool value stored in Task
+func (t *Task) GetBoolField(fType string) bool {
+	if fType == "Completed" {
+		return t.Completed
+	}
+	return false
 }
 
 // GetClass returns the Class string

@@ -10,11 +10,11 @@ func NewList[T DataModel](m []T) *List {
 }
 
 // NewLinkedList initializes a new linked list of DataModel for rendering
-func NewLinkedList[T DataModel](m []T, delete bool, search bool) *List {
+func NewLinkedList[T DataModel](m []T, baseURL string, delete bool, search bool, chkBox bool) *List {
 	var listItems []*ListItem
 	listId, _ := GenerateUuid()
 	for _, gr := range m {
-		gLink := NewLink("pill", "", "/admin/"+gr.GetClass(true)+"/"+gr.GetID(), gr.GetLabel(), false)
+		gLink := NewLink("pill", "", baseURL+gr.GetClass(true)+"/"+gr.GetID(), gr.GetLabel(), false)
 		var ops []*ItemOption
 		if delete {
 			defForm := InitializePopupDeleteForm(gr)
@@ -22,6 +22,12 @@ func NewLinkedList[T DataModel](m []T, delete bool, search bool) *List {
 			defForm.Popup = nil
 			delOp := NewDeleteOption(defForm, btn)
 			ops = append(ops, delOp)
+		}
+		if chkBox {
+			reqURL := baseURL + gr.GetClass(true) + "/" + gr.GetID() + "/check"
+			chkInput := NewCheckboxInput("", "pill checkbox", "check"+gr.GetID(), gr.GetBoolField("Completed"), reqURL)
+			chkOp := NewCheckOption("", chkInput)
+			ops = append(ops, chkOp)
 		}
 		listItems = append(listItems, NewLinkListItem("pill", gr.GetID(), gLink, ops))
 	}

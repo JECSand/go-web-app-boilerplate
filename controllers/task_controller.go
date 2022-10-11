@@ -26,7 +26,8 @@ func (p *TaskController) TaskPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	userTasks, err := p.taskService.GetMany(auth)
-	userTasksList := models.NewLinkedList(userTasks, true, true)
+	userTasksList := models.NewLinkedList(userTasks, "/", true, true, true)
+	userTasksList.Script = &models.Script{Category: "postCheck"}
 	createForm := models.InitializePopupCreateTaskForm(groupUsers.Users)
 	model := models.TaskModel{
 		Title:         "Tasks",
