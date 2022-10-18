@@ -56,11 +56,12 @@ func GetRouter(p *controllers.ControllerManager, b *controllers.BasicController,
 	router.Handler("GET", "/admin/users/:id/delete", p.Protected(ad.AdminDeleteUserHandler))
 
 	// Task Page Routes
-	router.Handler("GET", "/tasks", p.Protected(t.TaskPage))
-	router.GET("/tasks/:child", b.VariablePage)
+	router.Handler("GET", "/tasks", p.Protected(t.TasksPage))
+	//router.Handler("GET", "/tasks/:id", p.Protected(b.TaskPage))
 
 	// Task Handler Routes
 	router.Handler("POST", "/tasks", p.Protected(t.CreateTaskHandler))
+	router.Handler("POST", "/tasks/:id/check", p.Protected(t.CompleteTaskHandler))
 
 	// Example route that encounters an error
 	router.GET("/broken/handler", b.BrokenPage)

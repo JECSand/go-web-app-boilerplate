@@ -1,9 +1,11 @@
 package controllers
 
 import (
+	"encoding/json"
 	"github.com/JECSand/go-web-app-boilerplate/models"
 	"github.com/JECSand/go-web-app-boilerplate/services"
 	"github.com/julienschmidt/httprouter"
+	"io"
 	"net/http"
 )
 
@@ -15,8 +17,8 @@ type TaskController struct {
 	groupService *services.GroupService
 }
 
-// TaskPage renders the Variable Page
-func (p *TaskController) TaskPage(w http.ResponseWriter, r *http.Request) {
+// TasksPage renders the Variable Page
+func (p *TaskController) TasksPage(w http.ResponseWriter, r *http.Request) {
 	auth, _ := p.manager.authCheck(r)
 	params := httprouter.ParamsFromContext(r.Context())
 	created := r.URL.Query().Get("created")
@@ -82,5 +84,48 @@ func (p *TaskController) CreateTaskHandler(w http.ResponseWriter, r *http.Reques
 		returnMsg = "no"
 	}
 	http.Redirect(w, r, "/tasks?created="+returnMsg, 303)
+	return
+}
+
+// CompleteTaskHandler updates whether a task is completed or not
+func (p *TaskController) CompleteTaskHandler(w http.ResponseWriter, r *http.Request) {
+	var t models.Task
+	auth, _ := p.manager.authCheck(r)
+	params := httprouter.ParamsFromContext(r.Context())
+	body, err := io.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		if err = json.NewEncoder(w).Encode(err); err != nil {
+			return
+		}
+		return
+	}
+	if err = r.Body.Close(); err != nil {
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		if err = json.NewEncoder(w).Encode(err); err != nil {
+			return
+		}
+		return
+	}
+	if err = json.Unmarshal(body, &t); err != nil {
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		if err = json.NewEncoder(w).Encode(err); err != nil {
+			return
+		}
+		return
+	}
+	updateId := params.ByName("id")
+	t.Id = updateId
+	task, err := p.taskService.Update(auth, &t)
+	if err != nil {
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		if err = json.NewEncoder(w).Encode(task); err != nil {
+			return
+		}
+	}
+	w.WriteHeader(http.StatusOK)
+	if err = json.NewEncoder(w).Encode(task); err != nil {
+		return
+	}
 	return
 }
