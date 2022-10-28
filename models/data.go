@@ -139,18 +139,26 @@ func (u *User) GetClass(pl bool) string {
 ================ Task DTOs ==================
 */
 
+type TaskStatus string
+
+const (
+	NOTSTARTED TaskStatus = "NOT_STARTED"
+	INPROGRESS TaskStatus = "IN_PROGRESS"
+	COMPLETED  TaskStatus = "COMPLETED"
+)
+
 // Task is a root struct that is used to store the json encoded data for/from a mongodb todos doc.
 type Task struct {
-	Id           string    `json:"id,omitempty"`
-	Name         string    `json:"name,omitempty"`
-	Completed    bool      `json:"completed,omitempty"`
-	Due          time.Time `json:"due,omitempty"`
-	Description  string    `json:"description,omitempty"`
-	UserId       string    `json:"user_id,omitempty"`
-	GroupId      string    `json:"group_id,omitempty"`
-	LastModified time.Time `json:"last_modified,omitempty"`
-	CreatedAt    time.Time `json:"creation_at,omitempty"`
-	DeletedAt    time.Time `json:"deleted_at,omitempty"`
+	Id           string     `json:"id,omitempty"`
+	Name         string     `json:"name,omitempty"`
+	Status       TaskStatus `json:"status,omitempty"`
+	Due          time.Time  `json:"due,omitempty"`
+	Description  string     `json:"description,omitempty"`
+	UserId       string     `json:"user_id,omitempty"`
+	GroupId      string     `json:"group_id,omitempty"`
+	LastModified time.Time  `json:"last_modified,omitempty"`
+	CreatedAt    time.Time  `json:"creation_at,omitempty"`
+	DeletedAt    time.Time  `json:"deleted_at,omitempty"`
 }
 
 // Validate checks the data in the DTO for issues
@@ -176,8 +184,8 @@ func (t *Task) GetLabel() string {
 
 // GetBoolField returns a bool value stored in Task
 func (t *Task) GetBoolField(fType string) bool {
-	if fType == "Completed" {
-		return t.Completed
+	if fType == "Completed" && t.Status == COMPLETED {
+		return true
 	}
 	return false
 }

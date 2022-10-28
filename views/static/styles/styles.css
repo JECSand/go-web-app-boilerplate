@@ -73,13 +73,13 @@ body {
     display: flex;
     flex-direction: row;
 }
-.columnOne {
+.uneven.columnOne {
     width: 30%;
     box-sizing: border-box;
     /*whatever element it is applied to...*/
     padding: 0 0 0 10px;
 }
-.columnTwo {
+.uneven.columnTwo {
     width: 20%;
     box-sizing: border-box;
     /*whatever element it is applied to...*/
@@ -89,10 +89,38 @@ body {
     border-right: 3px solid blue;
     padding: 0 0 0 10px;
 }
-.columnThree {
+.uneven.columnThree {
     display:flex;
     flex-direction: column;
     width: 50%;
+    box-sizing: border-box;
+    /*whatever element it is applied to...*/
+    border-top: 0;
+    border-bottom: 0;
+    border-left: 0;
+    padding: 0 0 0 10px;
+}
+
+.even.columnOne {
+    width: 33%;
+    box-sizing: border-box;
+    /*whatever element it is applied to...*/
+    padding: 0 0 0 10px;
+}
+.even.columnTwo {
+    width: 33%;
+    box-sizing: border-box;
+    /*whatever element it is applied to...*/
+    border-top: 0;
+    border-bottom: 0;
+    border-left: 3px solid blue;
+    border-right: 3px solid blue;
+    padding: 0 0 0 10px;
+}
+.even.columnThree {
+    display:flex;
+    flex-direction: column;
+    width: 33%;
     box-sizing: border-box;
     /*whatever element it is applied to...*/
     border-top: 0;
