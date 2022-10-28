@@ -160,7 +160,8 @@ type TaskModel struct {
 	Heading       *Heading
 	Auth          *Auth
 	User          *User
-	Settings      *Settings
+	Overview      *Overview // Overview view
+	Settings      *Settings // Individual Task settings view
 	CreateTask    *Form
 	OverviewTasks *List
 	Alert         *Alert

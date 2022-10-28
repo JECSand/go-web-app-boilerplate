@@ -23,21 +23,34 @@ func (p *TaskController) TasksPage(w http.ResponseWriter, r *http.Request) {
 	params := httprouter.ParamsFromContext(r.Context())
 	created := r.URL.Query().Get("created")
 	groupUsers, err := p.groupService.GetGroupUsers(auth, &models.Group{Id: auth.GroupId})
+	groups := []*models.Group{groupUsers.Group}
 	if err != nil {
 		http.Redirect(w, r, "/logout", 303)
 		return
 	}
 	userTasks, err := p.taskService.GetMany(auth)
-	userTasksList := models.NewLinkedList(userTasks, "/", true, true, true)
-	userTasksList.Script = &models.Script{Category: "postCheck"}
+	if err != nil {
+		http.Redirect(w, r, "/logout", 303)
+		return
+	}
+	if auth.RootAdmin { // Get all groups if master admin for task over group filter
+		groups, err = p.groupService.GetMany(auth)
+		if err != nil {
+			http.Redirect(w, r, "/logout", 303)
+			return
+		}
+	}
+	tasksOverview := models.InitializeTaskOverview(userTasks, groupUsers, groups)
+	//userTasksList := models.NewLinkedList(userTasks, "/", true, true, true)
+	//userTasksList.Script = &models.Script{Category: "postCheck"}
 	createForm := models.InitializePopupCreateTaskForm(groupUsers.Users)
 	model := models.TaskModel{
-		Title:         "Tasks",
-		SubRoute:      params.ByName("child"),
-		Name:          "tasks",
-		Auth:          auth,
-		CreateTask:    createForm,
-		OverviewTasks: userTasksList,
+		Title:      "Tasks",
+		SubRoute:   params.ByName("child"),
+		Name:       "tasks",
+		Auth:       auth,
+		Overview:   tasksOverview,
+		CreateTask: createForm,
 	}
 	model.BuildRoute()
 	model.Heading = models.NewHeading("Tasks Overview", "w3-wide text")
@@ -90,6 +103,11 @@ func (p *TaskController) CreateTaskHandler(w http.ResponseWriter, r *http.Reques
 // CompleteTaskHandler updates whether a task is completed or not
 func (p *TaskController) CompleteTaskHandler(w http.ResponseWriter, r *http.Request) {
 	var t models.Task
+	type completeTask struct {
+		Id        string `json:"id,omitempty"`
+		Completed bool   `json:"completed,omitempty"`
+	}
+	var ct completeTask
 	auth, _ := p.manager.authCheck(r)
 	params := httprouter.ParamsFromContext(r.Context())
 	body, err := io.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -107,7 +125,7 @@ func (p *TaskController) CompleteTaskHandler(w http.ResponseWriter, r *http.Requ
 		}
 		return
 	}
-	if err = json.Unmarshal(body, &t); err != nil {
+	if err = json.Unmarshal(body, &ct); err != nil {
 		w.WriteHeader(http.StatusUnprocessableEntity)
 		if err = json.NewEncoder(w).Encode(err); err != nil {
 			return
@@ -116,6 +134,11 @@ func (p *TaskController) CompleteTaskHandler(w http.ResponseWriter, r *http.Requ
 	}
 	updateId := params.ByName("id")
 	t.Id = updateId
+	if ct.Completed {
+		t.Status = models.COMPLETED
+	} else {
+		t.Status = models.NOTSTARTED
+	}
 	task, err := p.taskService.Update(auth, &t)
 	if err != nil {
 		w.WriteHeader(http.StatusUnprocessableEntity)

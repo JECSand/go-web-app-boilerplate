@@ -9,8 +9,8 @@
         {{ template "templates/components/organisms/forms.html" .CreateTask }}
     {{ end }}
     {{ if eq .Route "tasks/" }}
-        <div class="list-container">
-            {{ template "templates/components/organisms/lists.html" .OverviewTasks }}
+        <div class="criteria">
+            {{ template "templates/components/abstractions/overview.html" .Overview }}
         <div>
     {{ end }}
     {{ end }}
