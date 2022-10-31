@@ -44,6 +44,22 @@
         });
     }
 </script>
+{{ else if eq .Category "getCheck"}}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script type="text/javascript">
+    function getCheck(reqUrl, elementId, e) {
+        axios.post(reqUrl, {
+            id: (document.getElementById(elementId)).id,
+            completed: e.target.checked,
+        })
+        .then((response) => {
+            // do something if request is successful ...
+        })
+        .catch((error) => {
+            console.log(error.response.data);
+        });
+    }
+</script>
 {{ else if eq .Category "dataTableUsers"}}
 <script>
     $(document).ready(function () {

@@ -28,9 +28,9 @@ func SplitTasksByStatus(tasks []*Task) ([]*Task, []*Task, []*Task) {
 		case NOTSTARTED:
 			ns = append(ns, t)
 		case INPROGRESS:
-			ns = append(ip, t)
+			ip = append(ip, t)
 		case COMPLETED:
-			ns = append(com, t)
+			com = append(com, t)
 		}
 	}
 	return ns, ip, com

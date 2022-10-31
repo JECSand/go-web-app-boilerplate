@@ -1,5 +1,7 @@
 package models
 
+import "fmt"
+
 // InitializeUserSettings ...
 func InitializeUserSettings(user *User, admin bool) *Settings {
 	SettingsForm := InitializeUserSettingsForm(user, admin)
@@ -48,23 +50,33 @@ NOTES:
 
 // InitializeTaskOverview instantiates a task Overview Abstract	// TODO NEXT - START HERE, called in TASK CONTROLLER
 func InitializeTaskOverview(inTasks []*Task, groupUsers *GroupUsersDTO, groups []*Group) *Overview {
+	// Init group and user select filter drop down
+	var filterInputs []*InputField
+	var overviewScripts []*Script
+	userSelect := NewSelectInput("Select Users", "Select Users", "update", "user_id", "text", GetDataSelectOptions(groupUsers.Users), false)
+	filterInputs = append(filterInputs, userSelect)
+	if len(groups) > 1 {
+		groupSelect := NewSelectInput("Select Groups", "Select Groups", "update", "group_id", "text", GetDataSelectOptions(groups), false)
+		filterInputs = append(filterInputs, groupSelect)
+	}
+	for _, t := range inTasks {
+		fmt.Println(t)
+	}
 	nsTasks, ipTasks, comTasks := SplitTasksByStatus(inTasks)
-	// STEPS:
-	//	1) Init Not Started List DIV
+	// Init Not Started List DIV
+	overviewScripts = append(overviewScripts, &Script{Category: "postCheck"})
 	notStartedList := NewLinkedList(nsTasks, "/", true, true, true)
-	notStartedList.Script = &Script{Category: "postCheck"}
+	//notStartedList.Script = &Script{Category: "postCheck"}
 	notStartedCol := NewListDiv("even columnOne", "", "", NewColumnHeading("Not Started", ""), notStartedList)
-	//	2) Init In Progress List DIV
+	// Init In Progress List DIV
 	inProgressList := NewLinkedList(ipTasks, "/", true, true, true)
-	inProgressList.Script = &Script{Category: "postCheck"}
+	//inProgressList.Script = &Script{Category: "postCheck"}
 	inProgressCol := NewListDiv("even columnTwo", "", "", NewColumnHeading("In Progress", ""), inProgressList)
-	//  3) Init In Completed List DIV
+	// Init In Completed List DIV
 	completedList := NewLinkedList(comTasks, "/", true, true, true)
-	completedList.Script = &Script{Category: "postCheck"}
+	//completedList.Script = &Script{Category: "postCheck"}
 	completedCol := NewListDiv("even columnThree", "", "", NewColumnHeading("Completed", ""), completedList)
-	//	4) Init group select filter drop down (master admin)
-	// 	5) Init user select filter drop down
 	//	6) Init "drag and drop" jquery script
 	//	7) Init and return NewTaskOverview
-	return NewTasksOverview("tasksOverview", "", notStartedCol, inProgressCol, completedCol)
+	return NewTasksOverview("tasksOverview", "", filterInputs, notStartedCol, inProgressCol, completedCol, overviewScripts)
 }
