@@ -24,14 +24,14 @@ func NewSettings(class string, id string, form *Form, col1 *Div, col3 *Div) *Set
 
 // Overview ...
 type Overview struct {
-	Class           string
-	Id              string
-	primaryFilter   *InputField // i.e. Group Filter
-	secondaryFilter *InputField // i.e. User Filter
-	Col1            *Div
-	Col2            *Div
-	Col3            *Div
-	Category        string
+	Class    string
+	Id       string
+	Filters  []*InputField // i.e. Group and/or User Filter
+	Col1     *Div
+	Col2     *Div
+	Col3     *Div
+	Scripts  []*Script
+	Category string
 }
 
 // NewOverview instantiates a default Overview Abstract
@@ -47,15 +47,15 @@ func NewOverview(class string, id string, col1 *Div, col2 *Div, col3 *Div) *Over
 }
 
 // NewTasksOverview instantiates a task Overview Abstract	// TODO NEXT - START HERE, called in TASK CONTROLLER
-func NewTasksOverview(class string, id string, userFilter *InputField, groupFilter *InputField, col1 *Div, col2 *Div, col3 *Div) *Overview {
+func NewTasksOverview(class string, id string, filterInputs []*InputField, col1 *Div, col2 *Div, col3 *Div, scripts []*Script) *Overview {
 	return &Overview{
-		Class:           class,
-		Id:              id,
-		primaryFilter:   groupFilter,
-		secondaryFilter: userFilter,
-		Col1:            col1,
-		Col2:            col2,
-		Col3:            col3,
-		Category:        "tasks",
+		Class:    class,
+		Id:       id,
+		Filters:  filterInputs,
+		Col1:     col1,
+		Col2:     col2,
+		Col3:     col3,
+		Scripts:  scripts,
+		Category: "tasks",
 	}
 }
