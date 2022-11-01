@@ -45,11 +45,12 @@ type ListItem struct {
 }
 
 // NewListItem ...
-func NewListItem(class string, id string, label string) *ListItem {
+func NewListItem(class string, id string, label string, ops []*ItemOption) *ListItem {
 	return &ListItem{
 		Class:    class,
 		Id:       id,
 		Label:    label,
+		Options:  ops,
 		Category: "default",
 	}
 }
