@@ -8,6 +8,7 @@ Script Types
 type Script struct {
 	Id       string
 	Load     bool
+	Axios    bool
 	Category string
 }
 
@@ -144,19 +145,20 @@ func GetRoleSelectOptions(defVal string) []*SelectOptions {
 
 // InputField ...
 type InputField struct {
-	Name     string
-	Label    string
-	Class    string
-	Id       string
-	Type     string // acts as the formId in searchBar inputs
-	Value    string // acts as the RequestURL in checkbox type
-	Multi    bool
-	Checked  bool
-	Options  []*SelectOptions
-	Rows     string
-	Cols     string
-	Script   *Script
-	Category string
+	Name       string
+	Label      string
+	Class      string
+	Id         string
+	Type       string // acts as the formId in searchBar inputs
+	Value      string // acts as the RequestURL in checkbox type
+	Multi      bool
+	Checked    bool
+	Options    []*SelectOptions
+	Rows       string
+	Cols       string
+	Script     *Script
+	ScriptType string
+	Category   string
 }
 
 // NewSearchInput ... (itYPE = formId)
@@ -178,19 +180,20 @@ func NewSearchInput(class string, id string, iType string, val string) *InputFie
 }
 
 // NewCheckboxInput ...
-func NewCheckboxInput(label string, class string, id string, chk bool, val string) *InputField {
+func NewCheckboxInput(label string, class string, id string, chk bool, val string, scriptType string) *InputField {
 	return &InputField{
-		Label:    label,
-		Class:    class,
-		Id:       id,
-		Checked:  chk,
-		Value:    val,
-		Multi:    false,
-		Options:  nil,
-		Rows:     "",
-		Cols:     "",
-		Script:   nil,
-		Category: "checkbox",
+		Label:      label,
+		Class:      class,
+		Id:         id,
+		Checked:    chk,
+		Value:      val,
+		Multi:      false,
+		Options:    nil,
+		Rows:       "",
+		Cols:       "",
+		Script:     nil,
+		ScriptType: scriptType,
+		Category:   "checkbox",
 	}
 }
 

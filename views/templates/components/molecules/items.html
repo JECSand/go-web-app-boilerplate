@@ -13,6 +13,14 @@
 {{ end }}
 
 {{ if eq .Category "default" }}
+    {{ range .Options }}
+    {{ if eq .Category "delete" }}
+        {{ template "templates/components/atoms/buttons.html" .Button }}
+        {{ template "templates/components/organisms/forms.html" .Form }}
+    {{ else if eq .Category "checkbox" }}
+        {{ template "templates/components/atoms/inputs.html" .Input }}
+    {{ end }}
+    {{ end }}
     {{ .Label }}
 {{ end }}
 

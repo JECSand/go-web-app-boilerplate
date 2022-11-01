@@ -11,10 +11,18 @@
 
 {{ else if eq .Category "checkbox" }}
 
-    {{ if .Checked }}
-    <input type="checkbox" id={{ .Id }} class={{ .Class }} onclick="postCheck({{ .Value }}, {{ .Id }}, event)" checked>
-    {{ else }}
-    <input type="checkbox" id={{ .Id }} class={{ .Class }} onclick="postCheck({{ .Value }}, {{ .Id }}, event)">
+    {{ if eq .Category "postCheck" }}
+        {{ if .Checked }}
+            <input type="checkbox" id={{ .Id }} class={{ .Class }} onclick="postCheck({{ .Value }}, {{ .Id }}, event)" checked>
+        {{ else }}
+            <input type="checkbox" id={{ .Id }} class={{ .Class }} onclick="postCheck({{ .Value }}, {{ .Id }}, event)">
+        {{ end }}
+    {{ else if eq .Category "updateTasks" }}
+        {{ if .Checked }}
+            <input type="checkbox" id={{ .Id }} class={{ .Class }} onclick="updateTasks({{ .Value }}, {{ .Id }}, event)" checked>
+        {{ else }}
+            <input type="checkbox" id={{ .Id }} class={{ .Class }} onclick="updateTasks({{ .Value }}, {{ .Id }}, event)">
+        {{ end }}
     {{ end }}
 
 {{ else if eq .Category "input" }}

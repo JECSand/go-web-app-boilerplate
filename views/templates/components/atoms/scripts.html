@@ -29,7 +29,9 @@
     }
 </script>
 {{ else if eq .Category "postCheck"}}
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    {{ if .Axios }}
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    {{ end }}
 <script type="text/javascript">
     function postCheck(reqUrl, elementId, e) {
         axios.post(reqUrl, {
@@ -44,10 +46,12 @@
         });
     }
 </script>
-{{ else if eq .Category "getCheck"}}
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+{{ else if eq .Category "updateTasks"}}
+    {{ if .Axios }}
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    {{ end }}
 <script type="text/javascript">
-    function getCheck(reqUrl, elementId, e) {
+    function updateTasks(reqUrl, elementId, e) {
         axios.post(reqUrl, {
             id: (document.getElementById(elementId)).id,
             completed: e.target.checked,

@@ -25,7 +25,7 @@ func InitializeUserSettings(user *User, admin bool) *Settings {
 func InitializeGroupSettings(group *Group, users []*User) *Settings {
 	SettingsForm := InitializeGroupSettingsForm(group)
 	// 1. NewLinkDiv(class string, id string, label string, head *Heading, links []*Link)
-	uList := NewLinkedList(users, "/admin/", true, true, false)
+	uList := NewLinkedList(users, "/admin/", true, true, false, "")
 	usersCol := NewListDiv("uneven columnOne", "", "", NewColumnHeading("Group Users", ""), uList)
 	// 2. NewLinkDiv(class string, id string, label string, head *Heading, links []*Link)
 	nameLink := NewLink("active", "", "", group.Name, true)
@@ -51,13 +51,15 @@ NOTES:
 // InitializeTaskOverview instantiates a task Overview Abstract	// TODO NEXT - START HERE, called in TASK CONTROLLER
 func InitializeTaskOverview(inTasks []*Task, groupUsers *GroupUsersDTO, groups []*Group) *Overview {
 	// Init group and user select filter drop down
-	var filterInputs []*InputField
+	var filters []*List
 	var overviewScripts []*Script
-	userSelect := NewSelectInput("Select Users", "Select Users", "update", "user_id", "text", GetDataSelectOptions(groupUsers.Users), false)
-	filterInputs = append(filterInputs, userSelect)
+	//userSelect := NewSelectInput("Select Users", "Select Users", "update", "user_id", "text", GetDataSelectOptions(groupUsers.Users), false)
+	userSelect := NewList(groupUsers.Users, "dropdown", "/users", true, "updateTasks")
+	filters = append(filters, userSelect)
 	if len(groups) > 1 {
-		groupSelect := NewSelectInput("Select Groups", "Select Groups", "update", "group_id", "text", GetDataSelectOptions(groups), false)
-		filterInputs = append(filterInputs, groupSelect)
+		//groupSelect := NewSelectInput("Select Groups", "Select Groups", "update", "group_id", "text", GetDataSelectOptions(groups), false)
+		groupSelect := NewList(groups, "dropdown", "/groups", true, "updateTasks")
+		filters = append(filters, groupSelect)
 	}
 	for _, t := range inTasks {
 		fmt.Println(t)
@@ -65,18 +67,18 @@ func InitializeTaskOverview(inTasks []*Task, groupUsers *GroupUsersDTO, groups [
 	nsTasks, ipTasks, comTasks := SplitTasksByStatus(inTasks)
 	// Init Not Started List DIV
 	overviewScripts = append(overviewScripts, &Script{Category: "postCheck"})
-	notStartedList := NewLinkedList(nsTasks, "/", true, true, true)
+	notStartedList := NewLinkedList(nsTasks, "/", true, true, true, "postCheck")
 	//notStartedList.Script = &Script{Category: "postCheck"}
 	notStartedCol := NewListDiv("even columnOne", "", "", NewColumnHeading("Not Started", ""), notStartedList)
 	// Init In Progress List DIV
-	inProgressList := NewLinkedList(ipTasks, "/", true, true, true)
+	inProgressList := NewLinkedList(ipTasks, "/", true, true, true, "postCheck")
 	//inProgressList.Script = &Script{Category: "postCheck"}
 	inProgressCol := NewListDiv("even columnTwo", "", "", NewColumnHeading("In Progress", ""), inProgressList)
 	// Init In Completed List DIV
-	completedList := NewLinkedList(comTasks, "/", true, true, true)
+	completedList := NewLinkedList(comTasks, "/", true, true, true, "postCheck")
 	//completedList.Script = &Script{Category: "postCheck"}
 	completedCol := NewListDiv("even columnThree", "", "", NewColumnHeading("Completed", ""), completedList)
 	//	6) Init "drag and drop" jquery script
 	//	7) Init and return NewTaskOverview
-	return NewTasksOverview("tasksOverview", "", filterInputs, notStartedCol, inProgressCol, completedCol, overviewScripts)
+	return NewTasksOverview("tasksOverview", "", filters, notStartedCol, inProgressCol, completedCol, overviewScripts)
 }
