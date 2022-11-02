@@ -61,7 +61,7 @@ func GetRouter(p *controllers.ControllerManager, b *controllers.BasicController,
 
 	// Task Handler Routes
 	router.Handler("POST", "/tasks", p.Protected(t.CreateTaskHandler))
-	router.Handler("POST", "/tasks/:id/check", p.Protected(t.CompleteTaskHandler))
+	router.Handler("POST", "/data/tasks/:id/check", p.Protected(t.CompleteTaskHandler))
 
 	// Example route that encounters an error
 	router.GET("/broken/handler", b.BrokenPage)
