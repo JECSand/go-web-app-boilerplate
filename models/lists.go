@@ -1,12 +1,12 @@
 package models
 
 // NewList initializes a new list of groups for rendering
-func NewList[T DataModel](m []T, class string, baseURL string, chkBox bool, scriptType string) *List {
+func NewList[T DataModel](m []T, class string, baseURL string, endpoint string, chkBox bool, scriptType string) *List {
 	var listItems []*ListItem
 	for _, gr := range m {
 		var ops []*ItemOption
 		if chkBox {
-			reqURL := baseURL + gr.GetClass(true) + "/" + gr.GetID() + "/check"
+			reqURL := baseURL + gr.GetClass(true) + "/" + gr.GetID() + endpoint
 			chkInput := NewCheckboxInput("", "pill checkbox", "check"+gr.GetID(), gr.GetBoolField("Completed"), reqURL, scriptType)
 			chkOp := NewCheckOption("", chkInput)
 			ops = append(ops, chkOp)
@@ -17,11 +17,11 @@ func NewList[T DataModel](m []T, class string, baseURL string, chkBox bool, scri
 }
 
 // NewLinkedList initializes a new linked list of DataModel for rendering
-func NewLinkedList[T DataModel](m []T, baseURL string, delete bool, search bool, chkBox bool, scriptType string) *List {
+func NewLinkedList[T DataModel](m []T, baseURL string, endpoint string, delete bool, search bool, chkBox bool, scriptType string) *List {
 	var listItems []*ListItem
 	listId, _ := GenerateUuid()
 	for _, gr := range m {
-		gLink := NewLink("pill", "", baseURL+gr.GetClass(true)+"/"+gr.GetID(), gr.GetLabel(), false)
+		gLink := NewLink("pill", "", baseURL+gr.GetClass(true)+"/"+gr.GetID()+endpoint, gr.GetLabel(), false)
 		var ops []*ItemOption
 		if delete {
 			defForm := InitializePopupDeleteForm(gr)
@@ -31,7 +31,7 @@ func NewLinkedList[T DataModel](m []T, baseURL string, delete bool, search bool,
 			ops = append(ops, delOp)
 		}
 		if chkBox {
-			reqURL := baseURL + gr.GetClass(true) + "/" + gr.GetID() + "/check"
+			reqURL := baseURL + gr.GetClass(true) + "/" + gr.GetID() + endpoint
 			chkInput := NewCheckboxInput("", "pill checkbox", "check"+gr.GetID(), gr.GetBoolField("Completed"), reqURL, scriptType)
 			chkOp := NewCheckOption("", chkInput)
 			ops = append(ops, chkOp)
