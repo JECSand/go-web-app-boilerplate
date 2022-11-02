@@ -8,6 +8,7 @@
     document.getElementById(id).style.display = "none";
   }
 </script>
+
 {{ else if eq .Category "searchBar"}}
 <script>
     function searchList(listId, inputId) {
@@ -28,6 +29,57 @@
         }
     }
 </script>
+
+{{ else if eq .Category "manageTasks"}}
+<script type="text/javascript">
+    // Create a new task li element
+    function createTaskElement(item) {
+        const taskElement = document.createElement('li');
+        taskElement.id = item.id;
+        taskElement.appendChild(document.createTextNode(item.title));
+        return taskElement;
+    }
+
+    // remove a task element from a list
+    function removeTaskElement(listId, taskId) {
+        const taskList = document.getElementById(listId);
+        const taskElement = document.getElementById(taskId);
+        taskList.removeChild(taskElement);
+    }
+
+    // moveTaskElement a task element between lists
+    function moveTaskElement(initListId, tarListId, taskId) {
+        const initTaskList = document.getElementById(initListId);
+        const tarTaskList = document.getElementById(tarListId);
+        const taskElement = document.getElementById(taskId);
+        initTaskList.removeChild(taskElement);
+        tarTaskList.appendChild(taskElement);
+    }
+
+    // add one or more task items to a list
+    function appendTaskList(listId, taskItems) {
+        const taskList = document.getElementById(listId);
+        if (Array.isArray(taskItems) && taskItems.length > 0) {
+            taskItems.map(taskItem => {
+                taskList.appendChild(createTaskElement(taskItem));
+            });
+        } else if (taskItems) {
+            taskList.appendChild(createTaskElement(taskItems));
+        }
+    }
+
+    // remove one or more task items from a list
+    function subtractTaskList(listId, taskItems) {
+        if (Array.isArray(taskItems) && taskItems.length > 0) {
+            taskItems.map(taskItem => {
+                removeTaskElement(listId, taskItem.id);
+            });
+        } else if (taskItems) {
+            removeTaskElement(listId, taskItems.id);
+        }
+    }
+</script>
+
 {{ else if eq .Category "postCheck"}}
     {{ if .Axios }}
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -39,19 +91,34 @@
             completed: e.target.checked,
         })
         .then((response) => {
-             // do something if request is successful ...
+            const initListId = e.target.parentElement.parentElement.id;
+            const updatedTask = response.data;
+            let queryString = '.even.columnOne ul';
+            if (updatedTask.status === 'COMPLETED') {
+                queryString = '.even.columnThree ul';
+            }
+            const listItems = document.querySelectorAll(queryString);
+            if (listItems.length > 0) {
+                const tarListId = listItems[0].id;
+                try {
+                    moveTaskElement(initListId, tarListId, updatedTask.id);
+                } catch (error) {
+                    console.error(error);
+                }
+            }
         })
         .catch((error) => {
              console.log(error.response.data);
         });
     }
 </script>
-{{ else if eq .Category "updateTasks"}}
+
+{{ else if eq .Category "getTasks"}}
     {{ if .Axios }}
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     {{ end }}
 <script type="text/javascript">
-    function updateTasks(reqUrl, elementId, e) {
+    function getTasks(reqUrl, elementId, e) {
         axios.post(reqUrl, {
             id: (document.getElementById(elementId)).id,
             completed: e.target.checked,
@@ -64,6 +131,7 @@
         });
     }
 </script>
+
 {{ else if eq .Category "dataTableUsers"}}
 <script>
     $(document).ready(function () {
