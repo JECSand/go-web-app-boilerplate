@@ -67,15 +67,15 @@ func InitializeTaskOverview(inTasks []*Task, groupUsers *GroupUsersDTO, groups [
 	nsTasks, ipTasks, comTasks := SplitTasksByStatus(inTasks)
 	// Init Not Started List DIV
 	overviewScripts = append(overviewScripts, &Script{Category: "postCheck", Axios: true})
-	notStartedList := NewLinkedList(nsTasks, "/", true, true, true, "postCheck")
+	notStartedList := NewLinkedList(nsTasks, "/data/", true, true, true, "postCheck")
 	//notStartedList.Script = &Script{Category: "postCheck"}
 	notStartedCol := NewListDiv("even columnOne", "", "", NewColumnHeading("Not Started", ""), notStartedList)
 	// Init In Progress List DIV
-	inProgressList := NewLinkedList(ipTasks, "/", true, true, true, "postCheck")
+	inProgressList := NewLinkedList(ipTasks, "/data/", true, true, true, "postCheck")
 	//inProgressList.Script = &Script{Category: "postCheck"}
 	inProgressCol := NewListDiv("even columnTwo", "", "", NewColumnHeading("In Progress", ""), inProgressList)
 	// Init In Completed List DIV
-	completedList := NewLinkedList(comTasks, "/", true, true, true, "postCheck")
+	completedList := NewLinkedList(comTasks, "/data/", true, true, true, "postCheck")
 	//completedList.Script = &Script{Category: "postCheck"}
 	completedCol := NewListDiv("even columnThree", "", "", NewColumnHeading("Completed", ""), completedList)
 	//	6) Init "drag and drop" jquery script
