@@ -66,7 +66,7 @@ func InitializeTaskOverview(inTasks []*Task, groupUsers *GroupUsersDTO, groups [
 	}
 	nsTasks, ipTasks, comTasks := SplitTasksByStatus(inTasks)
 	// Init Not Started List DIV
-	overviewScripts = append(overviewScripts, &Script{Category: "postCheck"})
+	overviewScripts = append(overviewScripts, &Script{Category: "postCheck", Axios: true})
 	notStartedList := NewLinkedList(nsTasks, "/", true, true, true, "postCheck")
 	//notStartedList.Script = &Script{Category: "postCheck"}
 	notStartedCol := NewListDiv("even columnOne", "", "", NewColumnHeading("Not Started", ""), notStartedList)
