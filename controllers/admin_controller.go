@@ -202,7 +202,6 @@ func (p *AdminController) MasterAdminUserPage(w http.ResponseWriter, r *http.Req
 	}
 	uReq := p.userService.NewUsersRequest("", auth)
 	uFetch, err := uReq.GetAsync()
-	//users, err := p.userService.GetMany(auth)
 	if err != nil {
 		http.Redirect(w, r, "/logout", 303)
 		return
