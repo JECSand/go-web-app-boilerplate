@@ -71,9 +71,9 @@ func InitializeGroupSettingsForm(group *Group) *Form {
 }
 
 // InitializePopupDeleteForm for deletes a data record
-func InitializePopupDeleteForm[T DataModel](m T) *Form {
+func InitializePopupDeleteForm[T DataModel](m T, baseURL string) *Form {
 	formId := "delete" + m.GetClass(false) + m.GetID()
-	formMeta := []string{"Create", "delete-form", "form-container", formId, "GET", "/admin/" + m.GetClass(true) + "/" + m.GetID() + "/delete", "popup"}
+	formMeta := []string{"Create", "delete-form", "form-container", formId, "GET", baseURL + m.GetClass(true) + "/" + m.GetID() + "/delete", "popup"}
 	idField := NewInput("Id", "", "delete", "id", "hidden", m.GetID())
 	fields := []*InputField{idField}
 	subButton := NewButtonInput("Submit", "", "btn delete", "", "submit", "Delete")

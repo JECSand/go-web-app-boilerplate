@@ -1,7 +1,5 @@
 package models
 
-import "fmt"
-
 // InitializeUserSettings ...
 func InitializeUserSettings(user *User, admin bool) *Settings {
 	SettingsForm := InitializeUserSettingsForm(user, admin)
@@ -25,7 +23,7 @@ func InitializeUserSettings(user *User, admin bool) *Settings {
 func InitializeGroupSettings(group *Group, users []*User) *Settings {
 	SettingsForm := InitializeGroupSettingsForm(group)
 	// 1. NewLinkDiv(class string, id string, label string, head *Heading, links []*Link)
-	uList := NewLinkedList(users, "/admin/", "", true, true, false, "")
+	uList := NewLinkedList(users, "/admin/", "", true, true, false, "", "")
 	usersCol := NewListDiv("uneven columnOne", "", "", NewColumnHeading("Group Users", ""), uList)
 	// 2. NewLinkDiv(class string, id string, label string, head *Heading, links []*Link)
 	nameLink := NewLink("active", "", "", group.Name, true)
@@ -33,53 +31,29 @@ func InitializeGroupSettings(group *Group, users []*User) *Settings {
 	return NewSettings("", "", SettingsForm, usersCol, infoCol)
 }
 
-/*
-NOTES:
-	*EACH TASK LIST WILL HAVE TWO AXIOS CALLS:
-		1) POST UpdateTaskStatus based on drag and drop
-		2) GET	Sporadic GetTasks to get current task updates for keeping sync
-
-	*THESE AXIOS REQUESTS HIT A FRONTEND ROUTE WHICH PROXIES TO THE BACKEND API FOR DATA
-
-	*INITIAL GROUP TASKS ARE PROVIDED BY CONTROLLER AND LOADED INTO PAGE
-
-	*FILTER SELECT BUTTONS:
-		1) USERS: FILTERS LIST ITEMS USING JQUERY
-		2) GROUPS: RELOADS PAGE FOR A GIVEN GROUP (RootAdmin only)
-
-	*HIDDEN HTML TASK LI TEMPLATE TO USE IN CREATE FUNCTION WITH REGEXABLE ID
-*/
-
 // InitializeTaskOverview instantiates a task Overview Abstract	// TODO NEXT - START HERE, called in TASK CONTROLLER
 func InitializeTaskOverview(inTasks []*Task, groupUsers *GroupUsersDTO, groups []*Group) *Overview {
 	// Init group and user select filter drop down
 	var filters []*List
 	var overviewScripts []*Script
-	//userSelect := NewSelectInput("Select Users", "Select Users", "update", "user_id", "text", GetDataSelectOptions(groupUsers.Users), false)
-	userSelect := NewList(groupUsers.Users, "dropdown", "/data/", "/tasks", true, "getTasks")
+	userSelect := NewList(groupUsers.Users, "dropdown", "/data/", "/tasks", true, "*", "getTasks")
 	filters = append(filters, userSelect)
 	if len(groups) > 1 {
-		//groupSelect := NewSelectInput("Select Groups", "Select Groups", "update", "group_id", "text", GetDataSelectOptions(groups), false)
-		groupSelect := NewList(groups, "dropdown", "/data/", "/tasks", true, "getTasks")
+		groupSelect := NewList(groups, "dropdown", "/data/", "/tasks", true, groupUsers.Group.Id, "getTasks")
 		filters = append(filters, groupSelect)
-	}
-	for _, t := range inTasks {
-		fmt.Println(t)
 	}
 	nsTasks, ipTasks, comTasks := SplitTasksByStatus(inTasks)
 	// Init Not Started List DIV
 	overviewScripts = append(overviewScripts, &Script{Category: "manageTasks"})
 	overviewScripts = append(overviewScripts, &Script{Category: "postCheck", Axios: true})
-	notStartedList := NewLinkedList(nsTasks, "/data/", "/check", true, true, true, "postCheck")
-	//notStartedList.Script = &Script{Category: "postCheck"}
+	nsTasks = append(nsTasks, NewTask("000000000000000000000000", "TEMPLATE", NOTSTARTED)) // Template Task li for axios to use
+	notStartedList := NewLinkedList(nsTasks, "/data/", "/check", false, true, true, "Completed", "postCheck")
 	notStartedCol := NewListDiv("even columnOne", "", "", NewColumnHeading("Not Started", ""), notStartedList)
 	// Init In Progress List DIV
-	inProgressList := NewLinkedList(ipTasks, "/data/", "/check", true, true, true, "postCheck")
-	//inProgressList.Script = &Script{Category: "postCheck"}
+	inProgressList := NewLinkedList(ipTasks, "/data/", "/check", false, true, true, "Completed", "postCheck")
 	inProgressCol := NewListDiv("even columnTwo", "", "", NewColumnHeading("In Progress", ""), inProgressList)
 	// Init In Completed List DIV
-	completedList := NewLinkedList(comTasks, "/data/", "/check", true, true, true, "postCheck")
-	//completedList.Script = &Script{Category: "postCheck"}
+	completedList := NewLinkedList(comTasks, "/data/", "/check", false, true, true, "Completed", "postCheck")
 	completedCol := NewListDiv("even columnThree", "", "", NewColumnHeading("Completed", ""), completedList)
 	//	6) Init "drag and drop" jquery script
 	//	7) Init and return NewTaskOverview

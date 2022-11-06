@@ -66,6 +66,10 @@ func (g *Group) GetLabel() string {
 func (g *Group) GetBoolField(fType string) bool {
 	if fType == "RootAdmin" {
 		return g.RootAdmin
+	} else if fType == g.Id {
+		return true
+	} else if fType == "*" {
+		return true
 	}
 	return false
 }
@@ -123,6 +127,10 @@ func (u *User) GetLabel() string {
 func (u *User) GetBoolField(fType string) bool {
 	if fType == "RootAdmin" {
 		return u.RootAdmin
+	} else if fType == u.Id {
+		return true
+	} else if fType == "*" {
+		return true
 	}
 	return false
 }
@@ -159,6 +167,15 @@ type Task struct {
 	LastModified time.Time  `json:"last_modified,omitempty"`
 	CreatedAt    time.Time  `json:"creation_at,omitempty"`
 	DeletedAt    time.Time  `json:"deleted_at,omitempty"`
+}
+
+// NewTask instantiates a new Task struct
+func NewTask(id string, name string, status TaskStatus) *Task {
+	return &Task{
+		Id:     id,
+		Name:   name,
+		Status: status,
+	}
 }
 
 // Validate checks the data in the DTO for issues

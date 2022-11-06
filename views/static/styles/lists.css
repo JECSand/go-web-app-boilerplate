@@ -27,6 +27,10 @@ ul.linked li a.pill {
     word-wrap: break-word
 }
 
+.pill.template {
+    display: none;
+}
+
 ul.linked a.pill:hover {
     background-color: #f1f1f1;
 }
