@@ -1,13 +1,13 @@
 package models
 
 // NewList initializes a new list of groups for rendering
-func NewList[T DataModel](m []T, class string, baseURL string, endpoint string, chkBox bool, scriptType string) *List {
+func NewList[T DataModel](m []T, class string, baseURL string, endpoint string, chkBox bool, chkRule string, scriptType string) *List {
 	var listItems []*ListItem
 	for _, gr := range m {
 		var ops []*ItemOption
 		if chkBox {
 			reqURL := baseURL + gr.GetClass(true) + "/" + gr.GetID() + endpoint
-			chkInput := NewCheckboxInput("", "pill checkbox", "check"+gr.GetID(), gr.GetBoolField("Completed"), reqURL, scriptType)
+			chkInput := NewCheckboxInput("", "pill checkbox", "check"+gr.GetID(), gr.GetBoolField(chkRule), reqURL, scriptType)
 			chkOp := NewCheckOption("", chkInput)
 			ops = append(ops, chkOp)
 		}
@@ -17,14 +17,14 @@ func NewList[T DataModel](m []T, class string, baseURL string, endpoint string, 
 }
 
 // NewLinkedList initializes a new linked list of DataModel for rendering
-func NewLinkedList[T DataModel](m []T, baseURL string, endpoint string, delete bool, search bool, chkBox bool, scriptType string) *List {
+func NewLinkedList[T DataModel](m []T, baseURL string, endpoint string, delete bool, search bool, chkBox bool, chkRule string, scriptType string) *List {
 	var listItems []*ListItem
 	listId, _ := GenerateUuid()
 	for _, gr := range m {
 		gLink := NewLink("pill", "", baseURL+gr.GetClass(true)+"/"+gr.GetID()+endpoint, gr.GetLabel(), false)
 		var ops []*ItemOption
 		if delete {
-			defForm := InitializePopupDeleteForm(gr)
+			defForm := InitializePopupDeleteForm(gr, baseURL)
 			btn := defForm.Popup
 			defForm.Popup = nil
 			delOp := NewDeleteOption(defForm, btn)
@@ -32,11 +32,15 @@ func NewLinkedList[T DataModel](m []T, baseURL string, endpoint string, delete b
 		}
 		if chkBox {
 			reqURL := baseURL + gr.GetClass(true) + "/" + gr.GetID() + endpoint
-			chkInput := NewCheckboxInput("", "pill checkbox", "check"+gr.GetID(), gr.GetBoolField("Completed"), reqURL, scriptType)
+			chkInput := NewCheckboxInput("", "pill checkbox", "check"+gr.GetID(), gr.GetBoolField(chkRule), reqURL, scriptType)
 			chkOp := NewCheckOption("", chkInput)
 			ops = append(ops, chkOp)
 		}
-		listItems = append(listItems, NewLinkListItem("pill", gr.GetID(), gLink, ops))
+		liClass := "pill"
+		if gr.GetID() == "000000000000000000000000" {
+			liClass += " template"
+		}
+		listItems = append(listItems, NewLinkListItem(liClass, gr.GetID(), gLink, ops))
 	}
 	if search {
 		inId, _ := GenerateUuid()

@@ -132,8 +132,14 @@ func (p *TaskController) CompleteTaskHandler(w http.ResponseWriter, r *http.Requ
 		}
 		return
 	}
-	updateId := params.ByName("id")
-	t.Id = updateId
+	t.Id = params.ByName("id")
+	if t.Id == "000000000000000000000000" {
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		if err = json.NewEncoder(w).Encode(t); err != nil {
+			return
+		}
+		return
+	}
 	if ct.Completed {
 		t.Status = models.COMPLETED
 	} else {
@@ -145,6 +151,7 @@ func (p *TaskController) CompleteTaskHandler(w http.ResponseWriter, r *http.Requ
 		if err = json.NewEncoder(w).Encode(task); err != nil {
 			return
 		}
+		return
 	}
 	w.WriteHeader(http.StatusOK)
 	if err = json.NewEncoder(w).Encode(task); err != nil {
