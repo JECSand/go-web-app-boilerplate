@@ -1,6 +1,6 @@
 # go-web-app-boilerplate
 
-boilerplate for golang frontend development
+Boilerplate for golang frontend development.
 
 ## Getting Started
 
